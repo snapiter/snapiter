@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, PanInfo, useDragControls } from 'framer-motion';
 import { ReactNode } from 'react';
+import { useOutsideClick } from '@/hooks/useOutsideClick';
 
 interface SlidingPanelProps {
   children: ReactNode;
@@ -12,6 +13,11 @@ export default function SlidingPanel({ children }: SlidingPanelProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [expandedHeight, setExpandedHeight] = useState(0);
   const dragControls = useDragControls();
+  
+  const panelRef = useOutsideClick<HTMLDivElement>(
+    () => setIsExpanded(false),
+    isExpanded
+  );
 
   // handle SSR (window not defined)
   useEffect(() => {
@@ -24,6 +30,7 @@ export default function SlidingPanel({ children }: SlidingPanelProps) {
 
   return (
     <motion.div
+      ref={panelRef}
       className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl z-50"
       initial={{ y: collapsedY }}
       animate={{ y: isExpanded ? expandedY : collapsedY }}
