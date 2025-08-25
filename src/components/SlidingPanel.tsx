@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { ReactNode } from 'react';
 
 interface SlidingPanelProps {
@@ -8,95 +8,31 @@ interface SlidingPanelProps {
 }
 
 export default function SlidingPanel({ children }: SlidingPanelProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startY, setStartY] = useState(0);
-  const [currentY, setCurrentY] = useState(0);
-  const panelRef = useRef<HTMLDivElement>(null);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setIsDragging(true);
-    setStartY(e.touches[0].clientY);
-    setCurrentY(e.touches[0].clientY);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) return;
-    setCurrentY(e.touches[0].clientY);
-  };
-
-  const handleTouchEnd = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-    
-    const deltaY = startY - currentY;
-    const threshold = 50;
-    
-    if (deltaY > threshold) {
-      setIsExpanded(true);
-    } else if (deltaY < -threshold) {
-      setIsExpanded(false);
-    }
-    
-    setCurrentY(0);
-    setStartY(0);
-  };
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setStartY(e.clientY);
-    setCurrentY(e.clientY);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
-    setCurrentY(e.clientY);
-  };
-
-  const handleMouseUp = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-    
-    const deltaY = startY - currentY;
-    const threshold = 50;
-    
-    if (deltaY > threshold) {
-      setIsExpanded(true);
-    } else if (deltaY < -threshold) {
-      setIsExpanded(false);
-    }
-    
-    setCurrentY(0);
-    setStartY(0);
-  };
-
-  const getTransform = () => {
-    if (isDragging) {
-      const deltaY = Math.min(0, startY - currentY);
-      const baseTransform = isExpanded ? -50 : 0;
-      return `translateY(${baseTransform + deltaY}%)`;
-    }
-    return isExpanded ? 'translateY(-50%)' : 'translateY(0%)';
-  };
+  const [isExpanded, setIsExpanded] = useState(true);
 
   return (
     <div
-      ref={panelRef}
       className={`fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl transition-transform duration-300 ease-out z-50 ${
-        isDragging ? 'duration-0' : ''
+        isExpanded ? 'translate-y-0' : 'translate-y-[calc(100%-5rem)]'
       }`}
-      style={{
-        height: '60vh',
-        transform: getTransform(),
-      }}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
+      style={{ height: isExpanded ? '80vh' : '5rem' }}
     >
-      <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mt-3 mb-4" />
+      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="w-12 h-1 bg-gray-300 rounded-full mx-auto"
+        />
+        {isExpanded && (
+          <button
+            onClick={() => setIsExpanded(false)}
+            className="text-gray-500 hover:text-gray-700 p-2"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
+      </div>
       <div className="px-4 pb-4 h-full overflow-hidden">
         {children}
       </div>
