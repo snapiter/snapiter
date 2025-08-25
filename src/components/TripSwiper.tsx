@@ -61,11 +61,6 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
         slidesPerView={1}
         onSlideChange={handleSlideChange}
         className="h-full"
-        pagination={{
-          clickable: true,
-          bulletClass: 'swiper-pagination-bullet !bg-blue-500 !w-2 !h-2',
-          bulletActiveClass: 'swiper-pagination-bullet-active !bg-blue-600'
-        }}
       >
         {trips.map((trip) => (
           <SwiperSlide key={trip.id} className="h-full">
