@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, PanInfo, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, PanInfo } from 'framer-motion';
 import { ReactNode } from 'react';
 
 interface SlidingPanelProps {
@@ -10,32 +10,51 @@ interface SlidingPanelProps {
 
 export default function SlidingPanel({ children }: SlidingPanelProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [expandedHeight, setExpandedHeight] = useState(0);
 
-  // Heights in pixels
+  // handle SSR (window not defined)
+  useEffect(() => {
+    setExpandedHeight(window.innerHeight * 0.6);
+  }, []);
+
   const collapsedHeight = 80;
-  const expandedHeight = window.innerHeight * 0.6; // 60vh
+  const collapsedY = expandedHeight - collapsedHeight;
+  const expandedY = 0;
 
   return (
     <motion.div
       className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl z-50"
-      initial={{ y: collapsedHeight }}
-      animate={{ y: isExpanded ? 0 : expandedHeight - collapsedHeight }}
+      initial={{ y: collapsedY }}
+      animate={{ y: isExpanded ? expandedY : collapsedY }}
+      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       drag="y"
-      dragConstraints={{ top: 0, bottom: expandedHeight - collapsedHeight }}
+      dragConstraints={{ top: expandedY, bottom: collapsedY }}
       dragElastic={0.2}
       onDragEnd={(_, info: PanInfo) => {
-        // If user drags more than 50px up, expand
-        if (info.offset.y < -50) setIsExpanded(true);
-        else if (info.offset.y > 50) setIsExpanded(false);
+        // If drag was quick or passed halfway, expand/collapse
+        if (info.offset.y < -50 || info.velocity.y < -500) {
+          setIsExpanded(true);
+        } else if (info.offset.y > 50 || info.velocity.y > 500) {
+          setIsExpanded(false);
+        } else {
+          // Snap to closest state
+          const middle = collapsedY / 2;
+          setIsExpanded(info.point.y < middle);
+        }
       }}
     >
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 cursor-pointer">
+      {/* Handle bar */}
+      <div
+        className="flex items-center justify-between p-4 border-b border-gray-200 cursor-pointer"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
         <motion.div
           className="w-12 h-1 bg-gray-300 rounded-full mx-auto"
           whileTap={{ scale: 1.2 }}
-          onClick={() => setIsExpanded(!isExpanded)}
         />
       </div>
+
+      {/* Content */}
       <div className="px-4 pb-4 h-full overflow-y-auto">{children}</div>
     </motion.div>
   );
