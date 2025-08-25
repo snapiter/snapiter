@@ -31,10 +31,17 @@ interface TripSwiperProps {
 
 export default function TripSwiper({ trips, className = '', onTripChange }: TripSwiperProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [swiperInstance, setSwiperInstance] = useState<any>(null);
 
   const handleSlideChange = (swiper: any) => {
     setActiveIndex(swiper.activeIndex);
     onTripChange?.(swiper.activeIndex);
+  };
+
+  const goToSlide = (index: number) => {
+    if (swiperInstance) {
+      swiperInstance.slideTo(index);
+    }
   };
 
   return (
@@ -47,8 +54,9 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
           {trips.map((_, index) => (
             <div
               key={index}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                index === activeIndex ? 'bg-blue-500' : 'bg-gray-300'
+              onClick={() => goToSlide(index)}
+              className={`w-2 h-2 rounded-full transition-colors cursor-pointer hover:scale-110 ${
+                index === activeIndex ? 'bg-blue-500' : 'bg-gray-300 hover:bg-gray-400'
               }`}
             />
           ))}
@@ -60,6 +68,7 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
         spaceBetween={0}
         slidesPerView={1}
         onSlideChange={handleSlideChange}
+        onSwiper={setSwiperInstance}
         className="h-full"
       >
         {trips.map((trip) => (
