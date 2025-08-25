@@ -31,6 +31,15 @@ export default function SlidingPanel({ children }: SlidingPanelProps) {
       dragConstraints={{ top: expandedY, bottom: collapsedY }}
       dragElastic={0.2}
       onDragEnd={(_, info: PanInfo) => {
+        // Only respond to predominantly vertical gestures
+        const absOffsetX = Math.abs(info.offset.x);
+        const absOffsetY = Math.abs(info.offset.y);
+        
+        // If horizontal movement is greater than vertical, ignore the drag
+        if (absOffsetX > absOffsetY) {
+          return;
+        }
+        
         // If drag was quick or passed halfway, expand/collapse
         if (info.offset.y < -50 || info.velocity.y < -500) {
           setIsExpanded(true);
