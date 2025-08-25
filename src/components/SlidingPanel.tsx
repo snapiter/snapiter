@@ -11,39 +11,14 @@ interface SlidingPanelProps {
 export default function SlidingPanel({ children }: SlidingPanelProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   
-  const collapsedHeight = 80; // 5rem in pixels
-  const expandedHeight = window.innerHeight * 0.6; // 60vh
-  const dragThreshold = 50;
-
-  const handleDragEnd = (event: any, info: PanInfo) => {
-    const { offset, velocity } = info;
-    
-    // If dragged up significantly or with upward velocity, expand
-    if (offset.y < -dragThreshold || velocity.y < -500) {
-      setIsExpanded(true);
-    }
-    // If dragged down significantly or with downward velocity, collapse
-    else if (offset.y > dragThreshold || velocity.y > 500) {
-      setIsExpanded(false);
-    }
-    // Otherwise snap back to current state
-  };
 
   return (
     <motion.div
       className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl z-50"
-      style={{ height: isExpanded ? expandedHeight : collapsedHeight }}
-      animate={{ 
-        y: 0
-      }}
-      drag="y"
-      dragConstraints={{ top: isExpanded ? -(expandedHeight - collapsedHeight) : 0, bottom: 0 }}
-      dragElastic={0.1}
-      onDragEnd={handleDragEnd}
-      transition={{ type: "spring", damping: 30, stiffness: 300 }}
+      style={{ height: '60vh' }}
     >
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
-        <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto cursor-grab" />
+        <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto cursor-grab active:cursor-grabbing" />
         {isExpanded && (
           <button
             onClick={() => setIsExpanded(false)}
