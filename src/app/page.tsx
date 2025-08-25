@@ -1,6 +1,7 @@
 import MapView from '@/components/MapView';
 import SlidingPanel from '@/components/SlidingPanel';
 import TripSwiper from '@/components/TripSwiper';
+import DesktopTripView from '@/components/DesktopTripView';
 
 const mockTrips = [
   {
@@ -99,10 +100,8 @@ export default function Home() {
         <div className="flex-1 relative">
           <MapView className="h-full" />
         </div>
-        <div className="w-96 bg-white shadow-xl overflow-hidden">
-          <div className="p-6 h-full">
-            <TripSwiper trips={mockTrips} />
-          </div>
+        <div className="w-[600px] bg-white shadow-xl overflow-hidden">
+          <DesktopTripView trips={mockTrips} />
         </div>
       </div>
     </div>
