@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, PanInfo } from 'framer-motion';
+import { motion, PanInfo, useDragControls } from 'framer-motion';
 import { ReactNode } from 'react';
 
 interface SlidingPanelProps {
@@ -11,6 +11,7 @@ interface SlidingPanelProps {
 export default function SlidingPanel({ children }: SlidingPanelProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [expandedHeight, setExpandedHeight] = useState(0);
+  const dragControls = useDragControls();
 
   // handle SSR (window not defined)
   useEffect(() => {
@@ -28,24 +29,22 @@ export default function SlidingPanel({ children }: SlidingPanelProps) {
       animate={{ y: isExpanded ? expandedY : collapsedY }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       drag="y"
+      dragControls={dragControls}
+      dragListener={false} // prevents whole panel from being draggable
       dragConstraints={{ top: expandedY, bottom: collapsedY }}
       dragElastic={0.2}
       onDragEnd={(_, info: PanInfo) => {
-        // If drag was quick or passed halfway, expand/collapse
-        if (info.offset.y < -50 || info.velocity.y < -500) {
+        if (info.velocity.y < -500) {
           setIsExpanded(true);
-        } else if (info.offset.y > 50 || info.velocity.y > 500) {
+        } else if (info.velocity.y > 500) {
           setIsExpanded(false);
-        } else {
-          // Snap to closest state
-          const middle = collapsedY / 2;
-          setIsExpanded(info.point.y < middle);
         }
       }}
     >
       {/* Handle bar */}
       <div
-        className="flex items-center justify-between p-4 border-b border-gray-200 cursor-pointer"
+        className="flex items-center justify-between p-4 border-b border-gray-200 cursor-grab"
+        onPointerDown={(e) => dragControls.start(e)} // only this starts dragging
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <motion.div
@@ -54,7 +53,6 @@ export default function SlidingPanel({ children }: SlidingPanelProps) {
         />
       </div>
 
-      {/* Content */}
       <div className="px-4 pb-4 h-full overflow-y-auto">{children}</div>
     </motion.div>
   );
