@@ -10,7 +10,7 @@ This is a Next.js 15 frontend application for the Follow My Vessel project, buil
 - TypeScript (strict mode enabled)
 - Tailwind CSS v4
 - Biome for linting and formatting
-- MapLibre GL JS via @vis.gl/react-maplibre for interactive maps
+- MapLibre GL JS via react-map-gl for interactive maps
 - Swiper for carousel/slider components
 
 ## Development Commands
