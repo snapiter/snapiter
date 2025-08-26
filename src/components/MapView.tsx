@@ -16,8 +16,8 @@ console.log("MAPVIEW RENDER" + trips.length)
 
   const selectedTrip = useAtomValue(selectedTripAtom);
   const mapRef = useRef<MapRef | null>(null);
-
-  const [lineProgressIndex, setLineProgressIndex] = useState(1);
+  const animationRef = useRef<number | null>(null);
+  const markerRef = useRef<any>(null);
 
   const activePositions = selectedTrip?.positions ?? [];
 
@@ -42,33 +42,72 @@ console.log("MAPVIEW RENDER" + trips.length)
     );
   }, [activePositions]);
 
-  // Animate the dashed line
+  // Animate using MapLibre native animation
   useEffect(() => {
-
-
-
-    if (activePositions.length < 2) {
-      setLineProgressIndex(1);
+    if (!mapRef.current || !selectedTrip || activePositions.length < 2) {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
       return;
     }
 
-    setLineProgressIndex(1);
+    const map = mapRef.current.getMap();
+    const duration = selectedTrip.animationSpeed ?? 5000;
+    const startTime = Date.now();
+    
+    // Clean up previous animation
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+    }
 
-    const duration = selectedTrip?.animationSpeed ?? 5000;
-    const stepTime = duration / (activePositions.length - 1);
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const currentIndex = Math.floor(progress * (activePositions.length - 1)) + 1;
+      
+      if (currentIndex < activePositions.length) {
+        // Update the route source to show progress
+        const progressCoordinates = activePositions.slice(0, currentIndex + 1).map(p => [p.longitude, p.latitude]);
+        
+        if (map.getSource(`route-${selectedTrip.id}`)) {
+          const source = map.getSource(`route-${selectedTrip.id}`) as any;
+          source.setData({
+            type: 'FeatureCollection',
+            features: [{
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                type: 'LineString',
+                coordinates: progressCoordinates,
+              },
+            }],
+          });
+        }
 
-    let index = 1;
-    const interval = setInterval(() => {
-      index += 1;
-      if (index >= activePositions.length) {
-        clearInterval(interval);
-        index = activePositions.length - 1;
+        // Update marker position
+        if (markerRef.current && currentIndex > 0) {
+          const currentPos = activePositions[currentIndex];
+          markerRef.current.setLngLat([currentPos.longitude, currentPos.latitude]);
+        }
       }
-      setLineProgressIndex(index);
-    }, stepTime);
 
-    return () => clearInterval(interval);
-  }, [activePositions]);
+      if (progress < 1) {
+        animationRef.current = requestAnimationFrame(animate);
+      } else {
+        animationRef.current = null;
+      }
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+    };
+  }, [selectedTrip, activePositions]);
 
   return (
     <div className={className}>
@@ -89,11 +128,13 @@ console.log("MAPVIEW RENDER" + trips.length)
           const color = trip.color || '#3b82f6';
           const isSelected = trip.id === selectedTrip?.id;
 
-          const displayedCoordinates = isSelected
-            ? trip.positions.slice(0, lineProgressIndex + 1).map(p => [p.longitude, p.latitude])
+          // For non-selected trips, show full route immediately
+          // For selected trip, the animation will update the source dynamically
+          const coordinates = isSelected 
+            ? [trip.positions[0], trip.positions[1]].map(p => [p.longitude, p.latitude]) // Start with just 2 points
             : trip.positions.map(p => [p.longitude, p.latitude]);
 
-          if (displayedCoordinates.length < 2) return null;
+          if (coordinates.length < 2) return null;
 
           const routeData = {
             type: 'FeatureCollection' as const,
@@ -102,7 +143,7 @@ console.log("MAPVIEW RENDER" + trips.length)
               properties: {},
               geometry: {
                 type: 'LineString' as const,
-                coordinates: displayedCoordinates,
+                coordinates: coordinates,
               },
             }],
           };
@@ -125,7 +166,6 @@ console.log("MAPVIEW RENDER" + trips.length)
                   'line-width': 4,
                   'line-color': color,
                   'line-opacity': isSelected ? 1.0 : 0.2,
-                  // 'line-dasharray': [4, 2],
                 }}
               />
             </Source>
@@ -133,19 +173,19 @@ console.log("MAPVIEW RENDER" + trips.length)
         })}
 
         {/* Marker at the front of the animated line */}
-        {selectedTrip && lineProgressIndex > 0 && lineProgressIndex < activePositions.length && (
+        {selectedTrip && activePositions.length > 0 && (
           <Marker
-            longitude={activePositions[lineProgressIndex].longitude}
-            latitude={activePositions[lineProgressIndex].latitude}
+            ref={markerRef}
+            longitude={activePositions[0].longitude}
+            latitude={activePositions[0].latitude}
             anchor="center"
           >
             <img
               src="/assets/icons/van-passenger.svg"
               alt="car"
-              style={{ width: 32, height: 32, transform: 'translate(-10%, -10%)' }} // center the icon
+              style={{ width: 32, height: 32, transform: 'translate(-10%, -10%)' }}
             />
           </Marker>
-
         )}
       </Map>
     </div>
