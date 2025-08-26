@@ -145,7 +145,7 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
                 }}
                 paint={{
                   'line-width': 4,
-                  'line-opacity': isSelected ? 1.0 : 0.35,
+                  'line-opacity': isSelected ? 1.0 : 0.2,
                   'line-gradient': lineGradient as any,
                 }}
               />
