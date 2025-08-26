@@ -1,16 +1,16 @@
 'use client';
 
 import PhotoCarousel, { Photo } from './PhotoCarousel';
-import { type Trip } from '@/store/atoms';
-import { useMarkers } from '@/hooks/useApiData';
+import { type Trip, type Marker } from '@/store/atoms';
 
 interface TripDetailsProps {
   trip: Trip;
+  markers: Marker[];
+  markersLoading: boolean;
   className?: string;
 }
 
-export default function TripDetails({ trip, className = '' }: TripDetailsProps) {
-  const { markers, isLoading: markersLoading } = useMarkers(trip);
+export default function TripDetails({ trip, markers, markersLoading, className = '' }: TripDetailsProps) {
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -20,7 +20,7 @@ export default function TripDetails({ trip, className = '' }: TripDetailsProps) 
     });
   };
 
-  const photosFromMarkers: Photo[] = markers
+  const photosFromMarkers: Photo[] = (markers || [])
     .filter(marker => marker.hasThumbnail)
     .map(marker => ({
       id: marker.id,

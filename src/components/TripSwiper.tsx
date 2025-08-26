@@ -6,6 +6,7 @@ import { Pagination } from 'swiper/modules';
 import TripDetails from './TripDetails';
 import { useSetAtom } from 'jotai';
 import { selectedTripAtom, type Trip } from '@/store/atoms';
+import { useMarkers } from '@/hooks/useApiData';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -20,6 +21,9 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
   const [activeIndex, setActiveIndex] = useState(0);
   const [swiperInstance, setSwiperInstance] = useState<any>(null);
   const setSelectedTrip = useSetAtom(selectedTripAtom);
+  
+  // Load markers only for the currently active trip
+  const { markers = [], isLoading: markersLoading } = useMarkers(trips[activeIndex]);
 
   const handleSlideChange = (swiper: any) => {
     setActiveIndex(swiper.activeIndex);
@@ -57,9 +61,14 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
         onSwiper={setSwiperInstance}
         className="h-full"
       >
-        {trips.map((trip) => (
+        {trips.map((trip, index) => (
           <SwiperSlide key={trip.id} className="h-full">
-            <TripDetails trip={trip} className="h-full" />
+            <TripDetails 
+              trip={trip} 
+              markers={index === activeIndex ? markers : []}
+              markersLoading={index === activeIndex ? markersLoading : false}
+              className="h-full" 
+            />
           </SwiperSlide>
         ))}
       </Swiper>

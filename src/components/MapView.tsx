@@ -14,11 +14,11 @@ export default function MapView({ className }: MapViewProps) {
         initialViewState={{
           longitude: -74.006,
           latitude: 40.7128,
-          zoom: 12
+          zoom: 12,
         }}
         style={{ width: '100%', height: '100%' }}
-        mapStyle="https://demotiles.maplibre.org/style.json"
-        attributionControl={false}
+        mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
+        attributionControl={true}
       />
     </div>
   );
