@@ -48,7 +48,6 @@ export default function SlidingPanel({ children }: SlidingPanelProps) {
         }
       }}
     >
-      {/* Handle bar */}
       <div
         className="flex items-center justify-between p-4 border-b border-gray-200 cursor-grab"
         onPointerDown={(e) => dragControls.start(e)} // only this starts dragging

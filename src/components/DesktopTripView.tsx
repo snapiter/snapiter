@@ -3,21 +3,8 @@
 import { useState } from 'react';
 import TripSidebar from './TripSidebar';
 import TripDetails from './TripDetails';
-
-interface Trip {
-  id: string;
-  title: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  distance: string;
-  photos: Array<{
-    id: string;
-    url: string;
-    alt: string;
-    caption?: string;
-  }>;
-}
+import { useSetAtom } from 'jotai';
+import { selectedTripAtom, type Trip } from '@/store/atoms';
 
 interface DesktopTripViewProps {
   trips: Trip[];
@@ -25,13 +12,29 @@ interface DesktopTripViewProps {
 
 export default function DesktopTripView({ trips }: DesktopTripViewProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const setSelectedTrip = useSetAtom(selectedTripAtom);
+
+  const handleTripSelect = (index: number) => {
+    setActiveIndex(index);
+    setSelectedTrip(trips[index] || null);
+  };
+
+  if (trips.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-center text-gray-500">
+          <p>No trips found for this vessel</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-full">
       <TripSidebar 
         trips={trips} 
         activeIndex={activeIndex} 
-        onTripSelect={setActiveIndex} 
+        onTripSelect={handleTripSelect} 
       />
       <div className="flex-1 p-6 overflow-y-auto">
         <TripDetails trip={trips[activeIndex]} className="h-full" />

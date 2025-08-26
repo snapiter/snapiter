@@ -4,24 +4,11 @@ import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import TripDetails from './TripDetails';
+import { useSetAtom } from 'jotai';
+import { selectedTripAtom, type Trip } from '@/store/atoms';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
-
-interface Trip {
-  id: string;
-  title: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  distance: string;
-  photos: Array<{
-    id: string;
-    url: string;
-    alt: string;
-    caption?: string;
-  }>;
-}
 
 interface TripSwiperProps {
   trips: Trip[];
@@ -32,9 +19,11 @@ interface TripSwiperProps {
 export default function TripSwiper({ trips, className = '', onTripChange }: TripSwiperProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [swiperInstance, setSwiperInstance] = useState<any>(null);
+  const setSelectedTrip = useSetAtom(selectedTripAtom);
 
   const handleSlideChange = (swiper: any) => {
     setActiveIndex(swiper.activeIndex);
+    setSelectedTrip(trips[swiper.activeIndex] || null);
     onTripChange?.(swiper.activeIndex);
   };
 

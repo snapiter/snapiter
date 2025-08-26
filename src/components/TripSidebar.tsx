@@ -1,13 +1,6 @@
 'use client';
 
-interface Trip {
-  id: string;
-  title: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  distance: string;
-}
+import { type Trip } from '@/store/atoms';
 
 interface TripSidebarProps {
   trips: Trip[];
@@ -16,6 +9,14 @@ interface TripSidebarProps {
 }
 
 export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSidebarProps) {
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: '2-digit'
+    });
+  };
+
   return (
     <div className="w-64 bg-gray-50 border-r border-gray-200 h-full overflow-y-auto">
       <div className="p-4 border-b border-gray-200">
@@ -34,16 +35,24 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
                 : 'bg-transparent'
             }`}
           >
-            <h3 className={`font-medium truncate ${
-              index === activeIndex ? 'text-blue-600' : 'text-gray-900'
-            }`}>
-              {trip.title}
-            </h3>
+            <div className="flex items-center justify-between mb-1">
+              <h3 className={`font-medium truncate ${
+                index === activeIndex ? 'text-blue-600' : 'text-gray-900'
+              }`}>
+                {trip.title}
+              </h3>
+              {trip.color && (
+                <div 
+                  className="w-3 h-3 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: trip.color }}
+                />
+              )}
+            </div>
             <p className="text-sm text-gray-500 mt-1">
-              {trip.startDate} - {trip.endDate}
+              {formatDate(trip.startDate)} - {formatDate(trip.endDate)}
             </p>
-            <p className="text-sm text-gray-400 mt-1">
-              {trip.distance}
+            <p className="text-xs text-gray-400 mt-1">
+              {trip.positionType}
             </p>
           </button>
         ))}
