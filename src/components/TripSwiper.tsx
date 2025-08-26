@@ -35,11 +35,8 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
 
   return (
     <div className={`w-full h-full ${className}`}>
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-gray-900">
-          Trip {activeIndex + 1} of {trips.length}
-        </h2>
-        <div className="flex space-x-1">
+      <div className="absolute right-0 top-10">
+        <div className="flex space-x-1 pr-3 flex-shrink-0">
           {trips.map((_, index) => (
             <div
               key={index}
