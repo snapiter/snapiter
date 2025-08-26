@@ -51,6 +51,8 @@ export function usePositions() {
   const [isLoading, setIsLoading] = useAtom(isLoadingPositionsAtom);
   const setError = useSetAtom(errorAtom);
 
+  console.log('usePositions - selectedTrip:', selectedTrip?.title, 'slug:', selectedTrip?.slug);
+
   const loadPositions = useCallback(async (tripSlug?: string) => {
     if (!vesselId || !tripSlug) return;
     

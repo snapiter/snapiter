@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import TripDetails from './TripDetails';
 import { useSetAtom } from 'jotai';
 import { selectedTripAtom, type Trip } from '@/store/atoms';
-import { useMarkers } from '@/hooks/useApiData';
+import { useMarkers, usePositions } from '@/hooks/useApiData';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -14,7 +14,7 @@ import 'swiper/css/pagination';
 interface TripSwiperProps {
   trips: Trip[];
   className?: string;
-  onTripChange?: (tripIndex: number) => void;
+  onTripChange?: (tripIndex: number, positions?: any[]) => void;
 }
 
 export default function TripSwiper({ trips, className = '', onTripChange }: TripSwiperProps) {
@@ -22,14 +22,33 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
   const [swiperInstance, setSwiperInstance] = useState<any>(null);
   const setSelectedTrip = useSetAtom(selectedTripAtom);
   
-  // Load markers only for the currently active trip
+  // Load data only for the currently active trip
   const { markers = [], isLoading: markersLoading } = useMarkers(trips[activeIndex]);
+  const { positions = [], isLoading: positionsLoading } = usePositions();
+  
+  console.log('TripSwiper - positions:', positions.length, 'loading:', positionsLoading, 'activeTrip:', trips[activeIndex]?.title);
 
   const handleSlideChange = (swiper: any) => {
     setActiveIndex(swiper.activeIndex);
     setSelectedTrip(trips[swiper.activeIndex] || null);
-    onTripChange?.(swiper.activeIndex);
+    onTripChange?.(swiper.activeIndex, positions);
   };
+
+  // Set initial trip when trips are loaded
+  useEffect(() => {
+    if (trips.length > 0 && !trips[activeIndex]) {
+      setSelectedTrip(trips[0]);
+    } else if (trips[activeIndex]) {
+      setSelectedTrip(trips[activeIndex]);
+    }
+  }, [trips, activeIndex, setSelectedTrip]);
+
+  // Trigger callback when positions change for current trip
+  useEffect(() => {
+    if (positions.length > 0) {
+      onTripChange?.(activeIndex, positions);
+    }
+  }, [positions, activeIndex, onTripChange]);
 
   const goToSlide = (index: number) => {
     if (swiperInstance) {
