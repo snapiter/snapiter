@@ -46,8 +46,7 @@ export default function Home() {
         <SlidingPanel>
           {trips.length === 0 ? (
             <div className="p-4 text-center">
-              <p className="text-gray-600">No trips found for this vessel</p>
-              <p className="text-xs text-gray-400 mt-1">Vessel ID: {trips.length === 0 ? 'Loading...' : 'Loaded'}</p>
+              <p className="text-gray-600">No trips found.</p>
             </div>
           ) : (
             <TripSwiper trips={trips} />

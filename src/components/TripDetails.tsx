@@ -11,7 +11,6 @@ interface TripDetailsProps {
 }
 
 export default function TripDetails({ trip, markers, markersLoading, className = '' }: TripDetailsProps) {
-
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',

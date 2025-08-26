@@ -15,8 +15,6 @@ interface MapViewProps {
 }
 
 export default function MapView({ className, tripsWithPositions = [] }: MapViewProps) {
-  console.log('MapView received trips:', tripsWithPositions.length);
-  
   // Calculate bounds to fit all routes
   const allPositions = tripsWithPositions.flatMap(t => t.positions);
   const bounds = allPositions.length > 0 ? {
@@ -24,8 +22,8 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
     latitude: allPositions[0].latitude,
     zoom: 8,
   } : {
-    longitude: -74.006,
-    latitude: 40.7128,
+    longitude: 5.12142010,
+    latitude: 52.09073740,
     zoom: 12,
   };
 
@@ -60,7 +58,7 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
                 paint={{
                   'line-color': tripData.trip.color || '#3b82f6',
                   'line-width': 3,
-                  'line-opacity': 0.8
+                  'line-opacity': 0.4
                 }}
               />
             </Source>
