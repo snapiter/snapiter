@@ -7,12 +7,13 @@ import TripSwiper from '@/components/TripSwiper';
 import DesktopTripView from '@/components/DesktopTripView';
 import { useTrips, useAllTripsWithPositions } from '@/hooks/useApiData';
 import { useAtomValue } from 'jotai';
-import { errorAtom } from '@/store/atoms';
+import { errorAtom, bottomPanelExpandedAtom } from '@/store/atoms';
 
 export default function Home() {
   const { trips, isLoading } = useTrips();
   const { tripsWithPositions, isLoading: positionsLoading } = useAllTripsWithPositions(trips);
   const error = useAtomValue(errorAtom);
+  const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
 
   if (error) {
     return (
@@ -42,7 +43,12 @@ export default function Home() {
     <div className="relative h-screen w-full overflow-hidden">
       {/* Mobile Layout */}
       <div className="md:hidden h-full flex flex-col">
-        <MapView className="flex-1" tripsWithPositions={tripsWithPositions} />
+        <MapView 
+          className={`transition-all duration-300 ${
+            isPanelExpanded ? 'h-[40vh]' : 'h-[calc(100vh-70px)]'
+          }`} 
+          tripsWithPositions={tripsWithPositions} 
+        />
         <SlidingPanel>
           {trips.length === 0 ? (
             <div className="p-4 text-center">
