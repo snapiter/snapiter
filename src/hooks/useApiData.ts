@@ -10,7 +10,8 @@ import {
   isLoadingPositionsAtom,
   isLoadingMarkersAtom,
   errorAtom,
-  Trip
+  Trip,
+  Position
 } from '@/store/atoms';
 import { fetchTrips, fetchPositions, fetchTripMarkers } from '@/services/api';
 
@@ -125,7 +126,7 @@ export function useAllTripsWithPositions(trips: Trip[]) {
       const promises = trips.map(async (trip) => {
         try {
           const positions = await fetchPositions(vesselId, trip.slug);
-          return { trip, positions };
+          return { trip, positions: positions.toReversed() };
         } catch (error) {
           console.error(`Failed to load positions for trip ${trip.title}:`, error);
           return { trip, positions: [] };
