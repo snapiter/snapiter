@@ -41,8 +41,8 @@ export default function Home() {
   return (
     <div className="relative h-screen w-full overflow-hidden">
       {/* Mobile Layout */}
-      <div className="md:hidden h-full">
-        <MapView className="absolute inset-0" tripsWithPositions={tripsWithPositions} />
+      <div className="md:hidden h-full flex flex-col">
+        <MapView className="flex-1" tripsWithPositions={tripsWithPositions} />
         <SlidingPanel>
           {trips.length === 0 ? (
             <div className="p-4 text-center">

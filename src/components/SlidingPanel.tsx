@@ -4,13 +4,15 @@ import { useState, useEffect } from 'react';
 import { motion, PanInfo, useDragControls } from 'framer-motion';
 import { ReactNode } from 'react';
 import { useOutsideClick } from '@/hooks/useOutsideClick';
+import { useAtom } from 'jotai';
+import { bottomPanelExpandedAtom } from '@/store/atoms';
 
 interface SlidingPanelProps {
   children: ReactNode;
 }
 
 export default function SlidingPanel({ children }: SlidingPanelProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useAtom(bottomPanelExpandedAtom);
   const [expandedHeight, setExpandedHeight] = useState(0);
   const dragControls = useDragControls();
   

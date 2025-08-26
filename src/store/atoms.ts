@@ -60,3 +60,5 @@ export const isLoadingPositionsAtom = atom<boolean>(false);
 export const isLoadingMarkersAtom = atom<boolean>(false);
 
 export const errorAtom = atom<string | null>(null);
+
+export const bottomPanelExpandedAtom = atom<boolean>(false);

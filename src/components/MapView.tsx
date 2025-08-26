@@ -2,7 +2,7 @@
 
 import Map, { Source, Layer, MapRef, Marker } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { selectedTripAtom, type Position, type Trip } from '@/store/atoms';
+import { selectedTripAtom, bottomPanelExpandedAtom, type Position, type Trip } from '@/store/atoms';
 import { useAtomValue } from 'jotai';
 import { useRef, useEffect, useState } from 'react';
 
@@ -18,9 +18,18 @@ interface MapViewProps {
 
 export default function MapView({ className, tripsWithPositions = [] }: MapViewProps) {
   const selectedTrip = useAtomValue(selectedTripAtom);
+  const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
   const mapRef = useRef<MapRef | null>(null);
 
   const [lineProgressIndex, setLineProgressIndex] = useState(1);
+  const [windowHeight, setWindowHeight] = useState(0);
+
+  useEffect(() => {
+    setWindowHeight(window.innerHeight);
+    const handleResize = () => setWindowHeight(window.innerHeight);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Get positions of the selected trip
   const selectedTripData = selectedTrip
@@ -75,6 +84,12 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
     return () => clearInterval(interval);
   }, [selectedTripData, activePositions]);
 
+  const mapHeight = windowHeight === 0 
+    ? '100%' 
+    : isPanelExpanded 
+      ? `calc(100vh - ${windowHeight * 0.6}px)` 
+      : 'calc(100vh - 70px)';
+
   return (
     <div className={className}>
       <Map
@@ -84,7 +99,11 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
           latitude: 52.09073740,
           zoom: 12,
         }}
-        style={{ width: '100%', height: '100%' }}
+        style={{ 
+          width: '100%', 
+          height: mapHeight,
+          transition: 'height 0.3s ease-in-out'
+        }}
         mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
         attributionControl={true}
       >
