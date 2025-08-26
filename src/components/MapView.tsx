@@ -12,8 +12,6 @@ interface MapViewProps {
 }
 
 export default function MapView({ className, trips = [] }: MapViewProps) {
-console.log("MAPVIEW RENDER" + trips.length)
-
   const selectedTrip = useAtomValue(selectedTripAtom);
   const mapRef = useRef<MapRef | null>(null);
   const animationRef = useRef<number | null>(null);
@@ -128,11 +126,9 @@ console.log("MAPVIEW RENDER" + trips.length)
           const color = trip.color || '#3b82f6';
           const isSelected = trip.id === selectedTrip?.id;
 
-          // For non-selected trips, show full route immediately
-          // For selected trip, the animation will update the source dynamically
-          const coordinates = isSelected 
-            ? [trip.positions[0], trip.positions[1]].map(p => [p.longitude, p.latitude]) // Start with just 2 points
-            : trip.positions.map(p => [p.longitude, p.latitude]);
+          // Show full route for all trips initially
+          // Animation will update the selected trip's source dynamically
+          const coordinates = trip.positions.map(p => [p.longitude, p.latitude]);
 
           if (coordinates.length < 2) return null;
 
@@ -165,7 +161,7 @@ console.log("MAPVIEW RENDER" + trips.length)
                 paint={{
                   'line-width': 4,
                   'line-color': color,
-                  'line-opacity': isSelected ? 1.0 : 0.2,
+                  'line-opacity': isSelected ? 1.0 : 0.3,
                 }}
               />
             </Source>

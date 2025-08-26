@@ -25,8 +25,6 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
   const markers = trips[activeIndex]?.markers || [];
   const positions = trips[activeIndex]?.positions || [];
   
-  console.log('TripSwiper - positions:', positions.length, 'activeTrip:', trips[activeIndex]?.title);
-
   const handleSlideChange = (swiper: any) => {
     setActiveIndex(swiper.activeIndex);
     setSelectedTrip(trips[swiper.activeIndex] || null);
@@ -84,7 +82,6 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
             <TripDetails 
               trip={trip} 
               markers={index === activeIndex ? markers : []}
-              markersLoading={false}
               className="h-full" 
             />
           </SwiperSlide>
