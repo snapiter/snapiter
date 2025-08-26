@@ -2,7 +2,8 @@
 
 import Map, { Source, Layer } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { type Position, type Trip } from '@/store/atoms';
+import { selectedTripAtom, type Position, type Trip } from '@/store/atoms';
+import { useAtomValue } from 'jotai';
 
 interface TripWithPositions {
   trip: Trip;
@@ -15,7 +16,10 @@ interface MapViewProps {
 }
 
 export default function MapView({ className, tripsWithPositions = [] }: MapViewProps) {
-  // Calculate bounds to fit all routes
+  // Calculate bounds to fit all routes 
+
+  const selectedTrip = useAtomValue(selectedTripAtom);
+
   const allPositions = tripsWithPositions.flatMap(t => t.positions);
   const bounds = allPositions.length > 0 ? {
     longitude: allPositions[0].longitude,
@@ -58,7 +62,7 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
                 paint={{
                   'line-color': tripData.trip.color || '#3b82f6',
                   'line-width': 3,
-                  'line-opacity': 0.4
+                  'line-opacity': tripData.trip.id === selectedTrip?.id ? 1.0 : 0.2
                 }}
               />
             </Source>
