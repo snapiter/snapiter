@@ -68,8 +68,8 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
         // Update the route source to show progress
         const progressCoordinates = activePositions.slice(0, currentIndex + 1).map(p => [p.longitude, p.latitude]);
         
-        if (map.getSource(`route-${selectedTrip.id}`)) {
-          const source = map.getSource(`route-${selectedTrip.id}`) as any;
+        if (map.getSource(`route-${selectedTrip.slug}`)) {
+          const source = map.getSource(`route-${selectedTrip.slug}`) as any;
           source.setData({
             type: 'FeatureCollection',
             features: [{
@@ -124,7 +124,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
           if (trip.positions.length < 2) return null;
 
           const color = trip.color || '#3b82f6';
-          const isSelected = trip.id === selectedTrip?.id;
+          const isSelected = trip.slug === selectedTrip?.slug;
 
           // Show full route for all trips initially
           // Animation will update the selected trip's source dynamically
@@ -146,13 +146,13 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
 
           return (
             <Source
-              key={`${trip.id}-${trip.slug}`}
-              id={`route-${trip.id}`}
+              key={trip.slug}
+              id={`route-${trip.slug}`}
               type="geojson"
               data={routeData}
             >
               <Layer
-                id={`route-line-${trip.id}`}
+                id={`route-line-${trip.slug}`}
                 type="line"
                 layout={{
                   'line-cap': 'round',
