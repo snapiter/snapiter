@@ -10,6 +10,7 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "jotai": "^2.13.1",
     "maplibre-gl": "^5.7.0",
     "motion": "^12.23.12",
     "next": "15.5.0",
