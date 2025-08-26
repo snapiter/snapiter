@@ -23,7 +23,7 @@ export default function SlidingPanel({ children }: SlidingPanelProps) {
     setExpandedHeight(window.innerHeight * 0.6);
   }, []);
 
-  const collapsedHeight = 80;
+  const collapsedHeight = 70;
   const expandedY = 0;
   const collapsedY = expandedHeight - collapsedHeight;
 
