@@ -142,9 +142,15 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
           <Marker
             longitude={activePositions[lineProgressIndex].longitude}
             latitude={activePositions[lineProgressIndex].latitude}
-            color="red"
             anchor="center"
-          />
+          >
+            <img
+              src="/assets/icons/van-passenger.svg"
+              alt="car"
+              style={{ width: 32, height: 32, transform: 'translate(-10%, -10%)' }} // center the icon
+            />
+          </Marker>
+
         )}
       </Map>
     </div>
