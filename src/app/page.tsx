@@ -14,7 +14,10 @@ export default function Home() {
   const error = useAtomValue(errorAtom);
   const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
   
-  const trips = useMemo(() => website?.trips || [], [website]);
+  const trips = useMemo(() => {
+    const tripsArray = website?.trips || [];
+    return tripsArray.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
+  }, [website]);
 
 
   if (error) {
