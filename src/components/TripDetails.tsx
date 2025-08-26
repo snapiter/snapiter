@@ -1,9 +1,8 @@
 'use client';
 
-import PhotoCarousel from './PhotoCarousel';
+import PhotoCarousel, { Photo } from './PhotoCarousel';
 import { type Trip } from '@/store/atoms';
 import { useMarkers } from '@/hooks/useApiData';
-import { useEffect } from 'react';
 
 interface TripDetailsProps {
   trip: Trip;
@@ -11,7 +10,7 @@ interface TripDetailsProps {
 }
 
 export default function TripDetails({ trip, className = '' }: TripDetailsProps) {
-  const { markers, isLoading: markersLoading } = useMarkers();
+  const { markers, isLoading: markersLoading } = useMarkers(trip);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -21,16 +20,15 @@ export default function TripDetails({ trip, className = '' }: TripDetailsProps) 
     });
   };
 
-  const photosFromMarkers = markers
+  const photosFromMarkers: Photo[] = markers
     .filter(marker => marker.hasThumbnail)
     .map(marker => ({
       id: marker.id,
-      url: `/api/marker/${marker.markerId}/thumbnail`, // Assuming thumbnail endpoint
+      url: `https://cache.partypieps.nl/marker/${marker.markerId}/thumbnail/500x500`,
       alt: marker.title || 'Marker photo',
       caption: marker.description
     }));
 
-  const allPhotos = [...(trip.photos || []), ...photosFromMarkers];
 
   return (
     <div className={`h-full overflow-y-auto ${className}`}>
@@ -57,34 +55,9 @@ export default function TripDetails({ trip, className = '' }: TripDetailsProps) 
         </div>
       )}
 
-      {allPhotos.length > 0 && (
+      {photosFromMarkers.length > 0 && (
         <div className="mb-4">
-          <h3 className="text-lg font-semibold mb-3">Photos ({allPhotos.length})</h3>
-          <PhotoCarousel photos={allPhotos} />
-        </div>
-      )}
-
-      {markers.length > 0 && (
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold mb-3">Markers ({markers.length})</h3>
-          <div className="space-y-2 max-h-40 overflow-y-auto">
-            {markers.slice(0, 5).map(marker => (
-              <div key={marker.id} className="p-2 bg-gray-50 rounded text-sm">
-                <div className="font-medium">{marker.title}</div>
-                {marker.description && (
-                  <div className="text-gray-600 text-xs mt-1">{marker.description}</div>
-                )}
-                <div className="text-gray-500 text-xs mt-1">
-                  {formatDate(marker.createdAt)}
-                </div>
-              </div>
-            ))}
-            {markers.length > 5 && (
-              <div className="text-xs text-gray-500 text-center py-1">
-                ... and {markers.length - 5} more
-              </div>
-            )}
-          </div>
+          <PhotoCarousel photos={photosFromMarkers} />
         </div>
       )}
     </div>

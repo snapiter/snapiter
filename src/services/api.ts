@@ -62,7 +62,7 @@ export async function fetchMarkers(
   if (untilDate) {
     params.set('untilDate', untilDate);
   }
-  
+
   return fetchApi<Marker[]>(`/public/vessel/${vesselId}/markers?${params}`);
 }
 

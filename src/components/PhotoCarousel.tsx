@@ -8,7 +8,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
-interface Photo {
+export interface Photo {
   id: string;
   url: string;
   alt: string;
@@ -19,7 +19,6 @@ interface PhotoCarouselProps {
   photos: Photo[];
   className?: string;
 }
-
 export default function PhotoCarousel({ photos, className = '' }: PhotoCarouselProps) {
   return (
     <div className={`w-full ${className}`}>
@@ -27,11 +26,6 @@ export default function PhotoCarousel({ photos, className = '' }: PhotoCarouselP
         modules={[Pagination, Navigation]}
         spaceBetween={10}
         slidesPerView={1}
-        pagination={{ 
-          clickable: true,
-          bulletClass: 'swiper-pagination-bullet !bg-blue-500',
-          bulletActiveClass: 'swiper-pagination-bullet-active !bg-blue-600'
-        }}
         navigation={true}
         className="h-full rounded-lg"
       >

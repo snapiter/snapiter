@@ -9,7 +9,8 @@ import {
   isLoadingTripsAtom,
   isLoadingPositionsAtom,
   isLoadingMarkersAtom,
-  errorAtom
+  errorAtom,
+  Trip
 } from '@/store/atoms';
 import { fetchTrips, fetchPositions, fetchTripMarkers } from '@/services/api';
 
@@ -27,7 +28,7 @@ export function useTrips() {
     
     try {
       const tripsData = await fetchTrips(vesselId);
-      setTrips(tripsData);
+      setTrips(tripsData.toReversed());
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Failed to load trips');
       console.error('Error loading trips:', error);
@@ -75,22 +76,20 @@ export function usePositions() {
 
   return { positions, isLoading, loadPositions };
 }
-
-export function useMarkers() {
+export function useMarkers(trip?: Trip) {
   const vesselId = useAtomValue(vesselIdAtom);
-  const selectedTrip = useAtomValue(selectedTripAtom);
   const [markers, setMarkers] = useAtom(markersAtom);
   const [isLoading, setIsLoading] = useAtom(isLoadingMarkersAtom);
   const setError = useSetAtom(errorAtom);
 
-  const loadMarkers = useCallback(async (trip?: typeof selectedTrip) => {
-    if (!vesselId || !trip) return;
+  const loadMarkers = useCallback(async (t?: Trip) => {
+    if (!vesselId || !t) return;
     
     setIsLoading(true);
     setError(null);
     
     try {
-      const markersData = await fetchTripMarkers(vesselId, trip);
+      const markersData = await fetchTripMarkers(vesselId, t);
       setMarkers(markersData);
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Failed to load markers');
@@ -101,13 +100,12 @@ export function useMarkers() {
   }, [vesselId, setMarkers, setIsLoading, setError]);
 
   useEffect(() => {
-    if (selectedTrip) {
-      loadMarkers(selectedTrip);
-    }
-  }, [selectedTrip, loadMarkers]);
+    if (trip) loadMarkers(trip);
+  }, [trip, loadMarkers]);
 
   return { markers, isLoading, loadMarkers };
 }
+
 
 export function useVesselConfig() {
   const vesselId = useAtomValue(vesselIdAtom);
