@@ -87,8 +87,8 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
   const mapHeight = windowHeight === 0 
     ? '100%' 
     : isPanelExpanded 
-      ? `calc(100vh - ${windowHeight * 0.6}px)` 
-      : 'calc(100vh - 70px)';
+      ? `calc(100vh - ${windowHeight * 0.6}px + 40px)` 
+      : 'calc(100vh - 40px)';
 
   return (
     <div className={className}>
@@ -102,7 +102,6 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
         style={{ 
           width: '100%', 
           height: mapHeight,
-          transition: 'height 0.3s ease-in-out'
         }}
         mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
         attributionControl={true}
