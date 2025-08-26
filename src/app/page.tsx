@@ -1,19 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import MapView from '@/components/MapView';
 import SlidingPanel from '@/components/SlidingPanel';
 import TripSwiper from '@/components/TripSwiper';
 import DesktopTripView from '@/components/DesktopTripView';
-import { useTrips, useAllTripsWithPositions } from '@/hooks/useApiData';
+import { useWebsite } from '@/hooks/useApiData';
 import { useAtomValue } from 'jotai';
 import { errorAtom, bottomPanelExpandedAtom } from '@/store/atoms';
 
 export default function Home() {
-  const { trips, isLoading } = useTrips();
-  const { tripsWithPositions, isLoading: positionsLoading } = useAllTripsWithPositions(trips);
+  const { website, isLoading: websiteLoading } = useWebsite();
   const error = useAtomValue(errorAtom);
   const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
+  
+  const trips = useMemo(() => website?.trips || [], [website]);
+
 
   if (error) {
     return (
@@ -26,18 +28,19 @@ export default function Home() {
     );
   }
 
-  if (isLoading || positionsLoading) {
+  if (websiteLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">
-            {isLoading ? 'Loading trips...' : 'Loading routes...'}
-          </p>
+          <p className="text-gray-600">Loading website...</p>
         </div>
       </div>
     );
   }
+
+  console.log("PAGE RENDER")
+
 
   return (
     <div className="relative h-screen w-full overflow-hidden">
@@ -47,7 +50,7 @@ export default function Home() {
           className={`transition-all duration-300 ${
             isPanelExpanded ? 'h-[calc(40vh+36px)]' : 'h-[calc(100vh-36px)]'
           }`} 
-          tripsWithPositions={tripsWithPositions} 
+          trips={trips}
         />
         <SlidingPanel>
           {trips.length === 0 ? (
@@ -63,7 +66,7 @@ export default function Home() {
       {/* Desktop Layout */}
       <div className="hidden md:flex h-full">
         <div className="flex-1 relative">
-          <MapView className="h-full" tripsWithPositions={tripsWithPositions} />
+          <MapView className="h-full" trips={trips} />
         </div>
         <div className="w-[600px] bg-white shadow-xl overflow-hidden">
           <DesktopTripView trips={trips} />

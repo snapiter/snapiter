@@ -1,6 +1,17 @@
 import { atom } from 'jotai';
 import { config } from '@/config/config';
 
+
+export interface Website {
+  vesselId: string;
+  shipName: string;
+  websiteTitle: string;
+  website: string;
+  icon: string;
+  pageType: string;
+  trips: Trip[];
+}
+
 export interface Trip {
   id: string;
   vesselId: string;
@@ -14,6 +25,8 @@ export interface Trip {
   color?: string;
   animationSpeed?: number;
   photos?: Photo[];
+  positions: Position[];
+  markers: Marker[];
 }
 
 export interface Position {
@@ -62,3 +75,6 @@ export const isLoadingMarkersAtom = atom<boolean>(false);
 export const errorAtom = atom<string | null>(null);
 
 export const bottomPanelExpandedAtom = atom<boolean>(false);
+
+export const websiteAtom = atom<Website | null>(null);
+export const isLoadingWebsiteAtom = atom<boolean>(false);

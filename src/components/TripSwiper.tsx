@@ -6,7 +6,6 @@ import { Pagination } from 'swiper/modules';
 import TripDetails from './TripDetails';
 import { useSetAtom } from 'jotai';
 import { selectedTripAtom, type Trip } from '@/store/atoms';
-import { useMarkers, usePositions } from '@/hooks/useApiData';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -22,11 +21,11 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
   const [swiperInstance, setSwiperInstance] = useState<any>(null);
   const setSelectedTrip = useSetAtom(selectedTripAtom);
   
-  // Load data only for the currently active trip
-  const { markers = [], isLoading: markersLoading } = useMarkers(trips[activeIndex]);
-  const { positions = [], isLoading: positionsLoading } = usePositions();
+  // Get data directly from the active trip
+  const markers = trips[activeIndex]?.markers || [];
+  const positions = trips[activeIndex]?.positions || [];
   
-  console.log('TripSwiper - positions:', positions.length, 'loading:', positionsLoading, 'activeTrip:', trips[activeIndex]?.title);
+  console.log('TripSwiper - positions:', positions.length, 'activeTrip:', trips[activeIndex]?.title);
 
   const handleSlideChange = (swiper: any) => {
     setActiveIndex(swiper.activeIndex);
@@ -81,11 +80,11 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
         className="h-full"
       >
         {trips.map((trip, index) => (
-          <SwiperSlide key={trip.id} className="h-full">
+          <SwiperSlide key={`${trip.id}-${trip.slug}`} className="h-full">
             <TripDetails 
               trip={trip} 
               markers={index === activeIndex ? markers : []}
-              markersLoading={index === activeIndex ? markersLoading : false}
+              markersLoading={false}
               className="h-full" 
             />
           </SwiperSlide>

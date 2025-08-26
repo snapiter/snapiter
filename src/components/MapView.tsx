@@ -6,28 +6,20 @@ import { selectedTripAtom, type Position, type Trip } from '@/store/atoms';
 import { useAtomValue } from 'jotai';
 import { useRef, useEffect, useState } from 'react';
 
-interface TripWithPositions {
-  trip: Trip;
-  positions: Position[];
-}
-
 interface MapViewProps {
   className?: string;
-  tripsWithPositions?: TripWithPositions[];
+  trips?: Trip[];
 }
 
-export default function MapView({ className, tripsWithPositions = [] }: MapViewProps) {
+export default function MapView({ className, trips = [] }: MapViewProps) {
+console.log("MAPVIEW RENDER" + trips.length)
+
   const selectedTrip = useAtomValue(selectedTripAtom);
   const mapRef = useRef<MapRef | null>(null);
 
   const [lineProgressIndex, setLineProgressIndex] = useState(1);
 
-  // Get positions of the selected trip
-  const selectedTripData = selectedTrip
-    ? tripsWithPositions.find(t => t.trip.id === selectedTrip.id)
-    : null;
-
-  const activePositions = selectedTripData?.positions ?? [];
+  const activePositions = selectedTrip?.positions ?? [];
 
   // Fit map bounds when positions change
   useEffect(() => {
@@ -52,14 +44,17 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
 
   // Animate the dashed line
   useEffect(() => {
-    if (!selectedTripData || activePositions.length < 2) {
+
+
+
+    if (activePositions.length < 2) {
       setLineProgressIndex(1);
       return;
     }
 
     setLineProgressIndex(1);
 
-    const duration = selectedTripData.trip.animationSpeed ?? 5000;
+    const duration = selectedTrip?.animationSpeed ?? 5000;
     const stepTime = duration / (activePositions.length - 1);
 
     let index = 1;
@@ -73,7 +68,7 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
     }, stepTime);
 
     return () => clearInterval(interval);
-  }, [selectedTripData, activePositions]);
+  }, [activePositions]);
 
   return (
     <div className={className}>
@@ -88,15 +83,15 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
         mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
         attributionControl={true}
       >
-        {tripsWithPositions.map(tripData => {
-          if (tripData.positions.length < 2) return null;
+        {trips.map(trip => {
+          if (trip.positions.length < 2) return null;
 
-          const color = tripData.trip.color || '#3b82f6';
-          const isSelected = tripData.trip.id === selectedTrip?.id;
+          const color = trip.color || '#3b82f6';
+          const isSelected = trip.id === selectedTrip?.id;
 
           const displayedCoordinates = isSelected
-            ? tripData.positions.slice(0, lineProgressIndex + 1).map(p => [p.longitude, p.latitude])
-            : tripData.positions.map(p => [p.longitude, p.latitude]);
+            ? trip.positions.slice(0, lineProgressIndex + 1).map(p => [p.longitude, p.latitude])
+            : trip.positions.map(p => [p.longitude, p.latitude]);
 
           if (displayedCoordinates.length < 2) return null;
 
@@ -114,13 +109,13 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
 
           return (
             <Source
-              key={tripData.trip.id}
-              id={`route-${tripData.trip.id}`}
+              key={`${trip.id}-${trip.slug}`}
+              id={`route-${trip.id}`}
               type="geojson"
               data={routeData}
             >
               <Layer
-                id={`route-line-${tripData.trip.id}`}
+                id={`route-line-${trip.id}`}
                 type="line"
                 layout={{
                   'line-cap': 'round',
@@ -138,7 +133,7 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
         })}
 
         {/* Marker at the front of the animated line */}
-        {selectedTripData && lineProgressIndex > 0 && lineProgressIndex < activePositions.length && (
+        {selectedTrip && lineProgressIndex > 0 && lineProgressIndex < activePositions.length && (
           <Marker
             longitude={activePositions[lineProgressIndex].longitude}
             latitude={activePositions[lineProgressIndex].latitude}

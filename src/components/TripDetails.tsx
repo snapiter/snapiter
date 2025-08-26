@@ -6,11 +6,10 @@ import { type Trip, type Marker } from '@/store/atoms';
 interface TripDetailsProps {
   trip: Trip;
   markers: Marker[];
-  markersLoading: boolean;
   className?: string;
 }
 
-export default function TripDetails({ trip, markers, markersLoading, className = '' }: TripDetailsProps) {
+export default function TripDetails({ trip, markers, className = '' }: TripDetailsProps) {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -48,12 +47,6 @@ export default function TripDetails({ trip, markers, markersLoading, className =
         <p className="text-gray-700 text-sm leading-relaxed">{trip.description}</p>
       </div>
       
-      {markersLoading && (
-        <div className="mb-4 text-sm text-gray-500">
-          Loading photos...
-        </div>
-      )}
-
       {photosFromMarkers.length > 0 && (
         <div className="mb-4">
           <PhotoCarousel photos={photosFromMarkers} />

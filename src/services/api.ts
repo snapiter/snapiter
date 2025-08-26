@@ -1,4 +1,4 @@
-import type { Trip, Position, Marker } from '@/store/atoms';
+import type { Trip, Position, Marker, Website } from '@/store/atoms';
 
 const BASE_URL = 'https://api.partypieps.nl/api';
 
@@ -68,4 +68,14 @@ export async function fetchMarkers(
 
 export async function fetchTripMarkers(vesselId: string, trip: Trip): Promise<Marker[]> {
   return fetchMarkers(vesselId, trip.startDate, trip.endDate);
+}
+
+export async function fetchWebsiteByHostname(hostname: string): Promise<Website> {
+  const response = await fetch(`https://cache.partypieps.nl/api/public/vessel/hostName/${hostname}`);
+  
+  if (!response.ok) {
+    throw new ApiError(`HTTP error! status: ${response.status}`, response.status);
+  }
+  
+  return await response.json();
 }
