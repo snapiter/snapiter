@@ -14,7 +14,7 @@ import 'swiper/css/pagination';
 interface TripSwiperProps {
   trips: Trip[];
   className?: string;
-  onTripChange?: (tripIndex: number, positions?: any[]) => void;
+  onTripChange?: (tripIndex: number, positions?: any[], trip?: Trip) => void;
 }
 
 export default function TripSwiper({ trips, className = '', onTripChange }: TripSwiperProps) {
@@ -31,7 +31,7 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
   const handleSlideChange = (swiper: any) => {
     setActiveIndex(swiper.activeIndex);
     setSelectedTrip(trips[swiper.activeIndex] || null);
-    onTripChange?.(swiper.activeIndex, positions);
+    onTripChange?.(swiper.activeIndex, positions, trips[swiper.activeIndex]);
   };
 
   // Set initial trip when trips are loaded
@@ -46,9 +46,9 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
   // Trigger callback when positions change for current trip
   useEffect(() => {
     if (positions.length > 0) {
-      onTripChange?.(activeIndex, positions);
+      onTripChange?.(activeIndex, positions, trips[activeIndex]);
     }
-  }, [positions, activeIndex, onTripChange]);
+  }, [positions, activeIndex, onTripChange, trips]);
 
   const goToSlide = (index: number) => {
     if (swiperInstance) {

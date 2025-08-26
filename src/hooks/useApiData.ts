@@ -1,5 +1,5 @@
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   vesselIdAtom,
   tripsAtom,
@@ -108,6 +108,46 @@ export function useMarkers(trip?: Trip) {
   return { markers, isLoading, loadMarkers };
 }
 
+
+export function useAllTripsWithPositions(trips: Trip[]) {
+  const vesselId = useAtomValue(vesselIdAtom);
+  const [tripsWithPositions, setTripsWithPositions] = useState<Array<{trip: Trip, positions: Position[]}>>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const setError = useSetAtom(errorAtom);
+
+  const loadAllPositions = useCallback(async () => {
+    if (!vesselId || trips.length === 0) return;
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const promises = trips.map(async (trip) => {
+        try {
+          const positions = await fetchPositions(vesselId, trip.slug);
+          return { trip, positions };
+        } catch (error) {
+          console.error(`Failed to load positions for trip ${trip.title}:`, error);
+          return { trip, positions: [] };
+        }
+      });
+      
+      const results = await Promise.all(promises);
+      setTripsWithPositions(results);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Failed to load positions');
+      console.error('Error loading all positions:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [vesselId, trips, setError]);
+
+  useEffect(() => {
+    loadAllPositions();
+  }, [loadAllPositions]);
+
+  return { tripsWithPositions, isLoading };
+}
 
 export function useVesselConfig() {
   const vesselId = useAtomValue(vesselIdAtom);

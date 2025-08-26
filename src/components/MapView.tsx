@@ -2,36 +2,27 @@
 
 import Map, { Source, Layer } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { type Position } from '@/store/atoms';
+import { type Position, type Trip } from '@/store/atoms';
+
+interface TripWithPositions {
+  trip: Trip;
+  positions: Position[];
+}
 
 interface MapViewProps {
   className?: string;
-  positions?: Position[];
+  tripsWithPositions?: TripWithPositions[];
 }
 
-export default function MapView({ className, positions = [] }: MapViewProps) {
-  console.log('MapView received positions:', positions.length, positions.slice(0, 2));
+export default function MapView({ className, tripsWithPositions = [] }: MapViewProps) {
+  console.log('MapView received trips:', tripsWithPositions.length);
   
-  // Create GeoJSON from positions
-  const routeData = {
-    type: 'FeatureCollection' as const,
-    features: positions.length > 0 ? [
-      {
-        type: 'Feature' as const,
-        properties: {},
-        geometry: {
-          type: 'LineString' as const,
-          coordinates: positions.map(pos => [pos.longitude, pos.latitude])
-        }
-      }
-    ] : []
-  };
-
-  // Calculate bounds to fit route
-  const bounds = positions.length > 0 ? {
-    longitude: positions.length > 0 ? positions[0].longitude : -74.006,
-    latitude: positions.length > 0 ? positions[0].latitude : 40.7128,
-    zoom: positions.length > 1 ? 8 : 12,
+  // Calculate bounds to fit all routes
+  const allPositions = tripsWithPositions.flatMap(t => t.positions);
+  const bounds = allPositions.length > 0 ? {
+    longitude: allPositions[0].longitude,
+    latitude: allPositions[0].latitude,
+    zoom: 8,
   } : {
     longitude: -74.006,
     latitude: 40.7128,
@@ -46,19 +37,35 @@ export default function MapView({ className, positions = [] }: MapViewProps) {
         mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
         attributionControl={true}
       >
-        {positions.length > 0 && (
-          <Source id="route" type="geojson" data={routeData}>
-            <Layer
-              id="route-line"
-              type="line"
-              paint={{
-                'line-color': '#3b82f6',
-                'line-width': 3,
-                'line-opacity': 0.8
-              }}
-            />
-          </Source>
-        )}
+        {tripsWithPositions.map((tripData, index) => {
+          if (tripData.positions.length === 0) return null;
+          
+          const routeData = {
+            type: 'FeatureCollection' as const,
+            features: [{
+              type: 'Feature' as const,
+              properties: {},
+              geometry: {
+                type: 'LineString' as const,
+                coordinates: tripData.positions.map(pos => [pos.longitude, pos.latitude])
+              }
+            }]
+          };
+
+          return (
+            <Source key={tripData.trip.id} id={`route-${tripData.trip.id}`} type="geojson" data={routeData}>
+              <Layer
+                id={`route-line-${tripData.trip.id}`}
+                type="line"
+                paint={{
+                  'line-color': tripData.trip.color || '#3b82f6',
+                  'line-width': 3,
+                  'line-opacity': 0.8
+                }}
+              />
+            </Source>
+          );
+        })}
       </Map>
     </div>
   );
