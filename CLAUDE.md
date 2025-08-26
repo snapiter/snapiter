@@ -12,6 +12,7 @@ This is a Next.js 15 frontend application for the Follow My Vessel project, buil
 - Biome for linting and formatting
 - MapLibre GL JS via react-map-gl for interactive maps
 - Swiper for carousel/slider components
+- jotai for state management
 
 ## Development Commands
 
