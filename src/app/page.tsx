@@ -45,7 +45,7 @@ export default function Home() {
       <div className="md:hidden h-full flex flex-col">
         <MapView 
           className={`transition-all duration-300 ${
-            isPanelExpanded ? 'h-[40vh]' : 'h-[calc(100vh-70px)]'
+            isPanelExpanded ? 'h-[calc(40vh+36px)]' : 'h-[calc(100vh-36px)]'
           }`} 
           tripsWithPositions={tripsWithPositions} 
         />
