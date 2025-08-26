@@ -1,9 +1,10 @@
 'use client';
 
-import Map, { Source, Layer } from 'react-map-gl/maplibre';
+import Map, { Source, Layer, MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { selectedTripAtom, type Position, type Trip } from '@/store/atoms';
 import { useAtomValue } from 'jotai';
+import { useRef, useEffect } from 'react';
 
 interface TripWithPositions {
   trip: Trip;
@@ -16,32 +17,52 @@ interface MapViewProps {
 }
 
 export default function MapView({ className, tripsWithPositions = [] }: MapViewProps) {
-  // Calculate bounds to fit all routes 
-
   const selectedTrip = useAtomValue(selectedTripAtom);
+  const mapRef = useRef<MapRef>(null);
 
-  const allPositions = tripsWithPositions.flatMap(t => t.positions);
-  const bounds = allPositions.length > 0 ? {
-    longitude: allPositions[0].longitude,
-    latitude: allPositions[0].latitude,
-    zoom: 8,
-  } : {
-    longitude: 5.12142010,
-    latitude: 52.09073740,
-    zoom: 12,
-  };
+  // All positions of either selected trip or all trips
+  const activePositions =
+    selectedTrip
+      ? tripsWithPositions.find(t => t.trip.id === selectedTrip.id)?.positions ?? []
+      : tripsWithPositions.flatMap(t => t.positions);
+
+  // On mount or when trips change → fit bounds
+  useEffect(() => {
+    if (!mapRef.current || activePositions.length === 0) return;
+
+    const lats = activePositions.map(p => p.latitude);
+    const lngs = activePositions.map(p => p.longitude);
+
+    const minLat = Math.min(...lats);
+    const maxLat = Math.max(...lats);
+    const minLng = Math.min(...lngs);
+    const maxLng = Math.max(...lngs);
+
+    mapRef.current.fitBounds(
+      [
+        [minLng, minLat],
+        [maxLng, maxLat],
+      ],
+      { padding: 40, duration: 1000 } // padding around bounds + animation
+    );
+  }, [activePositions]);
 
   return (
     <div className={className}>
       <Map
-        initialViewState={bounds}
+        ref={mapRef}
+        initialViewState={{
+          longitude: 5.12142010,
+          latitude: 52.09073740,
+          zoom: 12,
+        }}
         style={{ width: '100%', height: '100%' }}
         mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
         attributionControl={true}
       >
-        {tripsWithPositions.map((tripData, index) => {
+        {tripsWithPositions.map((tripData) => {
           if (tripData.positions.length === 0) return null;
-          
+
           const routeData = {
             type: 'FeatureCollection' as const,
             features: [{
