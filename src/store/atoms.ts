@@ -13,7 +13,6 @@ export interface Website {
 }
 
 export interface Trip {
-  id: string;
   vesselId: string;
   startDate: string;
   endDate: string;

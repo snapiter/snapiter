@@ -78,7 +78,7 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
         className="h-full"
       >
         {trips.map((trip, index) => (
-          <SwiperSlide key={`${trip.id}-${trip.slug}`} className="h-full">
+          <SwiperSlide key={`swiper-${trip.slug}`} className="h-full">
             <TripDetails 
               trip={trip} 
               markers={index === activeIndex ? markers : []}

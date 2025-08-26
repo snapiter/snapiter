@@ -27,7 +27,7 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
       <div className="p-2">
         {trips.map((trip, index) => (
           <button
-            key={`${trip.id}-${trip.slug}`}
+            key={`button-${trip.slug}`}
             onClick={() => onTripSelect(index)}
             className={`w-full p-3 mb-2 rounded-lg text-left transition-colors hover:bg-white hover:shadow-sm ${
               index === activeIndex
