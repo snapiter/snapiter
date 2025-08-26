@@ -1,6 +1,6 @@
 'use client';
 
-import Map, { Source, Layer, MapRef } from 'react-map-gl/maplibre';
+import Map, { Source, Layer, MapRef, Marker } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { selectedTripAtom, type Position, type Trip } from '@/store/atoms';
 import { useAtomValue } from 'jotai';
@@ -19,13 +19,15 @@ interface MapViewProps {
 export default function MapView({ className, tripsWithPositions = [] }: MapViewProps) {
   const selectedTrip = useAtomValue(selectedTripAtom);
   const mapRef = useRef<MapRef | null>(null);
-  const [progress, setProgress] = useState<number>(1); // default: fully drawn when nothing is selected
 
-  // Active positions for fitting bounds (selected trip or all)
-  const activePositions =
-    selectedTrip
-      ? tripsWithPositions.find(t => t.trip.id === selectedTrip.id)?.positions ?? []
-      : tripsWithPositions.flatMap(t => t.positions);
+  const [lineProgressIndex, setLineProgressIndex] = useState(1);
+
+  // Get positions of the selected trip
+  const selectedTripData = selectedTrip
+    ? tripsWithPositions.find(t => t.trip.id === selectedTrip.id)
+    : null;
+
+  const activePositions = selectedTripData?.positions ?? [];
 
   // Fit map bounds when positions change
   useEffect(() => {
@@ -48,41 +50,30 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
     );
   }, [activePositions]);
 
-  // Animate line drawing when selectedTrip changes
+  // Animate the dashed line
   useEffect(() => {
-    // if no trip selected => show everything
-    if (!selectedTrip) {
-      setProgress(1);
+    if (!selectedTripData || activePositions.length < 2) {
+      setLineProgressIndex(1);
       return;
     }
 
-    // reset and animate
-    setProgress(0);
+    setLineProgressIndex(1);
 
-    const duration = selectedTrip.animationSpeed ?? 5000; // ms — adjust to change speed
-    let rafId = 0;
-    let startTime = 0;
+    const duration = selectedTripData.trip.animationSpeed ?? 5000;
+    const stepTime = duration / (activePositions.length - 1);
 
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const elapsed = timestamp - startTime;
-      const t = Math.min(1, elapsed / duration);
-      setProgress(t);
-      if (t < 1) {
-        rafId = requestAnimationFrame(step);
+    let index = 1;
+    const interval = setInterval(() => {
+      index += 1;
+      if (index >= activePositions.length) {
+        clearInterval(interval);
+        index = activePositions.length - 1;
       }
-    };
+      setLineProgressIndex(index);
+    }, stepTime);
 
-    // small delay so the source/layer has time to be added to the map (helps in some setups)
-    const timeout = window.setTimeout(() => {
-      rafId = requestAnimationFrame(step);
-    }, 50);
-
-    return () => {
-      clearTimeout(timeout);
-      cancelAnimationFrame(rafId);
-    };
-  }, [selectedTrip, tripsWithPositions]);
+    return () => clearInterval(interval);
+  }, [selectedTripData, activePositions]);
 
   return (
     <div className={className}>
@@ -97,10 +88,18 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
         mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
         attributionControl={true}
       >
-        {tripsWithPositions.map((tripData) => {
-          if (tripData.positions.length === 0) return null;
+        {tripsWithPositions.map(tripData => {
+          if (tripData.positions.length < 2) return null;
 
-          const coordinates = tripData.positions.map(pos => [pos.longitude, pos.latitude]);
+          const color = tripData.trip.color || '#3b82f6';
+          const isSelected = tripData.trip.id === selectedTrip?.id;
+
+          const displayedCoordinates = isSelected
+            ? tripData.positions.slice(0, lineProgressIndex + 1).map(p => [p.longitude, p.latitude])
+            : tripData.positions.map(p => [p.longitude, p.latitude]);
+
+          if (displayedCoordinates.length < 2) return null;
+
           const routeData = {
             type: 'FeatureCollection' as const,
             features: [{
@@ -108,25 +107,10 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
               properties: {},
               geometry: {
                 type: 'LineString' as const,
-                coordinates
-              }
-            }]
+                coordinates: displayedCoordinates,
+              },
+            }],
           };
-
-          const color = tripData.trip.color || '#3b82f6';
-          const isSelected = tripData.trip.id === selectedTrip?.id;
-
-          // If selected -> use gradient expression with 'step' so the line is colored up to `progress`
-          // If not selected -> just show full color (optionally with lower opacity)
-          const lineGradient = isSelected
-            ? [
-                'step',
-                ['line-progress'],
-                color,          // when line-progress < progress => color
-                progress,       // stop
-                'rgba(0,0,0,0)' // when line-progress >= progress => transparent
-              ]
-            : color;
 
           return (
             <Source
@@ -134,7 +118,6 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
               id={`route-${tripData.trip.id}`}
               type="geojson"
               data={routeData}
-              lineMetrics={true} // required for line-progress
             >
               <Layer
                 id={`route-line-${tripData.trip.id}`}
@@ -145,13 +128,24 @@ export default function MapView({ className, tripsWithPositions = [] }: MapViewP
                 }}
                 paint={{
                   'line-width': 4,
+                  'line-color': color,
                   'line-opacity': isSelected ? 1.0 : 0.2,
-                  'line-gradient': lineGradient as any,
+                  // 'line-dasharray': [4, 2],
                 }}
               />
             </Source>
           );
         })}
+
+        {/* Marker at the front of the animated line */}
+        {selectedTripData && lineProgressIndex > 0 && lineProgressIndex < activePositions.length && (
+          <Marker
+            longitude={activePositions[lineProgressIndex].longitude}
+            latitude={activePositions[lineProgressIndex].latitude}
+            color="red"
+            anchor="center"
+          />
+        )}
       </Map>
     </div>
   );
