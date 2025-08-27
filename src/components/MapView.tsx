@@ -98,7 +98,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
         // Fly to marker location
         map.flyTo({
           center: [targetMarker.longitude, targetMarker.latitude],
-          zoom: 16, // Close zoom level
+          zoom: 10, // Close zoom level
           duration: 1000 // 1 second animation
         });
       }
