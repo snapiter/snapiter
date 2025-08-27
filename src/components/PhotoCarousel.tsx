@@ -1,8 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper/modules';
 import Image from 'next/image';
+import Lightbox from 'yet-another-react-lightbox';
+import 'yet-another-react-lightbox/styles.css';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -20,6 +23,20 @@ interface PhotoCarouselProps {
   className?: string;
 }
 export default function PhotoCarousel({ photos, className = '' }: PhotoCarouselProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [photoIndex, setPhotoIndex] = useState(0);
+
+  const slides = photos.map(photo => ({
+    src: photo.url,
+    alt: photo.alt,
+    title: photo.caption
+  }));
+
+  const handlePhotoClick = (index: number) => {
+    setPhotoIndex(index);
+    setIsOpen(true);
+  };
+
   return (
     <div className={`w-full ${className}`}>
       <Swiper
@@ -29,9 +46,12 @@ export default function PhotoCarousel({ photos, className = '' }: PhotoCarouselP
         navigation={true}
         className="h-full rounded-lg"
       >
-        {photos.map((photo) => (
+        {photos.map((photo, index) => (
           <SwiperSlide key={photo.id} className="relative">
-            <div className="relative w-full h-48 md:h-64">
+            <div 
+              className="relative w-full h-48 md:h-64 cursor-pointer hover:opacity-90 transition-opacity"
+              onClick={() => handlePhotoClick(index)}
+            >
               <Image
                 src={photo.url}
                 alt={photo.alt}
@@ -48,6 +68,13 @@ export default function PhotoCarousel({ photos, className = '' }: PhotoCarouselP
           </SwiperSlide>
         ))}
       </Swiper>
+
+      <Lightbox
+        open={isOpen}
+        close={() => setIsOpen(false)}
+        slides={slides}
+        index={photoIndex}
+      />
     </div>
   );
 }
