@@ -89,26 +89,37 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       startTimeRef.current = null; // reset for next animation
     }
   };
-
+  
   useEffect(() => {
     if (!mapRef.current || !selectedTrip || activePositions.length < 2) return;
-
+  
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
     }
-
-    startTimeRef.current = null; // reset start time for new animation
+  
+    startTimeRef.current = null; // reset start time
+  
+    const map = mapRef.current.getMap();
+  
+    // Handler to start animation after fitBounds finishes
+    const startAnimation = () => {
+      animationRef.current = requestAnimationFrame(animate);
+      map.off("moveend", startAnimation); // cleanup listener
+    };
+  
     fitBounds();
-    animationRef.current = requestAnimationFrame(animate);
-
+    map.on("moveend", startAnimation);
+  
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
         animationRef.current = null;
       }
       startTimeRef.current = null;
+      map.off("moveend", startAnimation);
     };
   }, [selectedTrip, activePositions, mapRef.current]);
+  
 
 
   return (
@@ -124,7 +135,9 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
         mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
         attributionControl={true}
       >
-        {trips.map(trip => {
+        {
+        trips
+        .map(trip => {
           if (trip.positions.length < 2) return null;
 
           const color = trip.color || '#3b82f6';
