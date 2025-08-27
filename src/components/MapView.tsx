@@ -3,7 +3,7 @@
 import Map, { Source, Layer, type MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { selectedTripAtom, lightboxIndexAtom, type Trip } from '@/store/atoms';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useRef, useEffect, useState } from 'react';
 import type maplibregl from 'maplibre-gl';
 import { createTripMarkers, createVehicleMarker, cleanupMarkers } from '@/utils/mapMarkers';
@@ -17,7 +17,8 @@ interface MapViewProps {
 
 export default function MapView({ className, trips = [] }: MapViewProps) {
   const selectedTrip = useAtomValue(selectedTripAtom);
-  const setLightboxIndex = useSetAtom(lightboxIndexAtom);
+
+  const [lightboxIndex, setLightboxIndex] = useAtom(lightboxIndexAtom);
   const mapRef = useRef<MapRef | null>(null);
   const animationRef = useRef<number | null>(null);
   const vehicleMarkerRef = useRef<maplibregl.Marker | null>(null);
@@ -30,8 +31,6 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
 
   
   useEffect(() => {
-    // if (!mapRef.current || !selectedTrip || activePositions.length < 2) return;
-
     if (!selectedTrip || !isMapLoaded || activePositions.length < 2) {
       return;
     }
@@ -66,6 +65,13 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       startTimeRef.current = null;
     };
   }, [selectedTrip, isMapLoaded, activePositions, setLightboxIndex]);
+
+
+  useEffect(() => {
+    if(lightboxIndex >= 0 ) {
+      // Automatic move to this marker on a oke zoom level
+    }
+  }, [lightboxIndex])
 
   return (
     <div className={className}>

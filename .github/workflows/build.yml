@@ -43,4 +43,4 @@ jobs:
         run: |
           curl -X POST \
           -H "X-Auth-Token: $SCW_DEPLOY_TOKEN" \
-          https://api.scaleway.com/containers/v1beta1/regions/nl-ams/containers/8f5dc5b9-7d0c-4a84-8500-f3bdc2a47de7/deploy
+          https://api.scaleway.com/containers/v1beta1/regions/nl-ams/containers/54580a8f-0e83-4a02-8c8f-551651540061/deploy
