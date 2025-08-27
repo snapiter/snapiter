@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useSetAtom } from 'jotai';
-import { lightboxStateAtom } from '@/store/atoms';
+import { lightboxIndexAtom } from '@/store/atoms';
 
 export interface Photo {
   id: string;
@@ -17,20 +17,10 @@ interface PhotoGridProps {
 }
 
 export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
-  const setLightboxState = useSetAtom(lightboxStateAtom);
+  const setLightboxIndex = useSetAtom(lightboxIndexAtom);
 
   const handlePhotoClick = (index: number) => {
-    const lightboxPhotos = photos.map(photo => ({
-      src: photo.url,
-      alt: photo.alt,
-      title: photo.caption
-    }));
-
-    setLightboxState({
-      isOpen: true,
-      photos: lightboxPhotos,
-      currentIndex: index
-    });
+    setLightboxIndex(index);
   };
 
   return (

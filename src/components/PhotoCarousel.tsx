@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper/modules';
 import Image from 'next/image';
 import { useSetAtom } from 'jotai';
-import { lightboxStateAtom } from '@/store/atoms';
+import { lightboxIndexAtom } from '@/store/atoms';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -22,20 +22,10 @@ interface PhotoCarouselProps {
   className?: string;
 }
 export default function PhotoCarousel({ photos, className = '' }: PhotoCarouselProps) {
-  const setLightboxState = useSetAtom(lightboxStateAtom);
+  const setLightboxIndex = useSetAtom(lightboxIndexAtom);
 
   const handlePhotoClick = (index: number) => {
-    const lightboxPhotos = photos.map(photo => ({
-      src: photo.url,
-      alt: photo.alt,
-      title: photo.caption
-    }));
-
-    setLightboxState({
-      isOpen: true,
-      photos: lightboxPhotos,
-      currentIndex: index
-    });
+    setLightboxIndex(index);
   };
 
   return (

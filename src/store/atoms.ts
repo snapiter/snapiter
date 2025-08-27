@@ -80,20 +80,4 @@ export const isLoadingWebsiteAtom = atom<boolean>(false);
 
 export const clickedMarkerAtom = atom<Marker | null>(null);
 
-export interface LightboxPhoto {
-  src: string;
-  alt: string;
-  title?: string;
-}
-
-export interface LightboxState {
-  isOpen: boolean;
-  photos: LightboxPhoto[];
-  currentIndex: number;
-}
-
-export const lightboxStateAtom = atom<LightboxState>({
-  isOpen: false,
-  photos: [],
-  currentIndex: 0
-});
+export const lightboxIndexAtom = atom<number>(-1);

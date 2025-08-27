@@ -1,10 +1,13 @@
 import maplibregl from 'maplibre-gl';
-import { type Marker as TripMarker, type Position } from '@/store/atoms';
+import { createStore } from 'jotai';
+import { type Marker as TripMarker, type Position, lightboxIndexAtom } from '@/store/atoms';
+
+// Create a store instance for direct atom manipulation
+const store = createStore();
 
 export function createTripMarkers(
   markers: TripMarker[], 
-  visibleMarkersRef: { current: Record<string, maplibregl.Marker> },
-  onMarkerClick: (marker: TripMarker) => void
+  visibleMarkersRef: { current: Record<string, maplibregl.Marker> }
 ) {
   markers.forEach(marker => {
     if (!visibleMarkersRef.current[marker.id]) {
@@ -19,7 +22,15 @@ export function createTripMarkers(
         />
       `;
 
-      el.addEventListener('click', () => onMarkerClick(marker));
+      el.addEventListener('click', () => {
+        // Find the index of the clicked marker in the filtered markers array
+        const photosFromMarkers = markers.filter(m => m.hasThumbnail);
+        const photoIndex = photosFromMarkers.findIndex(m => m.markerId === marker.markerId);
+        
+        if (photoIndex !== -1) {
+          store.set(lightboxIndexAtom, photoIndex);
+        }
+      });
     
       visibleMarkersRef.current[marker.id] = new maplibregl.Marker({ element: el })
         .setLngLat([marker.longitude, marker.latitude]);

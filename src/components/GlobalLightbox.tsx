@@ -2,27 +2,32 @@
 
 import { useAtomValue, useSetAtom } from 'jotai';
 import Lightbox from 'yet-another-react-lightbox';
-import { lightboxStateAtom } from '@/store/atoms';
+import { lightboxIndexAtom, selectedTripAtom } from '@/store/atoms';
 import 'yet-another-react-lightbox/styles.css';
 
 export default function GlobalLightbox() {
-  const lightboxState = useAtomValue(lightboxStateAtom);
-  const setLightboxState = useSetAtom(lightboxStateAtom);
+  const lightboxIndex = useAtomValue(lightboxIndexAtom);
+  const setLightboxIndex = useSetAtom(lightboxIndexAtom);
+  const selectedTrip = useAtomValue(selectedTripAtom);
 
-  const closeLightbox = () => {
-    setLightboxState({
-      isOpen: false,
-      photos: [],
-      currentIndex: 0
-    });
-  };
+  // Derive photos from selected trip
+  const photos = selectedTrip?.markers
+    .filter(marker => marker.hasThumbnail)
+    .map(marker => ({
+      src: `https://cache.partypieps.nl/marker/${marker.markerId}`,
+      alt: marker.title || 'Marker photo',
+      title: marker.description
+    })) || [];
+
+  const isOpen = lightboxIndex >= 0;
+  const closeLightbox = () => setLightboxIndex(-1);
 
   return (
     <Lightbox
-      open={lightboxState.isOpen}
+      open={isOpen}
       close={closeLightbox}
-      slides={lightboxState.photos}
-      index={lightboxState.currentIndex}
+      slides={photos}
+      index={Math.max(0, lightboxIndex)} // Ensure valid index
     />
   );
 }
