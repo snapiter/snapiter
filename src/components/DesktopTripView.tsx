@@ -37,7 +37,7 @@ export default function DesktopTripView({ trips }: DesktopTripViewProps) {
         onTripSelect={handleTripSelect} 
       />
       <div className="flex-1 p-6 overflow-y-auto">
-        <TripDetails trip={trips[activeIndex]} className="h-full" />
+        <TripDetails trip={trips[activeIndex]} />
       </div>
     </div>
   );
