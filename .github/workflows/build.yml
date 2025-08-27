@@ -26,6 +26,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Build the Docker image
         run: docker build -t rg.nl-ams.scw.cloud/snapiter/frontend:latest .
+        env:
+          NEXT_PUBLIC_MAPTILER_KEY: ${{ secrets.NEXT_PUBLIC_MAPTILER_KEY }}
       - name: Docker login to Scaleway
         env:
           SCW_SECRET_KEY: ${{ secrets.scw_secret_key }}
