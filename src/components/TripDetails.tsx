@@ -9,6 +9,7 @@ interface TripDetailsProps {
 }
 
 export default function TripDetails({ trip}: TripDetailsProps) {
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -25,6 +26,7 @@ export default function TripDetails({ trip}: TripDetailsProps) {
       alt: marker.title || 'Marker photo',
       caption: marker.description
     }));
+
 
   return (
     <div className={`h-full overflow-y-auto`}>

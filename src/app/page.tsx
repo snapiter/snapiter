@@ -24,7 +24,7 @@ export default function Home() {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
-          <h2 className="text-xl font-bold text-red-600 mb-2">Error Loading Data</h2>
+          <h2 className="text-xl font-bold text-red-600 mb-2">Error Loading Iter's</h2>
           <p className="text-gray-600">{error}</p>
         </div>
       </div>
@@ -36,7 +36,7 @@ export default function Home() {
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading website...</p>
+          <p className="text-gray-600">Gathering your Iter's...</p>
         </div>
       </div>
     );
@@ -55,7 +55,7 @@ export default function Home() {
         <SlidingPanel>
           {trips.length === 0 ? (
             <div className="p-4 text-center">
-              <p className="text-gray-600">No trips found.</p>
+              <p className="text-gray-600">No Iter's found.</p>
             </div>
           ) : (
             <TripSwiper trips={trips} />

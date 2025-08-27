@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
-import Lightbox from 'yet-another-react-lightbox';
-import 'yet-another-react-lightbox/styles.css';
+import { useSetAtom } from 'jotai';
+import { lightboxStateAtom } from '@/store/atoms';
 
 export interface Photo {
   id: string;
@@ -18,18 +17,20 @@ interface PhotoGridProps {
 }
 
 export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [photoIndex, setPhotoIndex] = useState(0);
-
-  const slides = photos.map(photo => ({
-    src: photo.url,
-    alt: photo.alt,
-    title: photo.caption
-  }));
+  const setLightboxState = useSetAtom(lightboxStateAtom);
 
   const handlePhotoClick = (index: number) => {
-    setPhotoIndex(index);
-    setIsOpen(true);
+    const lightboxPhotos = photos.map(photo => ({
+      src: photo.url,
+      alt: photo.alt,
+      title: photo.caption
+    }));
+
+    setLightboxState({
+      isOpen: true,
+      photos: lightboxPhotos,
+      currentIndex: index
+    });
   };
 
   return (
@@ -59,12 +60,6 @@ export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
         ))}
       </div>
 
-      <Lightbox
-        open={isOpen}
-        close={() => setIsOpen(false)}
-        slides={slides}
-        index={photoIndex}
-      />
     </div>
   );
 }

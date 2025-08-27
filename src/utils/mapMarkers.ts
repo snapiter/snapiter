@@ -3,7 +3,8 @@ import { type Marker as TripMarker, type Position } from '@/store/atoms';
 
 export function createTripMarkers(
   markers: TripMarker[], 
-  visibleMarkersRef: { current: Record<string, maplibregl.Marker> }
+  visibleMarkersRef: { current: Record<string, maplibregl.Marker> },
+  onMarkerClick: (marker: TripMarker) => void
 ) {
   markers.forEach(marker => {
     if (!visibleMarkersRef.current[marker.id]) {
@@ -13,10 +14,12 @@ export function createTripMarkers(
       el.innerHTML = `
         <img 
           src="https://cache.partypieps.nl/marker/${marker.markerId}/thumbnail/500x500" 
-          class="w-8 h-8 rounded-full border-2 border-white object-cover"
+          class="w-8 h-8 rounded-full border-2 border-white object-cover cursor-pointer hover:scale-110 transition-transform"
           alt="marker"
         />
       `;
+
+      el.addEventListener('click', () => onMarkerClick(marker));
     
       visibleMarkersRef.current[marker.id] = new maplibregl.Marker({ element: el })
         .setLngLat([marker.longitude, marker.latitude]);

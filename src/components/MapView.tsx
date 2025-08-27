@@ -2,8 +2,8 @@
 
 import Map, { Source, Layer, MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { selectedTripAtom, type Trip } from '@/store/atoms';
-import { useAtomValue } from 'jotai';
+import { selectedTripAtom, lightboxStateAtom, type Trip, type Marker as TripMarker } from '@/store/atoms';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useRef, useEffect, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import { createTripMarkers, createVehicleMarker, cleanupMarkers } from '@/utils/mapMarkers';
@@ -17,6 +17,7 @@ interface MapViewProps {
 
 export default function MapView({ className, trips = [] }: MapViewProps) {
   const selectedTrip = useAtomValue(selectedTripAtom);
+  const setLightboxState = useSetAtom(lightboxStateAtom);
   const mapRef = useRef<MapRef | null>(null);
   const animationRef = useRef<number | null>(null);
   const vehicleMarkerRef = useRef<maplibregl.Marker | null>(null);
@@ -42,7 +43,29 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
     const map = mapRef.current?.getMap();
     if (!map) return;
 
-    createTripMarkers(selectedTrip.markers, visibleMarkersRef);
+    createTripMarkers(selectedTrip.markers, visibleMarkersRef, (marker: TripMarker) => {
+      // Find all photos from trip markers to create lightbox photos array
+      const photosFromMarkers = selectedTrip.markers
+        .filter(m => m.hasThumbnail)
+        .map(m => ({
+          src: `https://cache.partypieps.nl/marker/${m.markerId}`,
+          alt: m.title || 'Marker photo',
+          title: m.description
+        }));
+      
+      // Find the index of the clicked marker in the photos array
+      const photoIndex = photosFromMarkers.findIndex(photo => 
+        photo.src.includes(marker.markerId)
+      );
+      
+      if (photoIndex !== -1) {
+        setLightboxState({
+          isOpen: true,
+          photos: photosFromMarkers,
+          currentIndex: photoIndex
+        });
+      }
+    });
     createVehicleMarker(activePositions[0], vehicleMarkerRef, map);
     fitMapBounds(mapRef, activePositions);
     
