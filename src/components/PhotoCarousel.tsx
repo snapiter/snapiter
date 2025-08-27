@@ -53,7 +53,7 @@ export default function PhotoCarousel({ photos, className = '' }: PhotoCarouselP
               onClick={() => handlePhotoClick(index)}
             >
               <Image
-                src={photo.url}
+                src={photo.url + "/thumbnail/500x500"}
                 alt={photo.alt}
                 fill
                 className="object-cover rounded-lg"

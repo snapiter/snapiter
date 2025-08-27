@@ -20,7 +20,7 @@ export default function TripDetails({ trip}: TripDetailsProps) {
     .filter(marker => marker.hasThumbnail)
     .map(marker => ({
       id: marker.id,
-      url: `https://cache.partypieps.nl/marker/${marker.markerId}/thumbnail/500x500`,
+      url: `https://cache.partypieps.nl/marker/${marker.markerId}`,
       alt: marker.title || 'Marker photo',
       caption: marker.description
     }));
