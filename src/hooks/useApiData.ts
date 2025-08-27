@@ -1,24 +1,12 @@
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   vesselIdAtom,
-  tripsAtom,
-  selectedTripAtom,
-  positionsAtom,
-  markersAtom,
-  isLoadingTripsAtom,
-  isLoadingPositionsAtom,
-  isLoadingMarkersAtom,
   websiteAtom,
   isLoadingWebsiteAtom,
   errorAtom,
-  Trip,
-  Position,
-  Website
 } from '@/store/atoms';
-import { fetchTrips, fetchTripMarkers, fetchWebsiteByHostname } from '@/services/api';
-
-
+import { fetchWebsiteByHostname } from '@/services/api';
 
 
 

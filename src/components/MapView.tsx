@@ -2,9 +2,9 @@
 
 import Map, { Source, Layer, MapRef, Marker } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { selectedTripAtom, type Position, type Trip } from '@/store/atoms';
+import { selectedTripAtom, type Trip } from '@/store/atoms';
 import { useAtomValue } from 'jotai';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 
 interface MapViewProps {
   className?: string;
@@ -16,11 +16,11 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
   const mapRef = useRef<MapRef | null>(null);
   const animationRef = useRef<number | null>(null);
   const markerRef = useRef<any>(null);
+  const startTimeRef = useRef<number | null>(null);
 
   const activePositions = selectedTrip?.positions ?? [];
 
-  // Fit map bounds when positions change
-  useEffect(() => {
+  const fitBounds = () => {
     if (!mapRef.current || activePositions.length === 0) return;
 
     const lats = activePositions.map(p => p.latitude);
@@ -38,65 +38,67 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       ],
       { padding: 40, duration: 1000 }
     );
-  }, [activePositions]);
 
-  // Animate using MapLibre native animation
-  useEffect(() => {
-    if (!mapRef.current || !selectedTrip || activePositions.length < 2) {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-        animationRef.current = null;
-      }
-      return;
-    }
+  };
+
+
+  const animate = () => {
+    if (!mapRef.current || !selectedTrip || activePositions.length < 2) return;
 
     const map = mapRef.current.getMap();
     const duration = selectedTrip.animationSpeed ?? 5000;
-    const startTime = Date.now();
-    
-    // Clean up previous animation
+
+    if (startTimeRef.current === null) {
+      startTimeRef.current = Date.now();
+    }
+
+    const elapsed = Date.now() - startTimeRef.current;
+    const progress = Math.min(elapsed / duration, 1);
+    const currentIndex = Math.floor(progress * (activePositions.length - 1));
+
+    if (currentIndex < activePositions.length) {
+      const progressCoordinates = activePositions
+        .slice(0, currentIndex + 1)
+        .map(p => [p.longitude, p.latitude]);
+
+      const source = map.getSource(`route-${selectedTrip.slug}`) as any;
+      if (source) {
+        source.setData({
+          type: 'FeatureCollection',
+          features: [{
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates: progressCoordinates,
+            },
+          }],
+        });
+      }
+
+      if (markerRef.current) {
+        const currentPos = activePositions[currentIndex];
+        markerRef.current.setLngLat([currentPos.longitude, currentPos.latitude]);
+      }
+    }
+
+    if (progress < 1) {
+      animationRef.current = requestAnimationFrame(animate);
+    } else {
+      animationRef.current = null;
+      startTimeRef.current = null; // reset for next animation
+    }
+  };
+
+  useEffect(() => {
+    if (!mapRef.current || !selectedTrip || activePositions.length < 2) return;
+
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
     }
 
-    const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const currentIndex = Math.floor(progress * (activePositions.length - 1)) + 1;
-      
-      if (currentIndex < activePositions.length) {
-        // Update the route source to show progress
-        const progressCoordinates = activePositions.slice(0, currentIndex + 1).map(p => [p.longitude, p.latitude]);
-        
-        if (map.getSource(`route-${selectedTrip.slug}`)) {
-          const source = map.getSource(`route-${selectedTrip.slug}`) as any;
-          source.setData({
-            type: 'FeatureCollection',
-            features: [{
-              type: 'Feature',
-              properties: {},
-              geometry: {
-                type: 'LineString',
-                coordinates: progressCoordinates,
-              },
-            }],
-          });
-        }
-
-        // Update marker position
-        if (markerRef.current && currentIndex > 0) {
-          const currentPos = activePositions[currentIndex];
-          markerRef.current.setLngLat([currentPos.longitude, currentPos.latitude]);
-        }
-      }
-
-      if (progress < 1) {
-        animationRef.current = requestAnimationFrame(animate);
-      } else {
-        animationRef.current = null;
-      }
-    };
-
+    startTimeRef.current = null; // reset start time for new animation
+    fitBounds();
     animationRef.current = requestAnimationFrame(animate);
 
     return () => {
@@ -104,8 +106,10 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
         cancelAnimationFrame(animationRef.current);
         animationRef.current = null;
       }
+      startTimeRef.current = null;
     };
-  }, [selectedTrip, activePositions]);
+  }, [selectedTrip, activePositions, mapRef.current]);
+
 
   return (
     <div className={className}>
