@@ -1,15 +1,13 @@
 'use client';
 
 import PhotoCarousel, { Photo } from './PhotoCarousel';
-import { type Trip, type Marker } from '@/store/atoms';
+import { type Trip } from '@/store/atoms';
 
 interface TripDetailsProps {
   trip: Trip;
-  markers: Marker[];
-  className?: string;
 }
 
-export default function TripDetails({ trip, markers, className = '' }: TripDetailsProps) {
+export default function TripDetails({ trip}: TripDetailsProps) {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -18,7 +16,7 @@ export default function TripDetails({ trip, markers, className = '' }: TripDetai
     });
   };
 
-  const photosFromMarkers: Photo[] = (markers || [])
+  const photosFromMarkers: Photo[] = (trip.markers || [])
     .filter(marker => marker.hasThumbnail)
     .map(marker => ({
       id: marker.id,
@@ -27,16 +25,18 @@ export default function TripDetails({ trip, markers, className = '' }: TripDetai
       caption: marker.description
     }));
 
-
   return (
-    <div className={`h-full overflow-y-auto ${className}`}>
+    <div className={`h-full overflow-y-auto`}>
       <div className="mb-4">
         <h2 className="text-xl font-bold text-gray-900 mb-2">{trip.title}</h2>
         <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-3">
-          <span>{formatDate(trip.startDate)} - {formatDate(trip.endDate)}</span>
+          <span>
+            {formatDate(trip.startDate)}
+            {trip.endDate ? ` - ${formatDate(trip.endDate)}` : ''}
+          </span>
           {trip.color && (
             <span className="flex items-center gap-1">
-              <div 
+              <div
                 className="w-3 h-3 rounded-full"
                 style={{ backgroundColor: trip.color }}
               />
@@ -46,7 +46,7 @@ export default function TripDetails({ trip, markers, className = '' }: TripDetai
         </div>
         <p className="text-gray-700 text-sm leading-relaxed">{trip.description}</p>
       </div>
-      
+
       {photosFromMarkers.length > 0 && (
         <div className="mb-4">
           <PhotoCarousel photos={photosFromMarkers} />

@@ -12,23 +12,16 @@ import 'swiper/css/pagination';
 
 interface TripSwiperProps {
   trips: Trip[];
-  className?: string;
-  onTripChange?: (tripIndex: number, positions?: any[], trip?: Trip) => void;
 }
 
-export default function TripSwiper({ trips, className = '', onTripChange }: TripSwiperProps) {
+export default function TripSwiper({ trips }: TripSwiperProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [swiperInstance, setSwiperInstance] = useState<any>(null);
   const setSelectedTrip = useSetAtom(selectedTripAtom);
   
-  // Get data directly from the active trip
-  const markers = trips[activeIndex]?.markers || [];
-  const positions = trips[activeIndex]?.positions || [];
-  
   const handleSlideChange = (swiper: any) => {
     setActiveIndex(swiper.activeIndex);
     setSelectedTrip(trips[swiper.activeIndex] || null);
-    onTripChange?.(swiper.activeIndex, positions, trips[swiper.activeIndex]);
   };
 
   // Set initial trip when trips are loaded
@@ -40,12 +33,6 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
     }
   }, [trips, activeIndex, setSelectedTrip]);
 
-  // Trigger callback when positions change for current trip
-  useEffect(() => {
-    if (positions.length > 0) {
-      onTripChange?.(activeIndex, positions, trips[activeIndex]);
-    }
-  }, [positions, activeIndex, onTripChange, trips]);
 
   const goToSlide = (index: number) => {
     if (swiperInstance) {
@@ -54,7 +41,7 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
   };
 
   return (
-    <div className={`w-full h-full ${className}`}>
+    <div className={`w-full h-full`}>
       <div className="absolute right-0 top-10">
         <div className="flex space-x-1 pr-3 flex-shrink-0">
           {trips.map((_, index) => (
@@ -77,12 +64,10 @@ export default function TripSwiper({ trips, className = '', onTripChange }: Trip
         onSwiper={setSwiperInstance}
         className="h-full"
       >
-        {trips.map((trip, index) => (
+        {trips.map((trip) => (
           <SwiperSlide key={`swiper-${trip.slug}`} className="h-full">
             <TripDetails 
               trip={trip} 
-              markers={index === activeIndex ? markers : []}
-              className="h-full" 
             />
           </SwiperSlide>
         ))}
