@@ -1,5 +1,5 @@
 import maplibregl from 'maplibre-gl';
-import { type Marker as TripMarker, type Position } from '@/store/atoms';
+import type { Marker as TripMarker, Position } from '@/store/atoms';
 
 export function createTripMarkers(
   markers: TripMarker[], 
@@ -44,7 +44,7 @@ export function createVehicleMarker(
     const el = document.createElement('div');
     el.style.width = '32px';
     el.style.height = '32px';
-    el.style.zIndex = '1000'; // Ensure vehicle marker is always on top
+    el.style.zIndex = '100'; // Ensure vehicle marker is always on top
     el.innerHTML = `<img src="/assets/icons/van-passenger.svg" style="width: 100%; height: 100%;" />`;
     vehicleMarkerRef.current = new maplibregl.Marker({ element: el, anchor: 'center' })
       .setLngLat([position.longitude, position.latitude])

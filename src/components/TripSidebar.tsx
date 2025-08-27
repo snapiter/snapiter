@@ -1,6 +1,6 @@
 'use client';
 
-import { type Trip } from '@/store/atoms';
+import type { Trip } from '@/store/atoms';
 
 interface TripSidebarProps {
   trips: Trip[];

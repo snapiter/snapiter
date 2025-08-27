@@ -1,11 +1,11 @@
 'use client';
 
-import Map, { Source, Layer, MapRef } from 'react-map-gl/maplibre';
+import Map, { Source, Layer, type MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { selectedTripAtom, lightboxIndexAtom, type Trip } from '@/store/atoms';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useRef, useEffect, useState } from 'react';
-import maplibregl from 'maplibre-gl';
+import type maplibregl from 'maplibre-gl';
 import { createTripMarkers, createVehicleMarker, cleanupMarkers } from '@/utils/mapMarkers';
 import { startAnimation, stopAnimation } from '@/utils/mapAnimation';
 import { fitMapBounds, createRouteData } from '@/utils/mapBounds';
@@ -65,7 +65,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       cleanupMarkers(visibleMarkersRef, vehicleMarkerRef);
       startTimeRef.current = null;
     };
-  }, [selectedTrip, isMapLoaded]);
+  }, [selectedTrip, isMapLoaded, activePositions, setLightboxIndex]);
 
   return (
     <div className={className}>

@@ -33,7 +33,7 @@ export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
             onClick={() => handlePhotoClick(index)}
           >
             <Image
-              src={photo.url + "/thumbnail/500x500"}
+              src={`${photo.url}/thumbnail/500x500`}
               alt={photo.alt}
               fill
               className="object-cover rounded-lg"

@@ -1,5 +1,5 @@
-import maplibregl from 'maplibre-gl';
-import { type Trip, type Position } from '@/store/atoms';
+import type maplibregl from 'maplibre-gl';
+import type { Trip, Position } from '@/store/atoms';
 import { getVisibleMarkers, updateMarkersOnMap } from './mapMarkers';
 
 export function createAnimationLoop(

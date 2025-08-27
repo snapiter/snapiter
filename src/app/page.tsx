@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import MapView from '@/components/MapView';
 import SlidingPanel from '@/components/SlidingPanel';
 import TripSwiper from '@/components/TripSwiper';
@@ -31,7 +31,7 @@ export default function Home() {
     );
   }
 
-  if (websiteLoading || trips.length == 0) {
+  if (websiteLoading || trips.length === 0) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">

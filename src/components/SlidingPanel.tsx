@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, PanInfo, useDragControls } from 'framer-motion';
-import { ReactNode } from 'react';
+import { motion, type PanInfo, useDragControls } from 'framer-motion';
+import type { ReactNode } from 'react';
 import { useOutsideClick } from '@/hooks/useOutsideClick';
 import { useAtom } from 'jotai';
 import { bottomPanelExpandedAtom } from '@/store/atoms';
@@ -35,7 +35,7 @@ export default function SlidingPanel({ children }: SlidingPanelProps) {
     <motion.div
       ref={panelRef}
       style={{ height: expandedHeight }} // FIX: set explicit height
-      className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl z-50"
+      className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl z-[102]"
       animate={{ y: isExpanded ? expandedY : collapsedY }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       drag="y"

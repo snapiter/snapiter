@@ -37,7 +37,7 @@ export function useWebsite() {
     
     return () => {
     };
-  }, []);
+  }, [setError, setIsLoading, setWebsite, website]);
 
   return { website, isLoading };
 }

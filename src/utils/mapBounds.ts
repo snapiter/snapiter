@@ -1,4 +1,4 @@
-import { type Position } from '@/store/atoms';
+import type { Position } from '@/store/atoms';
 
 export function fitMapBounds(
   mapRef: { current: any },

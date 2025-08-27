@@ -42,7 +42,7 @@ export default function TripSwiper({ trips }: TripSwiperProps) {
 
   return (
     <div className={`w-full h-full`}>
-      <div className="absolute right-0 top-10">
+      <div className="absolute right-0 top-10 z-[102] bg-white">
         <div className="flex space-x-1 pr-3 flex-shrink-0">
           {trips.map((_, index) => (
             <div
