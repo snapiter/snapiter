@@ -31,7 +31,7 @@ export default function Home() {
     );
   }
 
-  if (websiteLoading) {
+  if (websiteLoading || trips.length == 0) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
@@ -41,9 +41,6 @@ export default function Home() {
       </div>
     );
   }
-
-  console.log("PAGE RENDER")
-
 
   return (
     <div className="relative h-screen w-full overflow-hidden">

@@ -4,8 +4,9 @@ import Map, { Source, Layer, MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { selectedTripAtom, type Trip } from '@/store/atoms';
 import { useAtomValue } from 'jotai';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import maplibregl from 'maplibre-gl';
+import { useAtomCallback } from 'jotai/utils';
 
 interface MapViewProps {
   className?: string;
@@ -20,6 +21,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
   const startTimeRef = useRef<number | null>(null);
   const currentPositionIndexRef = useRef<number>(0);
   const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
+  const [isMapLoaded, setIsMapLoaded] = useState(false)
 
   const activePositions = selectedTrip?.positions.toReversed() ?? [];
 
@@ -32,16 +34,23 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
 
   const initializeTripMarkers = () => {
     if (!selectedTrip || !mapRef.current) return;
-    const map = mapRef.current.getMap();
     selectedTrip.markers.forEach(marker => {
       if (!visibleMarkersRef.current[marker.id]) {
         const el = document.createElement('div');
-        el.style.width = '24px';
-        el.style.height = '24px';
-        el.innerHTML = `<img src="/assets/icons/pin.svg" width="24" height="24" />`;
+        el.className = 'w-6 h-6'; // 24px x 24px
+      
+        el.innerHTML = `
+          <img 
+            src="https://cache.partypieps.nl/marker/${marker.markerId}/thumbnail/500x500" 
+            class="w-6 h-6 rounded-full border-2 border-white object-cover"
+            alt="marker"
+          />
+        `;
+      
         visibleMarkersRef.current[marker.id] = new maplibregl.Marker({ element: el })
           .setLngLat([marker.longitude, marker.latitude]);
       }
+      
     });
   };
 
@@ -121,13 +130,20 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       startTimeRef.current = null;
     }
   };
-
+  
   useEffect(() => {
-    if (!mapRef.current || !selectedTrip || activePositions.length < 2) return;
+    // if (!mapRef.current || !selectedTrip || activePositions.length < 2) return;
+
+    if(!selectedTrip || !isMapLoaded) { 
+      return;
+    }
+
+    console.log("BOINK" + mapRef.current)
 
     if (animationRef.current) cancelAnimationFrame(animationRef.current);
     startTimeRef.current = null;
     currentPositionIndexRef.current = 0;
+
 
     initializeTripMarkers();
     initializeVehicleMarker();
@@ -141,7 +157,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       vehicleMarkerRef.current = null;
       startTimeRef.current = null;
     };
-  }, [selectedTrip, activePositions]);
+  }, [selectedTrip, isMapLoaded]);
 
   return (
     <div className={className}>
@@ -151,6 +167,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
         style={{ width: '100%', height: '100%' }}
         mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
         attributionControl
+        onLoad={() => setIsMapLoaded(true)}
       >
         {trips.map(trip => {
           if (trip.positions.length < 2) return null;
