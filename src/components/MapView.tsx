@@ -27,13 +27,13 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
   const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
   const [isMapLoaded, setIsMapLoaded] = useState(false)
 
-  const activePositions = selectedTrip?.positions.toReversed() ?? [];
 
   
   useEffect(() => {
-    if (!selectedTrip || !isMapLoaded || activePositions.length < 2) {
+    if (!selectedTrip || !isMapLoaded || selectedTrip?.positions.length < 2) {
       return;
     }
+    const activePositions = selectedTrip?.positions.toReversed() ?? [];
 
     stopAnimation(animationRef);
     startTimeRef.current = null;
@@ -64,14 +64,46 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       cleanupMarkers(visibleMarkersRef, vehicleMarkerRef);
       startTimeRef.current = null;
     };
-  }, [selectedTrip, isMapLoaded, activePositions, setLightboxIndex]);
+  }, [selectedTrip, isMapLoaded]);
 
 
   useEffect(() => {
-    if(lightboxIndex >= 0 ) {
-      // Automatic move to this marker on a oke zoom level
+    if (lightboxIndex >= 0 && selectedTrip && mapRef.current) {
+      // 1. End animation and show complete route
+      stopAnimation(animationRef);
+      const map = mapRef.current.getMap();
+      
+      // Show complete route line
+      const source = map.getSource(`route-${selectedTrip.slug}`) as any;
+      if (source) {
+        const allCoordinates = selectedTrip?.positions.map(p => [p.longitude, p.latitude]);
+        source.setData({
+          type: 'FeatureCollection',
+          features: [{
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates: allCoordinates
+            }
+          }]
+        });
+      }
+
+      // 2. Get the marker corresponding to lightboxIndex
+      const photosFromMarkers = selectedTrip.markers.filter(m => m.hasThumbnail);
+      const targetMarker = photosFromMarkers[lightboxIndex];
+      
+      if (targetMarker) {
+        // Fly to marker location
+        map.flyTo({
+          center: [targetMarker.longitude, targetMarker.latitude],
+          zoom: 16, // Close zoom level
+          duration: 1000 // 1 second animation
+        });
+      }
     }
-  }, [lightboxIndex])
+  }, [lightboxIndex, selectedTrip])
 
   return (
     <div className={className}>
