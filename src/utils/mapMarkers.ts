@@ -8,12 +8,12 @@ export function createTripMarkers(
   markers.forEach(marker => {
     if (!visibleMarkersRef.current[marker.id]) {
       const el = document.createElement('div');
-      el.className = 'w-6 h-6';
+      el.className = 'w-8 h-8';
     
       el.innerHTML = `
         <img 
           src="https://cache.partypieps.nl/marker/${marker.markerId}/thumbnail/500x500" 
-          class="w-6 h-6 rounded-full border-2 border-white object-cover"
+          class="w-8 h-8 rounded-full border-2 border-white object-cover"
           alt="marker"
         />
       `;
