@@ -34,7 +34,7 @@ export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
 
   return (
     <div className={`w-full ${className}`}>
-      <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-3">
+      <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-3 px-4">
         {photos.map((photo, index) => (
           <div 
             key={photo.id}

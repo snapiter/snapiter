@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Next.js 15 frontend application for the Follow My Vessel project, built with:
+This is a Next.js 15 frontend application for the SnapIter project, built with:
 - Next.js 15.5.0 with App Router
 - React 19.1.0
 - TypeScript (strict mode enabled)

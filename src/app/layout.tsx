@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FollowMyVessel",
-  description: "Follow my vessel",
+  title: "SnapIter",
+  description: "Snap your journey",
 };
 
 export default function RootLayout({
