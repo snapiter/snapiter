@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "SnapIter",
-  description: "Snap your journey",
+  description: "Snap your Iter",
 };
 
 export default function RootLayout({
