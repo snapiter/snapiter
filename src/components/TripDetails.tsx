@@ -1,6 +1,7 @@
 'use client';
 
 import PhotoCarousel, { Photo } from './PhotoCarousel';
+import PhotoGrid from './PhotoGrid';
 import { type Trip } from '@/store/atoms';
 
 interface TripDetailsProps {
@@ -49,7 +50,13 @@ export default function TripDetails({ trip}: TripDetailsProps) {
 
       {photosFromMarkers.length > 0 && (
         <div className="mb-4">
-          <PhotoCarousel photos={photosFromMarkers} />
+          {/* Desktop: Show grid, Mobile: Show carousel */}
+          <div className="hidden md:block">
+            <PhotoGrid photos={photosFromMarkers} />
+          </div>
+          <div className="block md:hidden">
+            <PhotoCarousel photos={photosFromMarkers} />
+          </div>
         </div>
       )}
     </div>
