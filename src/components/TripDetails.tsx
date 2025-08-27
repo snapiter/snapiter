@@ -28,7 +28,7 @@ export default function TripDetails({ trip}: TripDetailsProps) {
 
   return (
     <div className={`h-full overflow-y-auto`}>
-      <div className="mb-4 p-6 sticky top-0 bg-white z-10">
+      <div className="p-0 md:p-4 sticky top-0 z-10">
         <h2 className="text-xl font-bold text-gray-900 mb-2">{trip.title}</h2>
         <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-3">
           <span>
