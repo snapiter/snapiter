@@ -74,7 +74,9 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
         initialViewState={{ longitude: 5.1214201, latitude: 52.0907374, zoom: 12 }}
         style={{ width: '100%', height: '100%' }}
         mapStyle={`https://api.maptiler.com/maps/outdoor-v2/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
-        attributionControl
+        attributionControl={{
+          compact: true,
+        }}
         onLoad={() => setIsMapLoaded(true)}
       >
         {trips.map(trip => {
