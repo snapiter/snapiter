@@ -4,7 +4,7 @@ import Map, { Source, Layer, MapRef, Marker } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { selectedTripAtom, type Trip } from '@/store/atoms';
 import { useAtomValue } from 'jotai';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 
 interface MapViewProps {
   className?: string;
@@ -18,7 +18,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
   const markerRef = useRef<any>(null);
   const startTimeRef = useRef<number | null>(null);
 
-  const activePositions = selectedTrip?.positions ?? [];
+  const activePositions = selectedTrip?.positions.toReversed() ?? [];
 
   const fitBounds = () => {
     if (!mapRef.current || activePositions.length === 0) return;
@@ -39,8 +39,14 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       { padding: 40, duration: 1000 }
     );
 
+    const map = mapRef.current.getMap();
+    const startAnimation = () => {
+      animationRef.current = requestAnimationFrame(animate);
+      map.off('moveend', startAnimation); // clean up listener
+    };
+    
+    map.on('moveend', startAnimation);
   };
-
 
   const animate = () => {
     if (!mapRef.current || !selectedTrip || activePositions.length < 2) return;
@@ -76,7 +82,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
         });
       }
 
-      if (markerRef.current) {
+      if (markerRef.current && currentIndex > 0) {
         const currentPos = activePositions[currentIndex];
         markerRef.current.setLngLat([currentPos.longitude, currentPos.latitude]);
       }
@@ -89,66 +95,51 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       startTimeRef.current = null; // reset for next animation
     }
   };
-  
+
   useEffect(() => {
     if (!mapRef.current || !selectedTrip || activePositions.length < 2) return;
-  
+
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
     }
-  
-    startTimeRef.current = null; // reset start time
-  
-    const map = mapRef.current.getMap();
-  
-    // Handler to start animation after fitBounds finishes
-    const startAnimation = () => {
-      animationRef.current = requestAnimationFrame(animate);
-      map.off("moveend", startAnimation); // cleanup listener
-    };
-  
+
+    startTimeRef.current = null;
+
+
     fitBounds();
-    map.on("moveend", startAnimation);
-  
+
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
         animationRef.current = null;
       }
       startTimeRef.current = null;
-      map.off("moveend", startAnimation);
     };
-  }, [selectedTrip, activePositions, mapRef.current]);
-  
-
+  }, [selectedTrip, activePositions]);
 
   return (
     <div className={className}>
       <Map
         ref={mapRef}
         initialViewState={{
-          longitude: 5.12142010,
-          latitude: 52.09073740,
+          longitude: 5.1214201,
+          latitude: 52.0907374,
           zoom: 12,
         }}
         style={{ width: '100%', height: '100%' }}
         mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
         attributionControl={true}
       >
-        {
-        trips
-        .map(trip => {
+        {trips.map(trip => {
           if (trip.positions.length < 2) return null;
 
           const color = trip.color || '#3b82f6';
           const isSelected = trip.slug === selectedTrip?.slug;
-
-          // Show full route for all trips initially
-          // Animation will update the selected trip's source dynamically
-          const coordinates = trip.positions.map(p => [p.longitude, p.latitude]);
+          const coordinates = trip.positions.toReversed().map(p => [p.longitude, p.latitude]);
 
           if (coordinates.length < 2) return null;
 
+          // Selected trip starts empty, others show full route
           const routeData = {
             type: 'FeatureCollection' as const,
             features: [{
@@ -156,7 +147,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
               properties: {},
               geometry: {
                 type: 'LineString' as const,
-                coordinates: coordinates,
+                coordinates: isSelected ? [] : coordinates,
               },
             }],
           };
@@ -186,7 +177,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
         })}
 
         {/* Marker at the front of the animated line */}
-        {selectedTrip && activePositions.length > 0 && (
+        {selectedTrip && activePositions.length > 0  && (
           <Marker
             ref={markerRef}
             longitude={activePositions[0].longitude}
