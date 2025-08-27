@@ -4,7 +4,7 @@ import Map, { Source, Layer, MapRef, Marker } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { selectedTripAtom, type Trip } from '@/store/atoms';
 import { useAtomValue } from 'jotai';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 
 interface MapViewProps {
   className?: string;

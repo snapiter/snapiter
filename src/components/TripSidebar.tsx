@@ -21,7 +21,7 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
     <div className="w-64 bg-gray-50 border-r border-gray-200 h-full overflow-y-auto">
       <div className="p-4 border-b border-gray-200">
         <h2 className="text-lg font-semibold text-gray-900">Trips</h2>
-        <p className="text-sm text-gray-500">{trips.length} voyages</p>
+        <p className="text-sm text-gray-500">{trips.length} Travels</p>
       </div>
       
       <div className="p-2">
@@ -49,7 +49,8 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
               )}
             </div>
             <p className="text-sm text-gray-500 mt-1">
-              {formatDate(trip.startDate)} - {formatDate(trip.endDate)}
+              {formatDate(trip.startDate)}
+              {trip.endDate ? ` - ${formatDate(trip.endDate)}` : ''}
             </p>
             <p className="text-xs text-gray-400 mt-1">
               {trip.positionType}
