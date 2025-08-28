@@ -9,12 +9,12 @@ export function createTripMarkers(
   markers.forEach(marker => {
     if (!visibleMarkersRef.current[marker.id]) {
       const el = document.createElement('div');
-      el.className = 'w-8 h-8';
+      el.className = '';
     
       el.innerHTML = `
         <img 
           src="https://cache.partypieps.nl/marker/${marker.markerId}/thumbnail/500x500" 
-          class="w-8 h-8 rounded-full border-2 border-white object-cover cursor-pointer hover:scale-110 transition-transform"
+          class="map-marker"
           alt="marker"
           data-marker-id="${marker.markerId}"
         />
@@ -97,13 +97,9 @@ export function highlightMarker(
     if (img) {
       const markerId = img.getAttribute('data-marker-id');
       if (hoveredPhotoId && markerId === hoveredPhotoId) {
-        img.style.transform = 'scale(1.4)';
-        img.style.zIndex = '1000';
-        img.style.boxShadow = '0 4px 12px rgba(244, 96, 54, 0.4)';
+        img.classList.add('map-marker--highlighted');
       } else {
-        img.style.transform = '';
-        img.style.zIndex = '';
-        img.style.boxShadow = '';
+        img.classList.remove('map-marker--highlighted');
       }
     }
   });
