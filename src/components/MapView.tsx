@@ -37,8 +37,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
     if (!selectedTrip || !isMapLoaded || selectedTrip?.positions.length < 2) {
       return;
     }
-
-    console.log("EFFECT " + trips.length)
+    
     // Use command system to animate the selected trip
     setCommands(prev => [...prev, { 
       type: 'ANIMATE_TRIP', 
@@ -111,7 +110,8 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
   useEffect(() => {
     if (commands.length === 0 || !mapRef.current) return;
 
-    const command = commands[0]; // Process first command
+    const command = commands[commands.length - 1];
+    
     const map = mapRef.current.getMap();
     if (!map) return;
 
