@@ -68,3 +68,50 @@ body {
 .map-marker--highlighted {
   transform: scale(1.2);
 }
+
+/* SnapIter Loader Animations */
+@keyframes route-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes points-appear {
+  0% { opacity: 0; transform: scale(0); }
+  50% { opacity: 0; transform: scale(0); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0) rotate(0deg); 
+    opacity: 0; 
+  }
+  50% { 
+    transform: translateY(-10px) rotate(2deg); 
+    opacity: 1; 
+  }
+}
+
+@keyframes progress {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-route-draw {
+  animation: route-draw 3s ease-in-out infinite;
+}
+
+.animate-points-appear {
+  animation: points-appear 2s ease-in-out infinite;
+}
+
+
+.animate-float {
+  animation: float 2s ease-in-out infinite;
+}
+
+.animate-progress {
+  animation: progress 2s ease-in-out infinite;
+}

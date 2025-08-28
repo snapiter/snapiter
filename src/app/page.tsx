@@ -5,6 +5,7 @@ import MapView from '@/components/MapView';
 import SlidingPanel from '@/components/SlidingPanel';
 import TripSwiper from '@/components/TripSwiper';
 import DesktopTripView from '@/components/DesktopTripView';
+import SnapIterLoader from '@/components/SnapIterLoader';
 import { useWebsite } from '@/hooks/useApiData';
 import { useAtomValue } from 'jotai';
 import { errorAtom, bottomPanelExpandedAtom } from '@/store/atoms';
@@ -32,16 +33,9 @@ export default function Home() {
   }
 
   if (websiteLoading || trips.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted">Gathering your Iter's...</p>
-        </div>
-      </div>
-    );
+    return <SnapIterLoader />;
   }
-
+  return <SnapIterLoader />;
   return (
     <div className="relative h-screen w-full overflow-hidden">
       {/* Mobile Layout */}
