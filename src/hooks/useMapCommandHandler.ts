@@ -1,5 +1,5 @@
 import { useAtom, useSetAtom } from 'jotai';
-import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent } from '@/store/atoms';
+import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndexAtom } from '@/store/atoms';
 import { useEffect, useRef } from 'react';
 import type maplibregl from 'maplibre-gl';
 import type { MapRef } from 'react-map-gl/maplibre';
@@ -10,11 +10,11 @@ import { fitMapBounds } from '@/utils/mapBounds';
 export function useMapCommandHandler(
   mapRef: React.RefObject<MapRef | null>,
   trips: Trip[],
-  setLightboxIndex: (index: number) => void
 ) {
   const [commands] = useAtom(mapCommandsAtom);
   const setMapEvents = useSetAtom(mapEventsAtom);
 
+  const [lightboxIndex, setLightboxIndex] = useAtom(lightboxIndexAtom);
   const animationRef = useRef<number | null>(null);
   const vehicleMarkerRef = useRef<maplibregl.Marker | null>(null);
   const startTimeRef = useRef<number | null>(null);
