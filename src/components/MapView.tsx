@@ -2,8 +2,8 @@
 
 import Map, { Source, Layer, type MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { selectedTripAtom, lightboxIndexAtom, hoveredPhotoAtom, type Trip } from '@/store/atoms';
-import { useAtom, useAtomValue } from 'jotai';
+import { selectedTripAtom, lightboxIndexAtom, hoveredPhotoAtom, mapReadyAtom, type Trip } from '@/store/atoms';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useRef, useEffect, useState } from 'react';
 import type maplibregl from 'maplibre-gl';
 import { createTripMarkers, createVehicleMarker, cleanupMarkers, highlightMarker } from '@/utils/mapMarkers';
@@ -18,6 +18,7 @@ interface MapViewProps {
 export default function MapView({ className, trips = [] }: MapViewProps) {
   const selectedTrip = useAtomValue(selectedTripAtom);
   const hoveredPhoto = useAtomValue(hoveredPhotoAtom);
+  const setMapReady = useSetAtom(mapReadyAtom);
 
   const [lightboxIndex, setLightboxIndex] = useAtom(lightboxIndexAtom);
   const mapRef = useRef<MapRef | null>(null);
@@ -121,7 +122,10 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
         attributionControl={{
           compact: true,
         }}
-        onLoad={() => setIsMapLoaded(true)}
+        onLoad={() => {
+          setIsMapLoaded(true);
+          setMapReady(true);
+        }}
       >
         {trips.map(trip => {
           if (trip.positions.length < 2) return null;

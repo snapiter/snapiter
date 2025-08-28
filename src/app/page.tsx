@@ -8,12 +8,13 @@ import DesktopTripView from '@/components/DesktopTripView';
 import SnapIterLoader from '@/components/SnapIterLoader';
 import { useWebsite } from '@/hooks/useApiData';
 import { useAtomValue } from 'jotai';
-import { errorAtom, bottomPanelExpandedAtom } from '@/store/atoms';
+import { errorAtom, bottomPanelExpandedAtom, mapReadyAtom } from '@/store/atoms';
 
 export default function Home() {
   const { website, isLoading: websiteLoading } = useWebsite();
   const error = useAtomValue(errorAtom);
   const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
+  const mapReady = useAtomValue(mapReadyAtom);
   
   const trips = useMemo(() => {
     const tripsArray = website?.trips || [];
@@ -30,10 +31,6 @@ export default function Home() {
         </div>
       </div>
     );
-  }
-
-  if (websiteLoading || trips.length === 0) {
-    return <SnapIterLoader />;
   }
 
   return (
@@ -66,6 +63,13 @@ export default function Home() {
           <DesktopTripView trips={trips} />
         </div>
       </div>
+
+      {/* Loading Overlay */}
+      {(websiteLoading || !mapReady || trips.length === 0) && (
+        <div className="absolute inset-0 z-[200]">
+          <SnapIterLoader />
+        </div>
+      )}
     </div>
   );
 }
