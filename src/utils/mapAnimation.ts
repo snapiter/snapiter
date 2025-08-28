@@ -10,7 +10,8 @@ export function createAnimationLoop(
   visibleMarkersRef: { current: Record<string, maplibregl.Marker> },
   currentPositionIndexRef: { current: number },
   startTimeRef: { current: number | null },
-  animationRef: { current: number | null }
+  animationRef: { current: number | null },
+  onComplete?: () => void
 ) {
   const animate = () => {
     if (!mapRef.current || !selectedTrip || activePositions.length < 2) return;
@@ -57,6 +58,7 @@ export function createAnimationLoop(
     } else {
       animationRef.current = null;
       startTimeRef.current = null;
+      onComplete?.(); // Fire callback when animation completes
     }
   };
 
@@ -71,7 +73,8 @@ export function startAnimation(
   visibleMarkersRef: { current: Record<string, maplibregl.Marker> },
   currentPositionIndexRef: { current: number },
   startTimeRef: { current: number | null },
-  animationRef: { current: number | null }
+  animationRef: { current: number | null },
+  onComplete?: () => void
 ) {
   const animate = createAnimationLoop(
     mapRef,
@@ -81,7 +84,8 @@ export function startAnimation(
     visibleMarkersRef,
     currentPositionIndexRef,
     startTimeRef,
-    animationRef
+    animationRef,
+    onComplete
   );
 
   const map = mapRef.current?.getMap();

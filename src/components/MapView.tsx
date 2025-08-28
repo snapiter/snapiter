@@ -2,7 +2,7 @@
 
 import Map, { Source, Layer, type MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { selectedTripAtom, lightboxIndexAtom, hoveredPhotoAtom, mapReadyAtom, type Trip } from '@/store/atoms';
+import { selectedTripAtom, lightboxIndexAtom, hoveredPhotoAtom, mapReadyAtom, mapCommandsAtom, mapEventsAtom, type Trip, type MapCommand, type MapEvent } from '@/store/atoms';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useRef, useEffect, useState } from 'react';
 import type maplibregl from 'maplibre-gl';
@@ -19,6 +19,8 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
   const selectedTrip = useAtomValue(selectedTripAtom);
   const hoveredPhoto = useAtomValue(hoveredPhotoAtom);
   const setMapReady = useSetAtom(mapReadyAtom);
+  const [commands, setCommands] = useAtom(mapCommandsAtom);
+  const setMapEvents = useSetAtom(mapEventsAtom);
 
   const [lightboxIndex, setLightboxIndex] = useAtom(lightboxIndexAtom);
   const mapRef = useRef<MapRef | null>(null);
@@ -29,44 +31,27 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
   const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
   const [isMapLoaded, setIsMapLoaded] = useState(false)
 
-
+  console.log("RENDER" + trips.length)
   
   useEffect(() => {
     if (!selectedTrip || !isMapLoaded || selectedTrip?.positions.length < 2) {
       return;
     }
-    const activePositions = selectedTrip?.positions.toReversed() ?? [];
 
-    stopAnimation(animationRef);
-    startTimeRef.current = null;
-    currentPositionIndexRef.current = 0;
-
-    const map = mapRef.current?.getMap();
-    if (!map) return;
-
-    createTripMarkers(selectedTrip.markers, visibleMarkersRef, (photoIndex: number) => {
-      setLightboxIndex(photoIndex);
-    });
-    createVehicleMarker(activePositions[0], vehicleMarkerRef, map);
-    fitMapBounds(mapRef, activePositions);
-    
-    startAnimation(
-      mapRef,
-      selectedTrip,
-      activePositions,
-      vehicleMarkerRef,
-      visibleMarkersRef,
-      currentPositionIndexRef,
-      startTimeRef,
-      animationRef
-    );
+    console.log("EFFECT " + trips.length)
+    // Use command system to animate the selected trip
+    setCommands(prev => [...prev, { 
+      type: 'ANIMATE_TRIP', 
+      tripSlug: selectedTrip.slug, 
+      id: `selected-${Date.now()}` 
+    }]);
 
     return () => {
       stopAnimation(animationRef);
       cleanupMarkers(visibleMarkersRef, vehicleMarkerRef);
       startTimeRef.current = null;
     };
-  }, [selectedTrip, isMapLoaded]);
+  }, [selectedTrip, isMapLoaded, setCommands]);
 
 
   useEffect(() => {
@@ -97,20 +82,112 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       const targetMarker = photosFromMarkers[lightboxIndex];
       
       if (targetMarker) {
-        // Fly to marker location
-        map.flyTo({
-          center: [targetMarker.longitude, targetMarker.latitude],
-          zoom: 10, // Close zoom level
-          duration: 1000 // 1 second animation
-        });
+        // Use command system to fly to marker location
+        setCommands(prev => [...prev, {
+          type: 'FLY_TO',
+          coordinates: [targetMarker.longitude, targetMarker.latitude],
+          zoom: 10,
+          id: `lightbox-${Date.now()}`
+        }]);
       }
     }
-  }, [lightboxIndex, selectedTrip]);
+  }, [lightboxIndex, selectedTrip, setCommands]);
 
   // Handle photo hover highlighting
   useEffect(() => {
     highlightMarker(visibleMarkersRef, hoveredPhoto);
   }, [hoveredPhoto]);
+
+  // Command handler
+  const emitEvent = (event: MapEvent) => {
+    console.log("Dispatched:" + event.type)
+    setMapEvents(prev => [...prev, event]);
+  };
+
+  const findTripBySlug = (slug: string) => {
+    return trips.find(trip => trip.slug === slug);
+  };
+
+  useEffect(() => {
+    if (commands.length === 0 || !mapRef.current) return;
+
+    const command = commands[0]; // Process first command
+    const map = mapRef.current.getMap();
+    if (!map) return;
+
+    const handleCommand = async () => {
+      console.log("Command: " + command.type)
+      switch (command.type) {
+        case 'ANIMATE_TRIP': {
+          const trip = findTripBySlug(command.tripSlug);
+          if (!trip) break;
+          
+          emitEvent({ type: 'ANIMATION_STARTED', tripSlug: command.tripSlug, commandId: command.id });
+          
+          // Stop current animation and start new one
+          stopAnimation(animationRef);
+          const activePositions = trip.positions.toReversed();
+          
+          createTripMarkers(trip.markers, visibleMarkersRef, (photoIndex: number) => {
+            setLightboxIndex(photoIndex);
+          });
+          createVehicleMarker(activePositions[0], vehicleMarkerRef, map);
+          fitMapBounds(mapRef, activePositions);
+          
+          startAnimation(
+            mapRef,
+            trip,
+            activePositions,
+            vehicleMarkerRef,
+            visibleMarkersRef,
+            currentPositionIndexRef,
+            startTimeRef,
+            animationRef,
+            () => {
+              // This callback fires when animation actually completes
+              emitEvent({ type: 'ANIMATION_ENDED', tripSlug: command.tripSlug, commandId: command.id });
+            }
+          );
+          break;
+        }
+        
+        case 'FLY_TO': {
+          emitEvent({ type: 'FLY_TO_STARTED', coordinates: command.coordinates, commandId: command.id });
+          
+          map.flyTo({
+            center: command.coordinates,
+            zoom: command.zoom || 10,
+            duration: 1000
+          });
+          
+          // Wait for flyTo to complete
+          setTimeout(() => {
+            emitEvent({ type: 'FLY_TO_ENDED', coordinates: command.coordinates, commandId: command.id });
+          }, 1000);
+          break;
+        }
+        
+        case 'FIT_BOUNDS': {
+          const trip = findTripBySlug(command.tripSlug);
+          if (!trip) break;
+          
+          emitEvent({ type: 'FIT_BOUNDS_STARTED', tripSlug: command.tripSlug, commandId: command.id });
+          
+          const activePositions = trip.positions.toReversed();
+          fitMapBounds(mapRef, activePositions);
+          
+          // Wait for bounds animation to complete
+          setTimeout(() => {
+            emitEvent({ type: 'FIT_BOUNDS_ENDED', tripSlug: command.tripSlug, commandId: command.id });
+          }, 1500);
+          break;
+        }
+      }
+    };
+
+    handleCommand();
+    
+  }, [commands, trips, setLightboxIndex, setCommands, setMapEvents]);
 
   return (
     <div className={className}>
