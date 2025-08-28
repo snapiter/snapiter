@@ -111,6 +111,18 @@ export function useMapCommandHandler(
           emitEvent({ type: 'MARKER_HIGHLIGHTED', photoId: command.photoId, commandId: command.id });
           break;
         }
+        
+        case 'LIGHTBOX_OPEN': {
+          setLightboxIndex(command.photoIndex);
+          emitEvent({ type: 'LIGHTBOX_OPENED', photoIndex: command.photoIndex, commandId: command.id });
+          break;
+        }
+        
+        case 'LIGHTBOX_CLOSE': {
+          setLightboxIndex(-1);
+          emitEvent({ type: 'LIGHTBOX_CLOSED', commandId: command.id });
+          break;
+        }
       }
     };
 

@@ -32,6 +32,18 @@ export function useMapCommands() {
     return id;
   }, [setCommands]);
 
+  const openLightbox = useCallback((photoIndex: number) => {
+    const id = generateId();
+    setCommands(prev => [...prev, { type: 'LIGHTBOX_OPEN', photoIndex, id }]);
+    return id;
+  }, [setCommands]);
+
+  const closeLightbox = useCallback(() => {
+    const id = generateId();
+    setCommands(prev => [...prev, { type: 'LIGHTBOX_CLOSE', id }]);
+    return id;
+  }, [setCommands]);
+
   // Helper to get events for a specific command
   const getEventsForCommand = useCallback((commandId: string) => {
     return events.filter(event => event.commandId === commandId);
@@ -70,6 +82,8 @@ export function useMapCommands() {
     flyTo,
     fitBounds,
     highlightMarker,
+    openLightbox,
+    closeLightbox,
     
     // Event helpers
     events,

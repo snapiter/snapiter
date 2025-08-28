@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper/modules';
 import Image from 'next/image';
 import { useSetAtom } from 'jotai';
-import { lightboxIndexAtom } from '@/store/atoms';
+import { mapCommandsAtom } from '@/store/atoms';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -22,10 +22,14 @@ interface PhotoCarouselProps {
   className?: string;
 }
 export default function PhotoCarousel({ photos, className = '' }: PhotoCarouselProps) {
-  const setLightboxIndex = useSetAtom(lightboxIndexAtom);
+  const setCommands = useSetAtom(mapCommandsAtom);
 
   const handlePhotoClick = (index: number) => {
-    setLightboxIndex(index);
+    setCommands(prev => [...prev, { 
+      type: 'LIGHTBOX_OPEN', 
+      photoIndex: index, 
+      id: `carousel-${Date.now()}` 
+    }]);
   };
 
   return (
