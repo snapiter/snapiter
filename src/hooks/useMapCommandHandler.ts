@@ -1,5 +1,5 @@
 import { useAtom, useSetAtom } from 'jotai';
-import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndexAtom } from '@/store/atoms';
+import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndexAtom, mapReadyAtom } from '@/store/atoms';
 import { useEffect, useRef } from 'react';
 import type maplibregl from 'maplibre-gl';
 import type { MapRef } from 'react-map-gl/maplibre';
@@ -13,6 +13,7 @@ export function useMapCommandHandler(
 ) {
   const [commands] = useAtom(mapCommandsAtom);
   const setMapEvents = useSetAtom(mapEventsAtom);
+  const setMapReady = useSetAtom(mapReadyAtom);
 
   const [lightboxIndex, setLightboxIndex] = useAtom(lightboxIndexAtom);
   const animationRef = useRef<number | null>(null);
@@ -121,6 +122,12 @@ export function useMapCommandHandler(
         case 'LIGHTBOX_CLOSE': {
           setLightboxIndex(-1);
           emitEvent({ type: 'LIGHTBOX_CLOSED', commandId: command.id });
+          break;
+        }
+        
+        case 'MAP_READY': {
+          setMapReady(true);
+          emitEvent({ type: 'MAP_READY', commandId: command.id });
           break;
         }
       }

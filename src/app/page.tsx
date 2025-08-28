@@ -9,13 +9,16 @@ import SnapIterLoader from '@/components/SnapIterLoader';
 import DynamicTitle from '@/components/DynamicTitle';
 import { useWebsite } from '@/hooks/useApiData';
 import { useAtomValue } from 'jotai';
-import { errorAtom, bottomPanelExpandedAtom, mapReadyAtom } from '@/store/atoms';
+import { errorAtom, bottomPanelExpandedAtom, mapEventsAtom } from '@/store/atoms';
 
 export default function Home() {
   const { website, isLoading: websiteLoading } = useWebsite();
   const error = useAtomValue(errorAtom);
   const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
-  const mapReady = useAtomValue(mapReadyAtom);
+  const mapEvents = useAtomValue(mapEventsAtom);
+  
+  // Check if map is ready by looking for MAP_READY events
+  const mapReady = mapEvents.some(event => event.type === 'MAP_READY');
   
   const trips = useMemo(() => {
     const tripsArray = website?.trips || [];

@@ -8,7 +8,8 @@ type MapCommandWithoutId =
   | { type: 'FIT_BOUNDS'; tripSlug: string }
   | { type: 'HIGHLIGHT_MARKER'; photoId: string | null }
   | { type: 'LIGHTBOX_OPEN'; photoIndex: number }
-  | { type: 'LIGHTBOX_CLOSE' };
+  | { type: 'LIGHTBOX_CLOSE' }
+  | { type: 'MAP_READY' };
 
 export function useMapCommands() {
   const setCommands = useSetAtom(mapCommandsAtom);

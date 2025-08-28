@@ -93,7 +93,8 @@ export type MapCommand =
   | { type: 'FIT_BOUNDS'; tripSlug: string; id: string }
   | { type: 'HIGHLIGHT_MARKER'; photoId: string | null; id: string }
   | { type: 'LIGHTBOX_OPEN'; photoIndex: number; id: string }
-  | { type: 'LIGHTBOX_CLOSE'; id: string };
+  | { type: 'LIGHTBOX_CLOSE'; id: string }
+  | { type: 'MAP_READY'; id: string };
 
 export type MapEvent = 
   | { type: 'ANIMATION_STARTED'; tripSlug: string; commandId: string }
@@ -104,7 +105,8 @@ export type MapEvent =
   | { type: 'FIT_BOUNDS_ENDED'; tripSlug: string; commandId: string }
   | { type: 'MARKER_HIGHLIGHTED'; photoId: string | null; commandId: string }
   | { type: 'LIGHTBOX_OPENED'; photoIndex: number; commandId: string }
-  | { type: 'LIGHTBOX_CLOSED'; commandId: string };
+  | { type: 'LIGHTBOX_CLOSED'; commandId: string }
+  | { type: 'MAP_READY'; commandId: string };
 
 export const mapCommandsAtom = atom<MapCommand[]>([]);
 export const mapEventsAtom = atom<MapEvent[]>([]);

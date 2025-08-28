@@ -2,8 +2,8 @@
 
 import Map, { Source, Layer, type MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { selectedTripAtom, mapReadyAtom, type Trip } from '@/store/atoms';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { mapEventsAtom, selectedTripAtom, type Trip } from '@/store/atoms';
+import { useAtomValue } from 'jotai';
 import { useRef, useEffect, useState } from 'react';
 import { createRouteData } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
@@ -16,19 +16,23 @@ interface MapViewProps {
 
 export default function MapView({ className, trips = [] }: MapViewProps) {
   const selectedTrip = useAtomValue(selectedTripAtom);
-  const setMapReady = useSetAtom(mapReadyAtom);
   const { runCommand } = useMapCommands();
 
   const mapRef = useRef<MapRef | null>(null);
-  const [isMapLoaded, setIsMapLoaded] = useState(false);
 
+  const mapEvents = useAtomValue(mapEventsAtom);
+  
+  // Check if map is ready by looking for MAP_READY events
+  const mapReady = mapEvents.some(event => event.type === 'MAP_READY');
+
+  
   // This handles the commands
   useMapCommandHandler(mapRef, trips);
 
   console.log("Mapview render" + trips.length)
   
   useEffect(() => {
-    if (!selectedTrip || !isMapLoaded || selectedTrip?.positions.length < 2) {
+    if (!selectedTrip || !mapReady || selectedTrip?.positions.length < 2) {
       return;
     }
     
@@ -38,7 +42,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       tripSlug: selectedTrip.slug 
     });
 
-  }, [selectedTrip, isMapLoaded, runCommand]);
+  }, [selectedTrip, mapReady, runCommand]);
 
 
   return (
@@ -52,8 +56,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
           compact: true,
         }}
         onLoad={() => {
-          setIsMapLoaded(true);
-          setMapReady(true);
+          runCommand({ type: 'MAP_READY' });
         }}
       >
         {trips.map(trip => {
