@@ -6,6 +6,7 @@ import SlidingPanel from '@/components/SlidingPanel';
 import TripSwiper from '@/components/TripSwiper';
 import DesktopTripView from '@/components/DesktopTripView';
 import SnapIterLoader from '@/components/SnapIterLoader';
+import DynamicTitle from '@/components/DynamicTitle';
 import { useWebsite } from '@/hooks/useApiData';
 import { useAtomValue } from 'jotai';
 import { errorAtom, bottomPanelExpandedAtom, mapReadyAtom } from '@/store/atoms';
@@ -34,7 +35,9 @@ export default function Home() {
   }
 
   return (
-    <div className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row">
+    <>
+      <DynamicTitle />
+      <div className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row">
       {/* Single MapView - responsive sizing */}
       <div className={`flex-1 transition-all duration-300 ${
         // Mobile: dynamic height based on panel state
@@ -69,6 +72,7 @@ export default function Home() {
           <SnapIterLoader />
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }
