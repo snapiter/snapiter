@@ -1,7 +1,6 @@
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import {
-  vesselIdAtom,
   websiteAtom,
   isLoadingWebsiteAtom,
   errorAtom,
@@ -72,10 +71,4 @@ export function useWebsite() {
   }, [hostname, setError, setIsLoading, setWebsite, website]);
 
   return { website, isLoading };
-}
-
-export function useVesselConfig() {
-  const vesselId = useAtomValue(vesselIdAtom);
-  
-  return { vesselId };
 }

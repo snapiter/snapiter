@@ -1,6 +1,4 @@
 import { atom } from 'jotai';
-import { config } from '@/config/config';
-
 
 export interface Website {
   vesselId: string;
@@ -57,19 +55,8 @@ export interface Photo {
   caption?: string;
 }
 
-export const vesselIdAtom = atom<string>(config.vesselId);
-
-export const tripsAtom = atom<Trip[]>([]);
-
 export const selectedTripAtom = atom<Trip | null>(null);
 
-export const positionsAtom = atom<Position[]>([]);
-
-export const markersAtom = atom<Marker[]>([]);
-
-export const isLoadingTripsAtom = atom<boolean>(false);
-export const isLoadingPositionsAtom = atom<boolean>(false);
-export const isLoadingMarkersAtom = atom<boolean>(false);
 
 export const errorAtom = atom<string | null>(null);
 
@@ -78,13 +65,8 @@ export const bottomPanelExpandedAtom = atom<boolean>(false);
 export const websiteAtom = atom<Website | null>(null);
 export const isLoadingWebsiteAtom = atom<boolean>(false);
 
-export const clickedMarkerAtom = atom<Marker | null>(null);
 
 export const lightboxIndexAtom = atom<number>(-1);
-
-export const hoveredPhotoAtom = atom<string | null>(null);
-
-export const mapReadyAtom = atom<boolean>(false);
 
 // Map Command/Event System
 export type MapCommand = 

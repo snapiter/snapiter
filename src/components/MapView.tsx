@@ -24,7 +24,6 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
   
   // Check if map is ready by looking for MAP_READY events
   const mapReady = mapEvents.some(event => event.type === 'MAP_READY');
-
   
   // This handles the commands
   useMapCommandHandler(mapRef, trips);
