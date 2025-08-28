@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import TripSidebar from './TripSidebar';
 import TripDetails from './TripDetails';
-import { useSetAtom } from 'jotai';
-import { selectedTripAtom, type Trip } from '@/store/atoms';
+import { type Trip } from '@/store/atoms';
+import { useMapCommands } from '@/hooks/useMapCommands';
 
 interface DesktopTripViewProps {
   trips: Trip[];
@@ -12,11 +12,14 @@ interface DesktopTripViewProps {
 
 export default function DesktopTripView({ trips }: DesktopTripViewProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const setSelectedTrip = useSetAtom(selectedTripAtom);
+  const { runCommand } = useMapCommands();
 
   const handleTripSelect = (index: number) => {
     setActiveIndex(index);
-    setSelectedTrip(trips[index] || null);
+    runCommand({
+      type: 'ANIMATE_TRIP',
+      tripSlug: trips[index].slug
+    });
   };
 
   if (trips.length === 0) {

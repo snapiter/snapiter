@@ -1,14 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import TripDetails from './TripDetails';
-import { useSetAtom } from 'jotai';
-import { selectedTripAtom, type Trip } from '@/store/atoms';
+import { type Trip } from '@/store/atoms';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { useMapCommands } from '@/hooks/useMapCommands';
 
 interface TripSwiperProps {
   trips: Trip[];
@@ -16,22 +16,15 @@ interface TripSwiperProps {
 
 export default function TripSwiper({ trips }: TripSwiperProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const setSelectedTrip = useSetAtom(selectedTripAtom);
+  const { runCommand } = useMapCommands();
   
   const handleSlideChange = (swiper: any) => {
     setActiveIndex(swiper.activeIndex);
-    setSelectedTrip(trips[swiper.activeIndex] || null);
+    runCommand({
+      type: 'ANIMATE_TRIP',
+      tripSlug: trips[swiper.activeIndex].slug
+    });
   };
-
-  // Set initial trip when trips are loaded
-  useEffect(() => {
-    if (trips.length > 0 && !trips[activeIndex]) {
-      setSelectedTrip(trips[0]);
-    } else if (trips[activeIndex]) {
-      setSelectedTrip(trips[activeIndex]);
-    }
-  }, [trips, activeIndex, setSelectedTrip]);
-
 
   return (
     <div className={`w-full h-full`}>

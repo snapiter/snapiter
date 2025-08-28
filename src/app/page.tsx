@@ -36,15 +36,18 @@ export default function Home() {
   // Trigger LOAD_WEBSITE command once when hostname is available
   useEffect(() => {
     if (!hostname || !mapReady || websiteReady) return;
-    
+
 
     runCommand({ type: 'LOAD_WEBSITE', hostname });
   }, [hostname, mapReady, websiteReady, runCommand]);
 
   useEffect(() => {
     if (websiteReady && mapReady && trips.length > 0) {
-      
       setIsLoaded(true);
+      runCommand({
+        type: 'ANIMATE_TRIP',
+        tripSlug: trips[0].slug
+      });
     }
   }, [websiteReady, mapReady, trips])
 
