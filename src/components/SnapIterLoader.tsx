@@ -43,11 +43,7 @@ export default function SnapIterLoader() {
             />
 
             {/* Moving Vehicle - follows the front of the drawing line */}
-            <circle r="6" fill="var(--warning)" opacity="0.9">
-              <animateMotion dur="3s" repeatCount="indefinite">
-                <mpath href="#route-path" />
-              </animateMotion>
-            </circle>
+            <circle r="6" fill="var(--warning)" opacity="0.9" className="animate-vehicle-follow" />
             
             {/* Journey Points - appear after the line is drawn */}
             <g className="animate-points-appear" style={{ animationDelay: '1s' }}>
@@ -92,30 +88,6 @@ export default function SnapIterLoader() {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Loading Text */}
-        <div className="text-center">
-          <p className="text-xl font-medium text-foreground mb-2 animate-pulse">
-            Preparing your journey...
-          </p>
-          <div className="flex items-center gap-2 text-muted">
-            <div className="flex gap-1">
-              {[1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className="w-2 h-2 bg-primary rounded-full animate-bounce"
-                  style={{ animationDelay: `${i * 0.2}s` }}
-                />
-              ))}
-            </div>
-            <span className="ml-2">Loading your snaps & maps</span>
-          </div>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="mt-8 w-64 h-1 bg-border rounded-full overflow-hidden">
-          <div className="h-full bg-gradient-to-r from-primary to-primary-light animate-progress" />
         </div>
       </div>
     </div>

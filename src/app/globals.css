@@ -115,3 +115,18 @@ body {
 .animate-progress {
   animation: progress 2s ease-in-out infinite;
 }
+
+@keyframes vehicle-follow {
+  0% { 
+    offset-path: path("M20,100 Q80,20 160,60 Q240,100 300,40");
+    offset-distance: 0%;
+  }
+  100% { 
+    offset-path: path("M20,100 Q80,20 160,60 Q240,100 300,40");
+    offset-distance: 100%;
+  }
+}
+
+.animate-vehicle-follow {
+  animation: vehicle-follow 2.8s ease-in-out infinite;
+}

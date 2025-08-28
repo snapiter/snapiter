@@ -35,7 +35,7 @@ export default function Home() {
   if (websiteLoading || trips.length === 0) {
     return <SnapIterLoader />;
   }
-  return <SnapIterLoader />;
+
   return (
     <div className="relative h-screen w-full overflow-hidden">
       {/* Mobile Layout */}
