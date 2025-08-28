@@ -14,6 +14,7 @@ This is a Next.js 15 frontend application for the SnapIter project, built with:
 - Swiper for carousel/slider components
 - jotai for state management
 - Backend swagger API https://api.partypieps.nl/api/api-docs/V1
+- Primary color is #F46036
 
 ## Development Commands
 
