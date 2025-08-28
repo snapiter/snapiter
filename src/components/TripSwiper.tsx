@@ -16,7 +16,6 @@ interface TripSwiperProps {
 
 export default function TripSwiper({ trips }: TripSwiperProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [swiperInstance, setSwiperInstance] = useState<any>(null);
   const setSelectedTrip = useSetAtom(selectedTripAtom);
   
   const handleSlideChange = (swiper: any) => {
@@ -33,12 +32,6 @@ export default function TripSwiper({ trips }: TripSwiperProps) {
     }
   }, [trips, activeIndex, setSelectedTrip]);
 
-
-  const goToSlide = (index: number) => {
-    if (swiperInstance) {
-      swiperInstance.slideTo(index);
-    }
-  };
 
   return (
     <div className={`w-full h-full`}>
@@ -88,7 +81,6 @@ export default function TripSwiper({ trips }: TripSwiperProps) {
         spaceBetween={0}
         slidesPerView={1}
         onSlideChange={handleSlideChange}
-        onSwiper={setSwiperInstance}
         className="h-full"
       >
         {trips.map((trip) => (
