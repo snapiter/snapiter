@@ -2,7 +2,8 @@ import type { Position } from '@/store/atoms';
 
 export function fitMapBounds(
   mapRef: { current: any },
-  positions: Position[]
+  positions: Position[],
+  duration: number = 1000
 ) {
   if (!mapRef.current || positions.length === 0) return;
 
@@ -15,7 +16,7 @@ export function fitMapBounds(
 
   mapRef.current.fitBounds(
     [[minLng, minLat], [maxLng, maxLat]], 
-    { padding: 40, duration: 1000 }
+    { padding: 40, duration: duration }
   );
 }
 
