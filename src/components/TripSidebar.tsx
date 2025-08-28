@@ -29,7 +29,7 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
           <button
             key={`button-${trip.slug}`}
             onClick={() => onTripSelect(index)}
-            className={`w-full p-3 mb-2 rounded-lg text-left transition-colors hover:bg-background hover:shadow-sm ${
+            className={`w-full p-3 mb-2 cursor-pointer rounded-lg text-left transition-colors hover:bg-background hover:shadow-sm ${
               index === activeIndex
                 ? 'bg-background shadow-sm border-l-4 border-primary'
                 : 'bg-transparent'
