@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import type { Trip } from '@/store/atoms';
 
 interface TripSidebarProps {
@@ -19,9 +20,20 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
 
   return (
     <div className="w-64 bg-surface border-r border-border h-full overflow-y-auto">
-      <div className="p-4 border-b border-border">
-        <h2 className="text-lg font-semibold text-foreground">Trips</h2>
-        <p className="text-sm text-muted">{trips.length} Travels</p>
+      <div className="p-4">
+        <div className="flex items-center gap-3 mb-2">
+          <Image 
+            src="/logo.svg" 
+            alt="SnapIter" 
+            width={32} 
+            height={32} 
+            className="flex-shrink-0"
+          />
+          <h1 className="text-xl font-bold text-foreground">SnapIter</h1>
+        </div>
+        <p className="text-sm text-muted">
+          {trips.length} {trips.length === 1 ? 'Journey' : 'Journeys'}
+        </p>
       </div>
       
       <div className="p-2">
