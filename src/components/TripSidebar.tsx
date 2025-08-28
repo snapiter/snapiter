@@ -18,10 +18,10 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
   };
 
   return (
-    <div className="w-64 bg-gray-50 border-r border-gray-200 h-full overflow-y-auto">
-      <div className="p-4 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900">Trips</h2>
-        <p className="text-sm text-gray-500">{trips.length} Travels</p>
+    <div className="w-64 bg-surface border-r border-border h-full overflow-y-auto">
+      <div className="p-4 border-b border-border">
+        <h2 className="text-lg font-semibold text-foreground">Trips</h2>
+        <p className="text-sm text-muted">{trips.length} Travels</p>
       </div>
       
       <div className="p-2">
@@ -29,15 +29,15 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
           <button
             key={`button-${trip.slug}`}
             onClick={() => onTripSelect(index)}
-            className={`w-full p-3 mb-2 rounded-lg text-left transition-colors hover:bg-white hover:shadow-sm ${
+            className={`w-full p-3 mb-2 rounded-lg text-left transition-colors hover:bg-background hover:shadow-sm ${
               index === activeIndex
-                ? 'bg-white shadow-sm border-l-4 border-blue-500'
+                ? 'bg-background shadow-sm border-l-4 border-primary'
                 : 'bg-transparent'
             }`}
           >
             <div className="flex items-center justify-between mb-1">
               <h3 className={`font-medium truncate ${
-                index === activeIndex ? 'text-blue-600' : 'text-gray-900'
+                index === activeIndex ? 'text-primary' : 'text-foreground'
               }`}>
                 {trip.title}
               </h3>
@@ -48,11 +48,11 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
                 />
               )}
             </div>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-muted mt-1">
               {formatDate(trip.startDate)}
               {trip.endDate ? ` - ${formatDate(trip.endDate)}` : ''}
             </p>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-muted mt-1">
               {trip.positionType}
             </p>
           </button>

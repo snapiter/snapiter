@@ -35,7 +35,7 @@ export default function SlidingPanel({ children }: SlidingPanelProps) {
     <motion.div
       ref={panelRef}
       style={{ height: expandedHeight }} // FIX: set explicit height
-      className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl z-[102]"
+      className="fixed bottom-0 left-0 right-0 bg-background rounded-t-3xl shadow-2xl z-[102]"
       animate={{ y: isExpanded ? expandedY : collapsedY }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       drag="y"
@@ -52,12 +52,12 @@ export default function SlidingPanel({ children }: SlidingPanelProps) {
       }}
     >
       <div
-        className="flex items-center justify-between p-4 border-b border-gray-200 cursor-grab"
+        className="flex items-center justify-between p-4 border-b border-border cursor-grab"
         onPointerDown={(e) => dragControls.start(e)}
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <motion.div
-          className="w-12 h-1 bg-gray-300 rounded-full mx-auto"
+          className="w-12 h-1 bg-border rounded-full mx-auto"
           whileTap={{ scale: 1.2 }}
         />
       </div>

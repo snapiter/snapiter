@@ -42,14 +42,14 @@ export default function TripSwiper({ trips }: TripSwiperProps) {
 
   return (
     <div className={`w-full h-full`}>
-      <div className="absolute right-0 top-10 z-[102] bg-white">
+      <div className="absolute right-0 top-10 z-[102] bg-background">
         <div className="flex space-x-1 pr-3 flex-shrink-0">
           {trips.map((_, index) => (
             <div
               key={index}
               onClick={() => goToSlide(index)}
               className={`w-2 h-2 rounded-full transition-colors cursor-pointer hover:scale-110 ${
-                index === activeIndex ? 'bg-blue-500' : 'bg-gray-300 hover:bg-gray-400'
+                index === activeIndex ? 'bg-primary' : 'bg-muted hover:bg-border'
               }`}
             />
           ))}

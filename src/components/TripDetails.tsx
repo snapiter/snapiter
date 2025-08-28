@@ -30,9 +30,9 @@ export default function TripDetails({ trip}: TripDetailsProps) {
 
   return (
     <div className={`h-full overflow-y-auto`}>
-      <div className="p-0 md:p-4 sticky top-0 z-[101] bg-white">
-        <h2 className="text-xl font-bold text-gray-900 mb-2">{trip.title}</h2>
-        <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-3">
+      <div className="p-0 md:p-4 sticky top-0 z-[101] bg-background">
+        <h2 className="text-xl font-bold text-foreground mb-2">{trip.title}</h2>
+        <div className="flex flex-wrap gap-4 text-sm text-muted mb-3">
           <span>
             {formatDate(trip.startDate)}
             {trip.endDate ? ` - ${formatDate(trip.endDate)}` : ''}
@@ -47,7 +47,7 @@ export default function TripDetails({ trip}: TripDetailsProps) {
             </span>
           )}
         </div>
-        <p className="text-gray-700 text-sm leading-relaxed">{trip.description}</p>
+        <p className="text-foreground text-sm leading-relaxed">{trip.description}</p>
       </div>
 
       {photosFromMarkers.length > 0 && (
