@@ -1,4 +1,4 @@
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndexAtom, isLoadingWebsiteAtom, websiteAtom, errorAtom } from '@/store/atoms';
 import { fetchWebsiteByHostname } from '@/services/api';
 import { useEffect, useRef } from 'react';
@@ -12,7 +12,7 @@ export function useMapCommandHandler(
   mapRef: React.RefObject<MapRef | null>,
   trips: Trip[],
 ) {
-  const [commands] = useAtom(mapCommandsAtom);
+  const commands = useAtomValue(mapCommandsAtom);
   const setMapEvents = useSetAtom(mapEventsAtom);
   const setIsLoadingWebsite = useSetAtom(isLoadingWebsiteAtom);
   const setWebsite = useSetAtom(websiteAtom);
@@ -39,6 +39,7 @@ export function useMapCommandHandler(
 
     const command = commands[commands.length - 1];
     
+
     const map = mapRef.current.getMap();
     if (!map) return;
 
@@ -157,7 +158,7 @@ export function useMapCommandHandler(
     };
 
     handleCommand();
-  }, [commands, trips, setLightboxIndex, setMapEvents, setIsLoadingWebsite, setWebsite, setError, mapRef]);
+  }, [commands, setLightboxIndex, setMapEvents, setIsLoadingWebsite, setWebsite, setError, mapRef]);
 
   // Cleanup function
   useEffect(() => {

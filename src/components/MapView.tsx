@@ -20,26 +20,25 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
 
   const mapRef = useRef<MapRef | null>(null);
 
-  const mapEvents = useAtomValue(mapEventsAtom);
+  // const mapEvents = useAtomValue(mapEventsAtom);
   
-  // Check if map is ready by looking for MAP_READY events
-  const mapReady = mapEvents.some(event => event.type === 'MAP_READY');
+  // const mapReady = mapEvents.some(event => event.type === 'MAP_READY');
   
   // This handles the commands
   useMapCommandHandler(mapRef, trips);
 
-  useEffect(() => {
-    if (!selectedTrip || !mapReady || selectedTrip?.positions.length < 2) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!selectedTrip || !mapReady || selectedTrip?.positions.length < 2) {
+  //     return;
+  //   }
     
-    // Use command system to animate the selected trip
-    runCommand({ 
-      type: 'ANIMATE_TRIP', 
-      tripSlug: selectedTrip.slug 
-    });
+  //   // Use command system to animate the selected trip
+  //   runCommand({ 
+  //     type: 'ANIMATE_TRIP', 
+  //     tripSlug: selectedTrip.slug 
+  //   });
 
-  }, [selectedTrip, mapReady, runCommand]);
+  // }, [selectedTrip, mapReady, runCommand]);
 
 
   return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import MapView from '@/components/MapView';
 import SlidingPanel from '@/components/SlidingPanel';
 import TripSwiper from '@/components/TripSwiper';
@@ -35,22 +35,15 @@ export default function Home() {
 
   // Trigger LOAD_WEBSITE command once when hostname is available
   useEffect(() => {
-    if (!hostname) return;
-
-    if(!mapReady) {
-      return;
-    }
-
-    if(websiteReady) {
-      // Already loaded
-      return;
-    }
+    if (!hostname || !mapReady || websiteReady) return;
+    
 
     runCommand({ type: 'LOAD_WEBSITE', hostname });
-  }, [hostname, mapReady, websiteReady]);
+  }, [hostname, mapReady, websiteReady, runCommand]);
 
   useEffect(() => {
     if (websiteReady && mapReady && trips.length > 0) {
+      
       setIsLoaded(true);
     }
   }, [websiteReady, mapReady, trips])
