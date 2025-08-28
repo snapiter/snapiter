@@ -34,15 +34,19 @@ export default function Home() {
   }
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
-      {/* Mobile Layout */}
-      <div className="md:hidden h-full flex flex-col">
-        <MapView 
-          className={`transition-all duration-300 ${
-            isPanelExpanded ? 'h-[calc(40vh+36px)]' : 'h-[calc(100vh-36px)]'
-          }`} 
-          trips={trips}
-        />
+    <div className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row">
+      {/* Single MapView - responsive sizing */}
+      <div className={`flex-1 transition-all duration-300 ${
+        // Mobile: dynamic height based on panel state
+        isPanelExpanded 
+          ? 'h-[calc(40vh+36px)] md:h-full' 
+          : 'h-[calc(100vh-36px)] md:h-full'
+      }`}>
+        <MapView className="w-full h-full" trips={trips} />
+      </div>
+
+      {/* Mobile: Sliding Panel */}
+      <div className="md:hidden">
         <SlidingPanel>
           {trips.length === 0 ? (
             <div className="p-4 text-center">
@@ -54,14 +58,9 @@ export default function Home() {
         </SlidingPanel>
       </div>
 
-      {/* Desktop Layout */}
-      <div className="hidden md:flex h-full">
-        <div className="flex-1 relative">
-          <MapView className="h-full" trips={trips} />
-        </div>
-        <div className="w-[600px] bg-background shadow-xl overflow-hidden">
-          <DesktopTripView trips={trips} />
-        </div>
+      {/* Desktop: Side Panel */}
+      <div className="hidden md:block w-[600px] bg-background shadow-xl overflow-hidden">
+        <DesktopTripView trips={trips} />
       </div>
 
       {/* Loading Overlay */}
