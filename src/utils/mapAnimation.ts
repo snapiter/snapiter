@@ -91,11 +91,15 @@ export function startAnimation(
   const map = mapRef.current?.getMap();
   if (!map) return;
 
+  // Remove any existing moveend listeners to prevent conflicts
+  map.off('moveend');
+  
   const startAnimationHandler = () => {
     animationRef.current = requestAnimationFrame(animate);
     map.off('moveend', startAnimationHandler);
   };
 
+  // Wait for any ongoing map movements to complete before starting animation
   map.on('moveend', startAnimationHandler);
 }
 

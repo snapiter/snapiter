@@ -52,8 +52,16 @@ export function useMapCommandHandler(
           
           emitEvent({ type: 'ANIMATION_STARTED', tripSlug: command.tripSlug, commandId: command.id });
           
-          // Stop current animation and start new one
+          // Stop current animation and reset ALL animation state
           stopAnimation(animationRef);
+          
+          // Reset all animation state completely
+          currentPositionIndexRef.current = 0;
+          startTimeRef.current = null;
+          
+          // Clean up existing markers and vehicle
+          cleanupMarkers(visibleMarkersRef, vehicleMarkerRef);
+          
           const activePositions = trip.positions.toReversed();
           
           createTripMarkers(trip.markers, visibleMarkersRef, (photoIndex: number) => {
