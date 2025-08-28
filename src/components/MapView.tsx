@@ -5,7 +5,6 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { selectedTripAtom, lightboxIndexAtom, hoveredPhotoAtom, mapReadyAtom, mapCommandsAtom, type Trip } from '@/store/atoms';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useRef, useEffect, useState } from 'react';
-import { highlightMarker } from '@/utils/mapMarkers';
 import { stopAnimation } from '@/utils/mapAnimation';
 import { createRouteData } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
@@ -25,7 +24,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
   const mapRef = useRef<MapRef | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
-  const { visibleMarkersRef, animationRef } = useMapCommandHandler(mapRef, trips, setLightboxIndex);
+  const { animationRef } = useMapCommandHandler(mapRef, trips, setLightboxIndex);
 
   console.log("RENDER" + trips.length)
   
@@ -83,10 +82,14 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
     }
   }, [lightboxIndex, selectedTrip, setCommands]);
 
-  // Handle photo hover highlighting
+  // Handle photo hover highlighting via command
   useEffect(() => {
-    highlightMarker(visibleMarkersRef, hoveredPhoto);
-  }, [hoveredPhoto]);
+    setCommands(prev => [...prev, { 
+      type: 'HIGHLIGHT_MARKER', 
+      photoId: hoveredPhoto, 
+      id: `highlight-${Date.now()}` 
+    }]);
+  }, [hoveredPhoto, setCommands]);
 
 
   return (

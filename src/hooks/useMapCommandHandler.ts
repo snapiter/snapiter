@@ -3,7 +3,7 @@ import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent } from '@/stor
 import { useEffect, useRef } from 'react';
 import type maplibregl from 'maplibre-gl';
 import type { MapRef } from 'react-map-gl/maplibre';
-import { createTripMarkers, createVehicleMarker, cleanupMarkers } from '@/utils/mapMarkers';
+import { createTripMarkers, createVehicleMarker, cleanupMarkers, highlightMarker } from '@/utils/mapMarkers';
 import { startAnimation, stopAnimation } from '@/utils/mapAnimation';
 import { fitMapBounds } from '@/utils/mapBounds';
 
@@ -103,6 +103,12 @@ export function useMapCommandHandler(
           setTimeout(() => {
             emitEvent({ type: 'FIT_BOUNDS_ENDED', tripSlug: command.tripSlug, commandId: command.id });
           }, 1500);
+          break;
+        }
+        
+        case 'HIGHLIGHT_MARKER': {
+          highlightMarker(visibleMarkersRef, command.photoId);
+          emitEvent({ type: 'MARKER_HIGHLIGHTED', photoId: command.photoId, commandId: command.id });
           break;
         }
       }

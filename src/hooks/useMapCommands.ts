@@ -26,6 +26,12 @@ export function useMapCommands() {
     return id;
   }, [setCommands]);
 
+  const highlightMarker = useCallback((photoId: string | null) => {
+    const id = generateId();
+    setCommands(prev => [...prev, { type: 'HIGHLIGHT_MARKER', photoId, id }]);
+    return id;
+  }, [setCommands]);
+
   // Helper to get events for a specific command
   const getEventsForCommand = useCallback((commandId: string) => {
     return events.filter(event => event.commandId === commandId);
@@ -63,6 +69,7 @@ export function useMapCommands() {
     animateTrip,
     flyTo,
     fitBounds,
+    highlightMarker,
     
     // Event helpers
     events,
