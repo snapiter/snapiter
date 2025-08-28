@@ -1,13 +1,14 @@
 'use client';
 
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import Lightbox from 'yet-another-react-lightbox';
-import { lightboxIndexAtom, selectedTripAtom, mapCommandsAtom } from '@/store/atoms';
+import { lightboxIndexAtom, selectedTripAtom } from '@/store/atoms';
+import { useMapCommands } from '@/hooks/useMapCommands';
 import 'yet-another-react-lightbox/styles.css';
 
 export default function GlobalLightbox() {
   const lightboxIndex = useAtomValue(lightboxIndexAtom);
-  const setCommands = useSetAtom(mapCommandsAtom);
+  const { runCommand } = useMapCommands();
   const selectedTrip = useAtomValue(selectedTripAtom);
 
   // Derive photos from selected trip
@@ -21,10 +22,7 @@ export default function GlobalLightbox() {
 
   const isOpen = lightboxIndex >= 0;
   const closeLightbox = () => {
-    setCommands(prev => [...prev, { 
-      type: 'LIGHTBOX_CLOSE', 
-      id: `close-${Date.now()}` 
-    }]);
+    runCommand({ type: 'LIGHTBOX_CLOSE' });
   };
 
   return (

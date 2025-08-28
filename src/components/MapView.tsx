@@ -2,12 +2,13 @@
 
 import Map, { Source, Layer, type MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { selectedTripAtom, lightboxIndexAtom, mapReadyAtom, mapCommandsAtom, type Trip } from '@/store/atoms';
+import { selectedTripAtom, lightboxIndexAtom, mapReadyAtom, type Trip } from '@/store/atoms';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useRef, useEffect, useState } from 'react';
 import { stopAnimation } from '@/utils/mapAnimation';
 import { createRouteData } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
+import { useMapCommands } from '@/hooks/useMapCommands';
 
 interface MapViewProps {
   className?: string;
@@ -17,7 +18,7 @@ interface MapViewProps {
 export default function MapView({ className, trips = [] }: MapViewProps) {
   const selectedTrip = useAtomValue(selectedTripAtom);
   const setMapReady = useSetAtom(mapReadyAtom);
-  const [commands, setCommands] = useAtom(mapCommandsAtom);
+  const { runCommand } = useMapCommands();
 
   const [lightboxIndex, setLightboxIndex] = useAtom(lightboxIndexAtom);
   const mapRef = useRef<MapRef | null>(null);
@@ -33,13 +34,12 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
     }
     
     // Use command system to animate the selected trip
-    setCommands(prev => [...prev, { 
+    runCommand({ 
       type: 'ANIMATE_TRIP', 
-      tripSlug: selectedTrip.slug, 
-      id: `selected-${Date.now()}` 
-    }]);
+      tripSlug: selectedTrip.slug 
+    });
 
-  }, [selectedTrip, isMapLoaded, setCommands]);
+  }, [selectedTrip, isMapLoaded, runCommand]);
 
 
   useEffect(() => {
@@ -71,15 +71,14 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       
       if (targetMarker) {
         // Use command system to fly to marker location
-        setCommands(prev => [...prev, {
+        runCommand({
           type: 'FLY_TO',
           coordinates: [targetMarker.longitude, targetMarker.latitude],
-          zoom: 10,
-          id: `lightbox-${Date.now()}`
-        }]);
+          zoom: 10
+        });
       }
     }
-  }, [lightboxIndex, selectedTrip, setCommands]);
+  }, [lightboxIndex, selectedTrip, runCommand]);
 
 
 

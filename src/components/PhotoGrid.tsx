@@ -1,8 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useSetAtom } from 'jotai';
-import { mapCommandsAtom } from '@/store/atoms';
+import { useMapCommands } from '@/hooks/useMapCommands';
 
 export interface Photo {
   id: string;
@@ -17,30 +16,18 @@ interface PhotoGridProps {
 }
 
 export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
-  const setCommands = useSetAtom(mapCommandsAtom);
+  const { runCommand } = useMapCommands();
 
   const handlePhotoClick = (index: number) => {
-    setCommands(prev => [...prev, { 
-      type: 'LIGHTBOX_OPEN', 
-      photoIndex: index, 
-      id: `click-${Date.now()}` 
-    }]);
+    runCommand({ type: 'LIGHTBOX_OPEN', photoIndex: index });
   };
 
   const handlePhotoHover = (photoId: string) => {
-    setCommands(prev => [...prev, { 
-      type: 'HIGHLIGHT_MARKER', 
-      photoId, 
-      id: `hover-${Date.now()}` 
-    }]);
+    runCommand({ type: 'HIGHLIGHT_MARKER', photoId });
   };
 
   const handlePhotoLeave = () => {
-    setCommands(prev => [...prev, { 
-      type: 'HIGHLIGHT_MARKER', 
-      photoId: null, 
-      id: `leave-${Date.now()}` 
-    }]);
+    runCommand({ type: 'HIGHLIGHT_MARKER', photoId: null });
   };
 
   return (
