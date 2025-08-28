@@ -2,7 +2,7 @@
 
 import Map, { Source, Layer, type MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { selectedTripAtom, lightboxIndexAtom, hoveredPhotoAtom, mapReadyAtom, mapCommandsAtom, type Trip } from '@/store/atoms';
+import { selectedTripAtom, lightboxIndexAtom, mapReadyAtom, mapCommandsAtom, type Trip } from '@/store/atoms';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useRef, useEffect, useState } from 'react';
 import { stopAnimation } from '@/utils/mapAnimation';
@@ -16,7 +16,6 @@ interface MapViewProps {
 
 export default function MapView({ className, trips = [] }: MapViewProps) {
   const selectedTrip = useAtomValue(selectedTripAtom);
-  const hoveredPhoto = useAtomValue(hoveredPhotoAtom);
   const setMapReady = useSetAtom(mapReadyAtom);
   const [commands, setCommands] = useAtom(mapCommandsAtom);
 
@@ -82,14 +81,6 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
     }
   }, [lightboxIndex, selectedTrip, setCommands]);
 
-  // Handle photo hover highlighting via command
-  useEffect(() => {
-    setCommands(prev => [...prev, { 
-      type: 'HIGHLIGHT_MARKER', 
-      photoId: hoveredPhoto, 
-      id: `highlight-${Date.now()}` 
-    }]);
-  }, [hoveredPhoto, setCommands]);
 
 
   return (
