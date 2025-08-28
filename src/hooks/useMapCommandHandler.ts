@@ -55,12 +55,51 @@ export function useMapCommandHandler(
           // Stop current animation and reset ALL animation state
           stopAnimation(animationRef);
           
+          // Restore the previous trip's full route line if there was one
+          const allTrips = trips;
+          for (const previousTrip of allTrips) {
+            if (previousTrip.slug !== command.tripSlug) {
+              const previousSource = map.getSource(`route-${previousTrip.slug}`) as any;
+              if (previousSource) {
+                const fullCoordinates = previousTrip.positions.toReversed()
+                  .map(p => [p.longitude, p.latitude]);
+                previousSource.setData({
+                  type: 'FeatureCollection',
+                  features: [{
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {
+                      type: 'LineString',
+                      coordinates: fullCoordinates
+                    }
+                  }]
+                });
+              }
+            }
+          }
+          
           // Reset all animation state completely
           currentPositionIndexRef.current = 0;
           startTimeRef.current = null;
           
           // Clean up existing markers and vehicle
           cleanupMarkers(visibleMarkersRef, vehicleMarkerRef);
+          
+          // Reset the route line to empty for the new trip
+          const routeSource = map.getSource(`route-${command.tripSlug}`) as any;
+          if (routeSource) {
+            routeSource.setData({
+              type: 'FeatureCollection',
+              features: [{
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'LineString',
+                  coordinates: []
+                }
+              }]
+            });
+          }
           
           const activePositions = trip.positions.toReversed();
           
