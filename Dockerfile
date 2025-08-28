@@ -26,6 +26,8 @@ COPY . .
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED=1
+ARG NEXT_PUBLIC_MAPTILER_KEY
+ENV NEXT_PUBLIC_MAPTILER_KEY=$NEXT_PUBLIC_MAPTILER_KEY
 
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
