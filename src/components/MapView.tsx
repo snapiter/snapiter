@@ -2,10 +2,9 @@
 
 import Map, { Source, Layer, type MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { selectedTripAtom, lightboxIndexAtom, mapReadyAtom, type Trip } from '@/store/atoms';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { selectedTripAtom, mapReadyAtom, type Trip } from '@/store/atoms';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useRef, useEffect, useState } from 'react';
-import { stopAnimation } from '@/utils/mapAnimation';
 import { createRouteData } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
@@ -20,13 +19,13 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
   const setMapReady = useSetAtom(mapReadyAtom);
   const { runCommand } = useMapCommands();
 
-  const [lightboxIndex, setLightboxIndex] = useAtom(lightboxIndexAtom);
   const mapRef = useRef<MapRef | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
-  const { animationRef } = useMapCommandHandler(mapRef, trips, setLightboxIndex);
+  // This handles the commands
+  useMapCommandHandler(mapRef, trips);
 
-  console.log("RENDER" + trips.length)
+  console.log("Mapview render" + trips.length)
   
   useEffect(() => {
     if (!selectedTrip || !isMapLoaded || selectedTrip?.positions.length < 2) {
@@ -40,46 +39,6 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
     });
 
   }, [selectedTrip, isMapLoaded, runCommand]);
-
-
-  useEffect(() => {
-    if (lightboxIndex >= 0 && selectedTrip && mapRef.current) {
-      // 1. End animation and show complete route
-      stopAnimation(animationRef);
-      const map = mapRef.current.getMap();
-      
-      // Show complete route line
-      const source = map.getSource(`route-${selectedTrip.slug}`) as any;
-      if (source) {
-        const allCoordinates = selectedTrip?.positions.map(p => [p.longitude, p.latitude]);
-        source.setData({
-          type: 'FeatureCollection',
-          features: [{
-            type: 'Feature',
-            properties: {},
-            geometry: {
-              type: 'LineString',
-              coordinates: allCoordinates
-            }
-          }]
-        });
-      }
-
-      // 2. Get the marker corresponding to lightboxIndex
-      const photosFromMarkers = selectedTrip.markers.filter(m => m.hasThumbnail);
-      const targetMarker = photosFromMarkers[lightboxIndex];
-      
-      if (targetMarker) {
-        // Use command system to fly to marker location
-        runCommand({
-          type: 'FLY_TO',
-          coordinates: [targetMarker.longitude, targetMarker.latitude],
-          zoom: 10
-        });
-      }
-    }
-  }, [lightboxIndex, selectedTrip, runCommand]);
-
 
 
   return (
