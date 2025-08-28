@@ -7,7 +7,8 @@ import TripSwiper from '@/components/TripSwiper';
 import DesktopTripView from '@/components/DesktopTripView';
 import SnapIterLoader from '@/components/SnapIterLoader';
 import DynamicTitle from '@/components/DynamicTitle';
-import { useWebsite } from '@/hooks/useApiData';
+import { useWebsite, useHostname } from '@/hooks/useApiData';
+import { useMapCommands } from '@/hooks/useMapCommands';
 import { useAtomValue } from 'jotai';
 import { errorAtom, bottomPanelExpandedAtom, mapEventsAtom } from '@/store/atoms';
 
@@ -15,6 +16,8 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const { website } = useWebsite();
+  const hostname = useHostname();
+  const { runCommand } = useMapCommands();
   const error = useAtomValue(errorAtom);
   const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
   const mapEvents = useAtomValue(mapEventsAtom);
@@ -30,10 +33,23 @@ export default function Home() {
     return tripsArray.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
   }, [website]);
 
+  // Trigger LOAD_WEBSITE command once when hostname is available
+  useEffect(() => {
+    if (!hostname) return;
+
+    if(!mapReady) {
+      return;
+    }
+
+    if(websiteReady) {
+      // Already loaded
+      return;
+    }
+
+    runCommand({ type: 'LOAD_WEBSITE', hostname });
+  }, [hostname, mapReady, websiteReady]);
 
   useEffect(() => {
-    console.log("HALLO" + websiteReady + " X " + mapReady + trips.length)
-    console.log(mapEvents);
     if (websiteReady && mapReady && trips.length > 0) {
       setIsLoaded(true);
     }

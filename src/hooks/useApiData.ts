@@ -1,20 +1,13 @@
 import { useAtomValue } from 'jotai';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   websiteAtom,
 } from '@/store/atoms';
-import { useMapCommands } from './useMapCommands';
 
-
-export function useWebsite() {
-  const website = useAtomValue(websiteAtom);
-  const { runCommand } = useMapCommands();
+function useHostname() {
+  const [hostname, setHostname] = useState<string>('');
 
   useEffect(() => {
-    if ( website) {
-      return;
-    }
-
     // Try to get hostname from cookie first (set by middleware)
     const getCookieValue = (name: string) => {
       const value = `; ${document.cookie}`;
@@ -36,8 +29,16 @@ export function useWebsite() {
     if (finalHostname === 'localhost' || finalHostname === '127.0.0.1' || finalHostname === "snapiter.com") {
       finalHostname = 'partypieps.nl';
     }
-    runCommand({ type: 'LOAD_WEBSITE', hostname: finalHostname });
+
+    setHostname(finalHostname);
   }, []);
 
+  return hostname;
+}
+
+export function useWebsite() {
+  const website = useAtomValue(websiteAtom);
   return { website };
 }
+
+export { useHostname };

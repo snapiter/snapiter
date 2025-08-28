@@ -28,8 +28,6 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
   // This handles the commands
   useMapCommandHandler(mapRef, trips);
 
-  console.log("Mapview render" + trips.length)
-  
   useEffect(() => {
     if (!selectedTrip || !mapReady || selectedTrip?.positions.length < 2) {
       return;
