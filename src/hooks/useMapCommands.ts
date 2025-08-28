@@ -10,7 +10,9 @@ type MapCommandWithoutId =
   | { type: 'LIGHTBOX_OPEN'; photoIndex: number }
   | { type: 'LIGHTBOX_CLOSE' }
   | { type: 'MAP_READY' }
-  | { type: 'LOAD_WEBSITE'; hostname: string };
+  | { type: 'LOAD_WEBSITE'; hostname: string }
+  | { type: 'TRIP_HOVERED'; tripSlug: string }
+  | { type: 'TRIP_BLURRED' };
 
 export function useMapCommands() {
   const setCommands = useSetAtom(mapCommandsAtom);

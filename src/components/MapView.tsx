@@ -2,9 +2,9 @@
 
 import Map, { Source, Layer, type MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { selectedTripAtom, type Trip } from '@/store/atoms';
+import { selectedTripAtom, type Trip, mapEventsAtom } from '@/store/atoms';
 import { useAtomValue } from 'jotai';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { createRouteData } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
@@ -18,6 +18,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
   const selectedTrip = useAtomValue(selectedTripAtom);
   const { runCommand } = useMapCommands();
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
+  const mapEvents = useAtomValue(mapEventsAtom);
 
   const mapRef = useRef<MapRef | null>(null);
 
@@ -25,17 +26,34 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
   // This handles the commands
   useMapCommandHandler(mapRef, trips);
 
+  // Listen to TRIP_HOVERED and TRIP_BLURRED events to update hover state
+  useEffect(() => {
+    const lastEvent = mapEvents[mapEvents.length - 1];
+    if (!lastEvent) return;
+
+    if (lastEvent.type === 'TRIP_HOVERED') {
+      setHoveredTrip(lastEvent.tripSlug);
+    } else if (lastEvent.type === 'TRIP_BLURRED') {
+      setHoveredTrip(null);
+    }
+  }, [mapEvents]);
+
   const handleMouseMove = (e: MapLayerMouseEvent) => {
     const feature = e.features?.[0];
     if (feature && feature.layer.id.startsWith('route-line-')) {
-      setHoveredTrip(feature.layer.id.replace('route-line-', ''));
+      const tripSlug = feature.layer.id.replace('route-line-', '');
+      if (hoveredTrip !== tripSlug) {
+        setHoveredTrip(tripSlug);
+        runCommand({ type: 'TRIP_HOVERED', tripSlug });
+      }
       mapRef.current?.getCanvas().style.setProperty('cursor', 'pointer');
     } else {
-      setHoveredTrip(null);
+      if (hoveredTrip !== null) {
+        setHoveredTrip(null);
+        runCommand({ type: 'TRIP_BLURRED' });
+      }
       mapRef.current?.getCanvas().style.removeProperty('cursor');
     }
-
-    console.log(hoveredTrip);
   };
 
   const handleClick = (e: MapLayerMouseEvent) => {
@@ -77,9 +95,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
           if (coordinates.length < 2) return null;
           const routeData = createRouteData(trip.positions, isSelected);
           return (
-            <Source key={trip.slug} id={`route-${trip.slug}`} type="geojson" data={routeData}
-            
-            >
+            <Source key={trip.slug} id={`route-${trip.slug}`} type="geojson" data={routeData}>
               <Layer
                 id={`route-line-${trip.slug}`}
                 type="line"

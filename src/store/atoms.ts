@@ -77,7 +77,9 @@ export type MapCommand =
   | { type: 'LIGHTBOX_OPEN'; photoIndex: number; id: string }
   | { type: 'LIGHTBOX_CLOSE'; id: string }
   | { type: 'MAP_READY'; id: string }
-  | { type: 'LOAD_WEBSITE'; hostname: string; id: string };
+  | { type: 'LOAD_WEBSITE'; hostname: string; id: string }
+  | { type: 'TRIP_HOVERED'; tripSlug: string; id: string }
+  | { type: 'TRIP_BLURRED'; id: string };
 
 export type MapEvent = 
   | { type: 'ANIMATION_STARTED'; tripSlug: string; commandId: string }
@@ -90,7 +92,9 @@ export type MapEvent =
   | { type: 'LIGHTBOX_OPENED'; photoIndex: number; commandId: string }
   | { type: 'LIGHTBOX_CLOSED'; commandId: string }
   | { type: 'MAP_READY'; commandId: string }
-  | { type: 'WEBSITE_LOADED'; commandId: string };
+  | { type: 'WEBSITE_LOADED'; commandId: string }
+  | { type: 'TRIP_HOVERED'; tripSlug: string; commandId: string }
+  | { type: 'TRIP_BLURRED'; commandId: string };
 
 export const mapCommandsAtom = atom<MapCommand[]>([]);
 export const mapEventsAtom = atom<MapEvent[]>([]);

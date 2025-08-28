@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import type { Trip } from '@/store/atoms';
 import { useWebsite } from '@/hooks/useApiData';
+import { useMapCommands } from '@/hooks/useMapCommands';
 
 interface TripSidebarProps {
   trips: Trip[];
@@ -13,6 +14,8 @@ interface TripSidebarProps {
 export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSidebarProps) {
   const website = useWebsite()
 
+  const { runCommand } = useMapCommands();
+    
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
@@ -52,6 +55,9 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
           <button
             key={`button-${trip.slug}`}
             onClick={() => onTripSelect(index)}
+            onMouseOver={() => {
+              runCommand({ type: 'TRIP_HOVERED', tripSlug: trip.slug });
+            }}
             className={`w-full p-3 mb-2 cursor-pointer rounded-lg text-left transition-colors hover:bg-background hover:shadow-sm ${
               index === activeIndex
                 ? 'bg-background shadow-sm border-l-4 border-primary'

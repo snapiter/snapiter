@@ -201,6 +201,16 @@ export function useMapCommandHandler(
           })();
           break;
         }
+        
+        case 'TRIP_HOVERED': {
+          emitEvent({ type: 'TRIP_HOVERED', tripSlug: command.tripSlug, commandId: command.id });
+          break;
+        }
+        
+        case 'TRIP_BLURRED': {
+          emitEvent({ type: 'TRIP_BLURRED', commandId: command.id });
+          break;
+        }
       }
     };
 
