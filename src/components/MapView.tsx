@@ -1,10 +1,10 @@
 'use client';
 
-import Map, { Source, Layer, type MapRef } from 'react-map-gl/maplibre';
+import Map, { Source, Layer, type MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { mapEventsAtom, selectedTripAtom, type Trip } from '@/store/atoms';
+import { selectedTripAtom, type Trip } from '@/store/atoms';
 import { useAtomValue } from 'jotai';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
 import { createRouteData } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
@@ -17,30 +17,40 @@ interface MapViewProps {
 export default function MapView({ className, trips = [] }: MapViewProps) {
   const selectedTrip = useAtomValue(selectedTripAtom);
   const { runCommand } = useMapCommands();
+  const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
 
   const mapRef = useRef<MapRef | null>(null);
 
-  // const mapEvents = useAtomValue(mapEventsAtom);
-  
-  // const mapReady = mapEvents.some(event => event.type === 'MAP_READY');
   
   // This handles the commands
   useMapCommandHandler(mapRef, trips);
 
-  // useEffect(() => {
-  //   if (!selectedTrip || !mapReady || selectedTrip?.positions.length < 2) {
-  //     return;
-  //   }
-    
-  //   // Use command system to animate the selected trip
-  //   runCommand({ 
-  //     type: 'ANIMATE_TRIP', 
-  //     tripSlug: selectedTrip.slug 
-  //   });
+  const handleMouseMove = (e: MapLayerMouseEvent) => {
+    const feature = e.features?.[0];
+    if (feature && feature.layer.id.startsWith('route-line-')) {
+      setHoveredTrip(feature.layer.id.replace('route-line-', ''));
+      mapRef.current?.getCanvas().style.setProperty('cursor', 'pointer');
+    } else {
+      setHoveredTrip(null);
+      mapRef.current?.getCanvas().style.removeProperty('cursor');
+    }
 
-  // }, [selectedTrip, mapReady, runCommand]);
+    console.log(hoveredTrip);
+  };
 
-
+  const handleClick = (e: MapLayerMouseEvent) => {
+    const feature = e.features?.[0];
+    if (feature && feature.layer.id.startsWith('route-line-')) {
+      const clickedSlug = feature.layer.id.replace('route-line-', '');
+      setHoveredTrip(null);
+      mapRef.current?.getCanvas().style.removeProperty('cursor');
+      runCommand({
+        type: 'ANIMATE_TRIP',
+        tripSlug: clickedSlug
+      });
+    }
+  };
+  
   return (
     <div className={className}>
       <Map
@@ -54,21 +64,30 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
         onLoad={() => {
           runCommand({ type: 'MAP_READY' });
         }}
+        interactiveLayerIds={trips.map(trip => `route-line-${trip.slug}`)} // 👈 IMPORTANT
+        onMouseMove={handleMouseMove}
+        onClick={handleClick}
       >
         {trips.map(trip => {
           if (trip.positions.length < 2) return null;
           const color = trip.color || '#3b82f6';
           const isSelected = trip.slug === selectedTrip?.slug;
+          const isHovered = trip.slug === hoveredTrip;
           const coordinates = trip.positions.toReversed().map(p => [p.longitude, p.latitude]);
           if (coordinates.length < 2) return null;
           const routeData = createRouteData(trip.positions, isSelected);
           return (
-            <Source key={trip.slug} id={`route-${trip.slug}`} type="geojson" data={routeData}>
+            <Source key={trip.slug} id={`route-${trip.slug}`} type="geojson" data={routeData}
+            
+            >
               <Layer
                 id={`route-line-${trip.slug}`}
                 type="line"
-                layout={{ 'line-cap': 'round', 'line-join': 'round' }}
-                paint={{ 'line-width': 4, 'line-color': color, 'line-opacity': isSelected ? 1 : 0.3 }}
+                layout={{ 'line-cap': 'round', 'line-join': 'round' }} paint={{
+                  'line-width': isHovered ? 6 : 4, // thicker on hover
+                  'line-color': color,
+                  'line-opacity': (isSelected || isHovered) ? 1 : 0.3,
+                }}
               />
             </Source>
           );
