@@ -81,3 +81,5 @@ export const isLoadingWebsiteAtom = atom<boolean>(false);
 export const clickedMarkerAtom = atom<Marker | null>(null);
 
 export const lightboxIndexAtom = atom<number>(-1);
+
+export const hoveredPhotoAtom = atom<string | null>(null);

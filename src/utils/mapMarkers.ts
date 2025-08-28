@@ -16,6 +16,7 @@ export function createTripMarkers(
           src="https://cache.partypieps.nl/marker/${marker.markerId}/thumbnail/500x500" 
           class="w-8 h-8 rounded-full border-2 border-white object-cover cursor-pointer hover:scale-110 transition-transform"
           alt="marker"
+          data-marker-id="${marker.markerId}"
         />
       `;
 
@@ -85,4 +86,25 @@ export function cleanupMarkers(
     vehicleMarkerRef.current.remove();
     vehicleMarkerRef.current = null;
   }
+}
+
+export function highlightMarker(
+  visibleMarkersRef: { current: Record<string, maplibregl.Marker> },
+  hoveredPhotoId: string | null
+) {
+  Object.values(visibleMarkersRef.current).forEach(marker => {
+    const img = marker.getElement().querySelector('img');
+    if (img) {
+      const markerId = img.getAttribute('data-marker-id');
+      if (hoveredPhotoId && markerId === hoveredPhotoId) {
+        img.style.transform = 'scale(1.4)';
+        img.style.zIndex = '1000';
+        img.style.boxShadow = '0 4px 12px rgba(244, 96, 54, 0.4)';
+      } else {
+        img.style.transform = '';
+        img.style.zIndex = '';
+        img.style.boxShadow = '';
+      }
+    }
+  });
 }

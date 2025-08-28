@@ -2,11 +2,11 @@
 
 import Map, { Source, Layer, type MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { selectedTripAtom, lightboxIndexAtom, type Trip } from '@/store/atoms';
+import { selectedTripAtom, lightboxIndexAtom, hoveredPhotoAtom, type Trip } from '@/store/atoms';
 import { useAtom, useAtomValue } from 'jotai';
 import { useRef, useEffect, useState } from 'react';
 import type maplibregl from 'maplibre-gl';
-import { createTripMarkers, createVehicleMarker, cleanupMarkers } from '@/utils/mapMarkers';
+import { createTripMarkers, createVehicleMarker, cleanupMarkers, highlightMarker } from '@/utils/mapMarkers';
 import { startAnimation, stopAnimation } from '@/utils/mapAnimation';
 import { fitMapBounds, createRouteData } from '@/utils/mapBounds';
 
@@ -17,6 +17,7 @@ interface MapViewProps {
 
 export default function MapView({ className, trips = [] }: MapViewProps) {
   const selectedTrip = useAtomValue(selectedTripAtom);
+  const hoveredPhoto = useAtomValue(hoveredPhotoAtom);
 
   const [lightboxIndex, setLightboxIndex] = useAtom(lightboxIndexAtom);
   const mapRef = useRef<MapRef | null>(null);
@@ -103,7 +104,12 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
         });
       }
     }
-  }, [lightboxIndex, selectedTrip])
+  }, [lightboxIndex, selectedTrip]);
+
+  // Handle photo hover highlighting
+  useEffect(() => {
+    highlightMarker(visibleMarkersRef, hoveredPhoto);
+  }, [hoveredPhoto]);
 
   return (
     <div className={className}>

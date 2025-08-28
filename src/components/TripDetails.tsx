@@ -21,7 +21,7 @@ export default function TripDetails({ trip}: TripDetailsProps) {
   const photosFromMarkers: Photo[] = (trip.markers || [])
     .filter(marker => marker.hasThumbnail)
     .map(marker => ({
-      id: marker.id,
+      id: marker.markerId, // Use markerId to match with map markers
       url: `https://cache.partypieps.nl/marker/${marker.markerId}`,
       alt: marker.title || 'Marker photo',
       caption: marker.description

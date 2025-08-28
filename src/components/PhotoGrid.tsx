@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useSetAtom } from 'jotai';
-import { lightboxIndexAtom } from '@/store/atoms';
+import { lightboxIndexAtom, hoveredPhotoAtom } from '@/store/atoms';
 
 export interface Photo {
   id: string;
@@ -18,9 +18,18 @@ interface PhotoGridProps {
 
 export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
+  const setHoveredPhoto = useSetAtom(hoveredPhotoAtom);
 
   const handlePhotoClick = (index: number) => {
     setLightboxIndex(index);
+  };
+
+  const handlePhotoHover = (photoId: string) => {
+    setHoveredPhoto(photoId);
+  };
+
+  const handlePhotoLeave = () => {
+    setHoveredPhoto(null);
   };
 
   return (
@@ -31,6 +40,8 @@ export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
             key={photo.id}
             className="relative aspect-square cursor-pointer hover:opacity-90 transition-opacity group"
             onClick={() => handlePhotoClick(index)}
+            onMouseEnter={() => handlePhotoHover(photo.id)}
+            onMouseLeave={handlePhotoLeave}
           >
             <Image
               src={`${photo.url}/thumbnail/500x500`}
