@@ -1,16 +1,20 @@
-import { useAtom, useSetAtom } from 'jotai';
-import { useEffect, useState } from 'react';
+import { useAtomValue } from 'jotai';
+import { useEffect } from 'react';
 import {
   websiteAtom,
-  isLoadingWebsiteAtom,
-  errorAtom,
 } from '@/store/atoms';
-import { fetchWebsiteByHostname } from '@/services/api';
+import { useMapCommands } from './useMapCommands';
 
-function useHostname() {
-  const [hostname, setHostname] = useState<string>('');
+
+export function useWebsite() {
+  const website = useAtomValue(websiteAtom);
+  const { runCommand } = useMapCommands();
 
   useEffect(() => {
+    if ( website) {
+      return;
+    }
+
     // Try to get hostname from cookie first (set by middleware)
     const getCookieValue = (name: string) => {
       const value = `; ${document.cookie}`;
@@ -32,43 +36,8 @@ function useHostname() {
     if (finalHostname === 'localhost' || finalHostname === '127.0.0.1' || finalHostname === "snapiter.com") {
       finalHostname = 'partypieps.nl';
     }
-
-    setHostname(finalHostname);
+    runCommand({ type: 'LOAD_WEBSITE', hostname: finalHostname });
   }, []);
 
-  return hostname;
-}
-
-
-
-export function useWebsite() {
-  const [website, setWebsite] = useAtom(websiteAtom);
-  const [isLoading, setIsLoading] = useAtom(isLoadingWebsiteAtom);
-  const setError = useSetAtom(errorAtom);
-  const hostname = useHostname();
-
-  useEffect(() => {
-    const loadWebsite = async () => {
-      // Don't load until we have a hostname
-      if (!hostname || website) return;
-      
-      setIsLoading(true);
-      setError(null);
-      
-      try {
-        console.log('Loading website for hostname:', hostname);
-        const websiteData = await fetchWebsiteByHostname(hostname);
-        setWebsite(websiteData);
-      } catch (error) {
-        setError(error instanceof Error ? error.message : 'Failed to load website data');
-        console.error('Error loading website:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadWebsite();
-  }, [hostname, setError, setIsLoading, setWebsite, website]);
-
-  return { website, isLoading };
+  return { website };
 }

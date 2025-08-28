@@ -9,7 +9,8 @@ type MapCommandWithoutId =
   | { type: 'HIGHLIGHT_MARKER'; photoId: string | null }
   | { type: 'LIGHTBOX_OPEN'; photoIndex: number }
   | { type: 'LIGHTBOX_CLOSE' }
-  | { type: 'MAP_READY' };
+  | { type: 'MAP_READY' }
+  | { type: 'LOAD_WEBSITE'; hostname: string };
 
 export function useMapCommands() {
   const setCommands = useSetAtom(mapCommandsAtom);

@@ -1,5 +1,6 @@
 import { useAtom, useSetAtom } from 'jotai';
-import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndexAtom } from '@/store/atoms';
+import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndexAtom, isLoadingWebsiteAtom, websiteAtom, errorAtom } from '@/store/atoms';
+import { fetchWebsiteByHostname } from '@/services/api';
 import { useEffect, useRef } from 'react';
 import type maplibregl from 'maplibre-gl';
 import type { MapRef } from 'react-map-gl/maplibre';
@@ -13,6 +14,9 @@ export function useMapCommandHandler(
 ) {
   const [commands] = useAtom(mapCommandsAtom);
   const setMapEvents = useSetAtom(mapEventsAtom);
+  const setIsLoadingWebsite = useSetAtom(isLoadingWebsiteAtom);
+  const setWebsite = useSetAtom(websiteAtom);
+  const setError = useSetAtom(errorAtom);
 
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
   const animationRef = useRef<number | null>(null);
@@ -128,11 +132,32 @@ export function useMapCommandHandler(
           emitEvent({ type: 'MAP_READY', commandId: command.id });
           break;
         }
+        
+        case 'LOAD_WEBSITE': {
+          setIsLoadingWebsite(true);
+          setError(null);
+          
+          // Perform the API call
+          (async () => {
+            try {
+              console.log('Loading website for hostname:', command.hostname);
+              const websiteData = await fetchWebsiteByHostname(command.hostname);
+              setWebsite(websiteData);
+              emitEvent({ type: 'WEBSITE_LOADED', commandId: command.id });
+            } catch (error) {
+              setError(error instanceof Error ? error.message : 'Failed to load website data');
+              console.error('Error loading website:', error);
+            } finally {
+              setIsLoadingWebsite(false);
+            }
+          })();
+          break;
+        }
       }
     };
 
     handleCommand();
-  }, [commands, trips, setLightboxIndex, setMapEvents, mapRef]);
+  }, [commands, trips, setLightboxIndex, setMapEvents, setIsLoadingWebsite, setWebsite, setError, mapRef]);
 
   // Cleanup function
   useEffect(() => {

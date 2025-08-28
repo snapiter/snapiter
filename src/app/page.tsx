@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import MapView from '@/components/MapView';
 import SlidingPanel from '@/components/SlidingPanel';
 import TripSwiper from '@/components/TripSwiper';
@@ -12,18 +12,33 @@ import { useAtomValue } from 'jotai';
 import { errorAtom, bottomPanelExpandedAtom, mapEventsAtom } from '@/store/atoms';
 
 export default function Home() {
-  const { website, isLoading: websiteLoading } = useWebsite();
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const { website } = useWebsite();
   const error = useAtomValue(errorAtom);
   const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
   const mapEvents = useAtomValue(mapEventsAtom);
-  
+
   // Check if map is ready by looking for MAP_READY events
   const mapReady = mapEvents.some(event => event.type === 'MAP_READY');
-  
+
+  // Check loading state - are we waiting for WEBSITE_LOADED event?
+  const websiteReady = mapEvents.some(event => event.type === 'WEBSITE_LOADED');
+
   const trips = useMemo(() => {
     const tripsArray = website?.trips || [];
     return tripsArray.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
   }, [website]);
+
+
+  useEffect(() => {
+    console.log("HALLO" + websiteReady + " X " + mapReady + trips.length)
+    console.log(mapEvents);
+    if (websiteReady && mapReady && trips.length > 0) {
+      setIsLoaded(true);
+    }
+  }, [websiteReady, mapReady, trips])
+
 
 
   if (error) {
@@ -41,40 +56,40 @@ export default function Home() {
     <>
       <DynamicTitle />
       <div className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row">
-      {/* Single MapView - responsive sizing */}
-      <div className={`flex-1 transition-all duration-300 ${
-        // Mobile: dynamic height based on panel state
-        isPanelExpanded 
-          ? 'h-[calc(40vh+36px)] md:h-full' 
-          : 'h-[calc(100vh-36px)] md:h-full'
-      }`}>
-        <MapView className="w-full h-full" trips={trips} />
-      </div>
-
-      {/* Mobile: Sliding Panel */}
-      <div className="md:hidden">
-        <SlidingPanel>
-          {trips.length === 0 ? (
-            <div className="p-4 text-center">
-              <p className="text-muted">No Iter's found.</p>
-            </div>
-          ) : (
-            <TripSwiper trips={trips} />
-          )}
-        </SlidingPanel>
-      </div>
-
-      {/* Desktop: Side Panel */}
-      <div className="hidden md:block w-[600px] bg-background shadow-xl overflow-hidden">
-        <DesktopTripView trips={trips} />
-      </div>
-
-      {/* Loading Overlay */}
-      {(websiteLoading || !mapReady || trips.length === 0) && (
-        <div className="absolute inset-0 z-[200]">
-          <SnapIterLoader />
+        {/* Single MapView - responsive sizing */}
+        <div className={`flex-1 transition-all duration-300 ${
+          // Mobile: dynamic height based on panel state
+          isPanelExpanded
+            ? 'h-[calc(40vh+36px)] md:h-full'
+            : 'h-[calc(100vh-36px)] md:h-full'
+          }`}>
+          <MapView className="w-full h-full" trips={trips} />
         </div>
-      )}
+
+        {/* Mobile: Sliding Panel */}
+        <div className="md:hidden">
+          <SlidingPanel>
+            {trips.length === 0 ? (
+              <div className="p-4 text-center">
+                <p className="text-muted">No Iter's found.</p>
+              </div>
+            ) : (
+              <TripSwiper trips={trips} />
+            )}
+          </SlidingPanel>
+        </div>
+
+        {/* Desktop: Side Panel */}
+        <div className="hidden md:block w-[600px] bg-background shadow-xl overflow-hidden">
+          <DesktopTripView trips={trips} />
+        </div>
+
+        {/* Loading Overlay */}
+        {(!isLoaded) && (
+          <div className="absolute inset-0 z-[200]">
+            <SnapIterLoader />
+          </div>
+        )}
       </div>
     </>
   );
