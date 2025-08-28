@@ -29,7 +29,9 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
             height={32} 
             className="flex-shrink-0"
           />
-          <h1 className="text-xl font-bold text-foreground">SnapIter</h1>
+          <h1 className="text-xl font-bold text-foreground">
+            <span className="text-primary">S</span>nap<span className="text-primary">I</span>ter
+          </h1>
         </div>
         <p className="text-sm text-muted">
           {trips.length} {trips.length === 1 ? 'Journey' : 'Journeys'}
