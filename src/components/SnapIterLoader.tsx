@@ -10,7 +10,7 @@ export default function SnapIterLoader() {
         <div className="mb-8 flex items-center gap-4">
           <Image 
             src="/logo.svg" 
-            alt="SnapIter Logo" 
+            alt="SnapIter" 
             width={64} 
             height={64}
             className="flex-shrink-0"

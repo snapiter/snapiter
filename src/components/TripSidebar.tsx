@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import type { Trip } from '@/store/atoms';
+import { useWebsite } from '@/hooks/useApiData';
 
 interface TripSidebarProps {
   trips: Trip[];
@@ -10,6 +11,8 @@ interface TripSidebarProps {
 }
 
 export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSidebarProps) {
+  const website = useWebsite()
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
@@ -30,8 +33,14 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
             className="flex-shrink-0"
           />
           <h1 className="text-xl font-bold text-foreground">
-            <span className="text-primary">S</span>nap<span className="text-primary">I</span>ter
+            {website.website?.websiteTitle ?? (
+              <>
+                <span className="text-primary">S</span>nap
+                <span className="text-primary">I</span>ter
+              </>
+            )}
           </h1>
+
         </div>
         <p className="text-sm text-muted">
           {trips.length} {trips.length === 1 ? 'Journey' : 'Journeys'}
