@@ -76,7 +76,7 @@ jobs:
 
 
   deploy_ssh:
-    needs: dockerbuild
+    needs: [dockerbuild, dockerbuild_cache]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
