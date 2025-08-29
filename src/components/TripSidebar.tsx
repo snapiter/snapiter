@@ -1,9 +1,11 @@
 'use client';
 
 import Image from 'next/image';
-import type { Trip } from '@/store/atoms';
+import { mapEventsAtom, type Trip } from '@/store/atoms';
 import { useWebsite } from '@/hooks/useApiData';
 import { useMapCommands } from '@/hooks/useMapCommands';
+import { useEffect, useState } from 'react';
+import { useAtomValue } from 'jotai';
 
 interface TripSidebarProps {
   trips: Trip[];
@@ -13,8 +15,14 @@ interface TripSidebarProps {
 
 export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSidebarProps) {
   const website = useWebsite()
-
+  const mapEvents = useAtomValue(mapEventsAtom);
   const { runCommand } = useMapCommands();
+  const [displayActiveIndex, setDisplayActiveIndex] = useState(activeIndex);
+
+  // Sync displayActiveIndex with prop changes
+  useEffect(() => {
+    setDisplayActiveIndex(activeIndex);
+  }, [activeIndex]);
     
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -23,6 +31,23 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
       year: '2-digit'
     });
   };
+
+
+
+
+  // Listen to TRIP_HOVERED and TRIP_BLURRED events to update hover state
+  useEffect(() => {
+    const lastEvent = mapEvents[mapEvents.length - 1];
+    if (!lastEvent) return;
+
+    if(lastEvent.type === 'TRIP_SELECTED') {
+      // Update visual state without triggering onTripSelect side effects
+      const selectedTripIndex = trips.findIndex(trip => trip.slug === lastEvent.tripSlug);
+      if (selectedTripIndex !== -1) {
+        setDisplayActiveIndex(selectedTripIndex);
+      }
+    }
+  }, [mapEvents]);
 
   return (
     <div className="w-64 bg-surface border-r border-border h-full overflow-y-auto">
@@ -59,14 +84,14 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
               runCommand({ type: 'HOVER_TRIP', tripSlug: trip.slug, fitBounds: true });
             }}
             className={`w-full p-3 mb-2 cursor-pointer rounded-lg text-left transition-colors hover:bg-background hover:shadow-sm ${
-              index === activeIndex
+              index === displayActiveIndex
                 ? 'bg-background shadow-sm border-l-4 border-primary'
                 : 'bg-transparent'
             }`}
           >
             <div className="flex items-center justify-between mb-1">
               <h3 className={`font-medium truncate ${
-                index === activeIndex ? 'text-primary' : 'text-foreground'
+                index === displayActiveIndex ? 'text-primary' : 'text-foreground'
               }`}>
                 {trip.title}
               </h3>

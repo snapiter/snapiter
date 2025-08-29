@@ -8,7 +8,6 @@ import { useRef, useState, useEffect } from 'react';
 import { createRouteData } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
-import { mark } from 'motion/react-client';
 
 interface MapViewProps {
   className?: string;
