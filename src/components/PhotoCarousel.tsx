@@ -39,7 +39,7 @@ export default function PhotoCarousel({ photos, className = '' }: PhotoCarouselP
         {photos.map((photo, index) => (
           <SwiperSlide key={photo.id} className="relative">
             <div 
-              className="relative w-full h-48 md:h-64 cursor-pointer hover:opacity-90 transition-opacity"
+              className="relative w-full h-64 cursor-pointer hover:opacity-90 transition-opacity"
               onClick={() => handlePhotoClick(index)}
             >
               <Image
