@@ -78,7 +78,7 @@ export type MapCommand =
   | { type: 'LIGHTBOX_CLOSE'; id: string }
   | { type: 'MAP_READY'; id: string }
   | { type: 'LOAD_WEBSITE'; hostname: string; id: string }
-  | { type: 'HOVER_TRIP'; tripSlug: string; id: string }
+  | { type: 'HOVER_TRIP'; tripSlug: string; fitBounds: boolean; id: string }
   | { type: 'BLUR_TRIP'; id: string }
   | { type: 'SELECT_TRIP'; tripSlug: string; id: string };
 
@@ -92,7 +92,7 @@ export type MapEvent =
   | { type: 'LIGHTBOX_CLOSED'; commandId: string }
   | { type: 'MAP_READY'; commandId: string }
   | { type: 'WEBSITE_LOADED'; commandId: string }
-  | { type: 'TRIP_HOVERED'; tripSlug: string; commandId: string }
+  | { type: 'TRIP_HOVERED'; tripSlug: string; commandId: string, fitBounds: boolean }
   | { type: 'TRIP_BLURRED'; commandId: string }
   | { type: 'TRIP_SELECTED'; tripSlug: string; commandId: string };
 

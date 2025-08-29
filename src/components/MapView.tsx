@@ -38,11 +38,13 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       });
     }
     else if (lastEvent.type === 'TRIP_HOVERED') {
+      if(lastEvent.fitBounds) {
         runCommand({
           type: 'FIT_BOUNDS',
           tripSlug: lastEvent.tripSlug,
           duration: 500
         });
+      }
     } else if (lastEvent.type === 'TRIP_BLURRED') {
       setHoveredTrip(null);
     }

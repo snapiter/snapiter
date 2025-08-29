@@ -200,7 +200,7 @@ export function useMapCommandHandler(
         }
         
         case 'HOVER_TRIP': {
-          emitEvent({ type: 'TRIP_HOVERED', tripSlug: command.tripSlug, commandId: command.id });
+          emitEvent({ type: 'TRIP_HOVERED', tripSlug: command.tripSlug, fitBounds: command.fitBounds, commandId: command.id });
           break;
         }
         

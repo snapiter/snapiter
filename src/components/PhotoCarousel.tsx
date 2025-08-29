@@ -2,6 +2,7 @@
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
+import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
 import { useMapCommands } from '@/hooks/useMapCommands';
 
@@ -13,6 +14,7 @@ export interface Photo {
   url: string;
   alt: string;
   caption?: string;
+  markerId?: string;
 }
 
 interface PhotoCarouselProps {
@@ -26,6 +28,14 @@ export default function PhotoCarousel({ photos, className = '' }: PhotoCarouselP
     runCommand({ type: 'LIGHTBOX_OPEN', photoIndex: index });
   };
 
+  const handleSlideChange = (swiper: SwiperType) => {
+    const activeIndex = swiper.activeIndex;
+    const activePhoto = photos[activeIndex];
+    if (activePhoto) {
+      runCommand({ type: 'HIGHLIGHT_MARKER', markerId: activePhoto.id });
+    }
+  };
+
   return (
     <div className={`w-full ${className}`}>
       <Swiper
@@ -36,6 +46,7 @@ export default function PhotoCarousel({ photos, className = '' }: PhotoCarouselP
         pagination={{
           dynamicBullets: true,
         }}
+        onSlideChange={handleSlideChange}
         className="h-full rounded-lg"
       >
         {photos.map((photo, index) => (

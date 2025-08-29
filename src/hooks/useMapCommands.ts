@@ -11,7 +11,7 @@ type MapCommandWithoutId =
   | { type: 'LIGHTBOX_CLOSE' }
   | { type: 'MAP_READY' }
   | { type: 'LOAD_WEBSITE'; hostname: string }
-  | { type: 'HOVER_TRIP'; tripSlug: string }
+  | { type: 'HOVER_TRIP'; tripSlug: string, fitBounds: boolean }
   | { type: 'BLUR_TRIP' }
   | { type: 'SELECT_TRIP'; tripSlug: string };
 
