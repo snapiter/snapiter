@@ -38,7 +38,11 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       });
     }
     else if (lastEvent.type === 'TRIP_HOVERED') {
-      setHoveredTrip(lastEvent.tripSlug);
+        runCommand({
+          type: 'FIT_BOUNDS',
+          tripSlug: lastEvent.tripSlug,
+          duration: 500
+        });
     } else if (lastEvent.type === 'TRIP_BLURRED') {
       setHoveredTrip(null);
     }
@@ -61,13 +65,13 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       const tripSlug = feature.layer.id.replace('route-line-', '');
       if (hoveredTrip !== tripSlug) {
         setHoveredTrip(tripSlug);
-        runCommand({ type: 'TRIP_HOVERED', tripSlug });
+        runCommand({ type: 'HOVER_TRIP', tripSlug });
       }
       mapRef.current?.getCanvas().style.setProperty('cursor', 'pointer');
     } else {
       if (hoveredTrip !== null) {
         setHoveredTrip(null);
-        runCommand({ type: 'TRIP_BLURRED' });
+        runCommand({ type: 'BLUR_TRIP' });
       }
       mapRef.current?.getCanvas().style.removeProperty('cursor');
     }

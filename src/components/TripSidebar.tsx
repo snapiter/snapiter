@@ -56,7 +56,7 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
             key={`button-${trip.slug}`}
             onClick={() => onTripSelect(index)}
             onMouseOver={() => {
-              runCommand({ type: 'TRIP_HOVERED', tripSlug: trip.slug });
+              runCommand({ type: 'HOVER_TRIP', tripSlug: trip.slug });
             }}
             className={`w-full p-3 mb-2 cursor-pointer rounded-lg text-left transition-colors hover:bg-background hover:shadow-sm ${
               index === activeIndex
