@@ -30,12 +30,12 @@ jobs:
             --build-arg NEXT_PUBLIC_MAPTILER_KEY=${{ secrets.NEXT_PUBLIC_MAPTILER_KEY }} \
             -t registry.bestanden.online/snapiter-frontend:latest \
             -t rg.nl-ams.scw.cloud/snapiter/frontend:latest .
-      - name: Docker login to Scaleway
-        env:
-          SCW_SECRET_KEY: ${{ secrets.scw_secret_key }}
-        run: docker login -u nologin -p="$SCW_SECRET_KEY" rg.nl-ams.scw.cloud/snapiter
-      - name: Publish Docker image to Scaleway
-        run: docker push rg.nl-ams.scw.cloud/snapiter/frontend:latest
+      # - name: Docker login to Scaleway
+      #   env:
+      #     SCW_SECRET_KEY: ${{ secrets.scw_secret_key }}
+      #   run: docker login -u nologin -p="$SCW_SECRET_KEY" rg.nl-ams.scw.cloud/snapiter
+      # - name: Publish Docker image to Scaleway
+      #   run: docker push rg.nl-ams.scw.cloud/snapiter/frontend:latest
       - name: Docker login to registry
         env:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -44,17 +44,17 @@ jobs:
         run: docker push registry.bestanden.online/snapiter-frontend:latest
 
 
-  deploy-scw:
-    needs: dockerbuild
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to Scaleway
-        env:
-          SCW_DEPLOY_TOKEN: ${{ secrets.scw_deploy_token }}
-        run: |
-          curl -X POST \
-          -H "X-Auth-Token: $SCW_DEPLOY_TOKEN" \
-          https://api.scaleway.com/containers/v1beta1/regions/nl-ams/containers/54580a8f-0e83-4a02-8c8f-551651540061/deploy
+  # deploy-scw:
+  #   needs: dockerbuild
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Deploy to Scaleway
+  #       env:
+  #         SCW_DEPLOY_TOKEN: ${{ secrets.scw_deploy_token }}
+  #       run: |
+  #         curl -X POST \
+  #         -H "X-Auth-Token: $SCW_DEPLOY_TOKEN" \
+  #         https://api.scaleway.com/containers/v1beta1/regions/nl-ams/containers/54580a8f-0e83-4a02-8c8f-551651540061/deploy
 
 
   deploy_ssh:
