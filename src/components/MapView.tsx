@@ -65,11 +65,11 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
     const feature = e.features?.[0];
     if (feature && feature.layer.id.startsWith('route-line-')) {
       const tripSlug = feature.layer.id.replace('route-line-', '');
-      if (hoveredTrip !== tripSlug) {
+      if (hoveredTrip !== tripSlug && selectedTrip?.slug !== tripSlug) {
+        mapRef.current?.getCanvas().style.setProperty('cursor', 'pointer');
         setHoveredTrip(tripSlug);
         runCommand({ type: 'HOVER_TRIP', tripSlug, fitBounds: false });
       }
-      mapRef.current?.getCanvas().style.setProperty('cursor', 'pointer');
     } else {
       if (hoveredTrip !== null) {
         setHoveredTrip(null);
