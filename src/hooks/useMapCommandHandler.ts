@@ -127,8 +127,6 @@ export function useMapCommandHandler(
         }
         
         case 'FLY_TO': {
-          emitEvent({ type: 'FLY_TO_STARTED', coordinates: command.coordinates, commandId: command.id });
-          
           map.flyTo({
             center: command.coordinates,
             zoom: command.zoom || 10,
@@ -159,8 +157,8 @@ export function useMapCommandHandler(
         }
         
         case 'HIGHLIGHT_MARKER': {
-          highlightMarker(visibleMarkersRef, command.photoId);
-          emitEvent({ type: 'MARKER_HIGHLIGHTED', photoId: command.photoId, commandId: command.id });
+          highlightMarker(visibleMarkersRef, command.markerId);
+          emitEvent({ type: 'MARKER_HIGHLIGHTED', markerId: command.markerId, commandId: command.id });
           break;
         }
         

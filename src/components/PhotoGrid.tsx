@@ -24,12 +24,8 @@ export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
     runCommand({ type: 'LIGHTBOX_OPEN', photoIndex: index });
   };
 
-  const handlePhotoHover = (photoId: string) => {
-    runCommand({ type: 'HIGHLIGHT_MARKER', photoId });
-  };
-
-  const handlePhotoLeave = () => {
-    runCommand({ type: 'HIGHLIGHT_MARKER', photoId: null });
+  const handlePhotoHover = (markerId: string) => {
+    runCommand({ type: 'HIGHLIGHT_MARKER', markerId });
   };
 
   const handleImageLoad = (photoId: string) => {
@@ -49,7 +45,6 @@ export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
             className="relative aspect-square cursor-pointer hover:opacity-90 transition-opacity group"
             onClick={() => handlePhotoClick(index)}
             onMouseEnter={() => handlePhotoHover(photo.id)}
-            onMouseLeave={handlePhotoLeave}
           >
             {/* Loading skeleton */}
             {loadingImages.has(photo.id) && (

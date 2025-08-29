@@ -6,7 +6,7 @@ type MapCommandWithoutId =
   | { type: 'ANIMATE_TRIP'; tripSlug: string }
   | { type: 'FLY_TO'; coordinates: [number, number]; zoom?: number }
   | { type: 'FIT_BOUNDS'; tripSlug: string }
-  | { type: 'HIGHLIGHT_MARKER'; photoId: string | null }
+  | { type: 'HIGHLIGHT_MARKER'; markerId: string | null }
   | { type: 'LIGHTBOX_OPEN'; photoIndex: number }
   | { type: 'LIGHTBOX_CLOSE' }
   | { type: 'MAP_READY' }

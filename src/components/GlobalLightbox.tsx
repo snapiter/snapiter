@@ -11,6 +11,7 @@ export default function GlobalLightbox() {
   const { runCommand } = useMapCommands();
   const selectedTrip = useAtomValue(selectedTripAtom);
 
+
   // Derive photos from selected trip
   const photos = selectedTrip?.markers
     .filter(marker => marker.hasThumbnail)

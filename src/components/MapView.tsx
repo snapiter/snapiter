@@ -21,7 +21,6 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
   const mapEvents = useAtomValue(mapEventsAtom);
 
   const mapRef = useRef<MapRef | null>(null);
-
   
   // This handles the commands
   useMapCommandHandler(mapRef, trips);
@@ -35,6 +34,13 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       setHoveredTrip(lastEvent.tripSlug);
     } else if (lastEvent.type === 'TRIP_BLURRED') {
       setHoveredTrip(null);
+    }
+    else if(lastEvent.type === 'MARKER_HIGHLIGHTED') {
+      console.log(selectedTrip);
+      const marker = selectedTrip?.markers.filter(i => i.markerId == lastEvent.markerId).pop()
+      if(marker) {
+        console.log(marker.latitude);
+      }
     }
   }, [mapEvents]);
 
