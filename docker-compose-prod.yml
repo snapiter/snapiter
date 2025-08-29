@@ -41,12 +41,12 @@ services:
       - "traefik.http.routers.snapitercache.middlewares=snapitercache-headers@docker"
     networks:
       - traefik
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
-      interval: 60s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+    #   interval: 60s
+    #   timeout: 5s
+    #   retries: 3
+    #   start_period: 10s
 
 networks:
   traefik:

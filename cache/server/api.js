@@ -105,8 +105,9 @@ const handleApi = async (s3Client,s3BucketName, apiBackendURL, req, res) => {
   let data;
 
   try {
-    const { data: s3Data, LastModified: lastModified } = await readFromS3(s3Client,s3BucketName, objectKey);
-    if (s3Data && lastModified) {
+    const s3Result = await readFromS3(s3Client,s3BucketName, objectKey);
+    if (s3Result && s3Result.data && s3Result.LastModified) {
+      const { data: s3Data, LastModified: lastModified } = s3Result;
       const cacheDuration = getCacheDuration(apiPath);
 
       // Calculate the time difference between the current time and last modified time of the object
