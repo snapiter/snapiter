@@ -9,6 +9,22 @@ const { getThumbnail, getMarkerImage } = require('./server/thumbnail');
 const app = express();
 const port = 5000;
 
+// Request logging middleware
+app.use((req, res, next) => {
+  const start = Date.now();
+  const startTimestamp = new Date().toISOString();
+  
+  console.log(`${startTimestamp} --> ${req.method} ${req.url}`);
+  
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    const endTimestamp = new Date().toISOString();
+    console.log(`${endTimestamp} <-- ${req.method} ${req.url} - ${res.statusCode} (${duration}ms)`);
+  });
+  
+  next();
+});
+
 
 // Other code for handleRequest function and related utility functions
 const apiBackendURL = process.env.API_BACKEND_URL || '';
