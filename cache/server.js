@@ -96,7 +96,7 @@ app.get('/marker/:uuid/thumbnail', corsMiddleware, cacheMiddleware, getThumbnail
 app.get('/marker/:uuid/thumbnail/:size', corsMiddleware, cacheMiddleware, getThumbnail(s3Client));
 
 // Catch-all for debugging
-app.use('*', (req, res) => {
+app.get('(.*)', (req, res) => {
   console.log(`Unmatched request: ${req.method} ${req.originalUrl}`);
   res.status(404).json({ error: 'Route not found', path: req.originalUrl });
 });
