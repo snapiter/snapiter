@@ -96,6 +96,10 @@ app.get('/marker/:uuid', corsMiddleware, cacheMiddleware, getMarkerImage(s3Clien
 app.get('/marker/:uuid/thumbnail', corsMiddleware, cacheMiddleware, getThumbnail(s3Client));
 app.get('/marker/:uuid/thumbnail/:size', corsMiddleware, cacheMiddleware, getThumbnail(s3Client));
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
