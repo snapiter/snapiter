@@ -100,7 +100,7 @@ export default function Home() {
           <div className="absolute inset-0 z-[200]">
             <SnapIterLoader website={website} />
           </div>
-        )}
+         )}
       </div>
     </>
   );

@@ -9,26 +9,26 @@ interface SnapIterLoaderProps {
 
 export default function SnapIterLoader({website}: SnapIterLoaderProps) {
   return (
-    <div className="fixed inset-0 bg-background flex items-center justify-center overflow-hidden">
-      <div className="bg-surface rounded-2xl p-12 shadow-lg border border-border flex flex-col items-center">
+    <div className="fixed inset-0 bg-black dark:bg-black bg-opacity-50 dark:bg-opacity-80 flex items-center justify-center overflow-hidden p-4 md:p-0">
+      <div className="bg-surface rounded-2xl p-6 md:p-12 shadow-lg border border-border flex flex-col items-center max-w-md w-full md:max-w-none md:w-auto">
         {/* Main Logo */}
-        <div className="mb-8 flex items-center gap-4">
+        <div className="mb-6 md:mb-8 flex items-center gap-3 md:gap-4">
           <Image 
             src="/logo.svg" 
             alt="SnapIter" 
-            width={64} 
-            height={64}
-            className="flex-shrink-0"
+            width={48} 
+            height={48}
+            className="md:w-16 md:h-16 flex-shrink-0"
           />
           {website?.websiteTitle && (
-            <h1 className="text-4xl font-bold text-foreground">
+            <h1 className="text-2xl md:text-4xl font-bold text-foreground text-center">
               {website.websiteTitle}
             </h1>
           )}
         </div>
 
         {/* Animated Journey Route */}
-        <div className="relative w-80 h-32 mb-8">
+        <div className="relative w-72 md:w-80 h-28 md:h-32 mb-6 md:mb-8">
           <svg viewBox="0 0 320 128" className="w-full h-full">
             {/* Hidden Path for Animation */}
             <defs>
