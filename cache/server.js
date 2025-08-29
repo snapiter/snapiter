@@ -1,9 +1,7 @@
 const express = require('express');
 const compression = require('compression');
 const helmet = require('helmet');
-const path = require('path');
 const { S3Client } = require('@aws-sdk/client-s3');
-var expressStaticGzip = require("express-static-gzip");
 
 const { handleApi } = require('./server/api');
 const { getThumbnail, getMarkerImage } = require('./server/thumbnail');
@@ -47,23 +45,6 @@ app.use((req, res, next) => {
 // Gzip compression
 app.use(compression());
 
-// Path to the Angular build output
-const angularDistPath = path.join(__dirname, 'dist', 'vesselmanager', 'browser');
-
-app.use('/', expressStaticGzip(angularDistPath, {
-  enableBrotli: true,
-  orderPreference: ['br', 'gz'],
-  setHeaders: function (res, path) {
-    if (path.endsWith('.html') || path.endsWith('.json')) {
-      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
-    } else if (path.endsWith('.css') || path.endsWith('.js')) {
-      res.setHeader('Cache-Control', 'max-age=31449600'); // one year
-    } else {
-      res.setHeader('Cache-Control', 'max-age=86400'); // one day
-    }
-  }
-}));
-
 const cacheMiddleware = (req, res, next) => {
   res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 year
   next();
@@ -98,11 +79,6 @@ app.get('/marker/:uuid', corsMiddleware, cacheMiddleware, getMarkerImage(s3Clien
 app.get('/marker/:uuid/thumbnail', corsMiddleware, cacheMiddleware, getThumbnail(s3Client));
 app.get('/marker/:uuid/thumbnail/:size', corsMiddleware, cacheMiddleware, getThumbnail(s3Client));
 
-app.all('/{*any}', (req, res, next) => {
-// Fallback for SPA (to index.html)
-// app.get('*', (req, res) => {
-  res.sendFile(path.join(angularDistPath, 'index.html'));
-});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
