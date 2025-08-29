@@ -1,13 +1,12 @@
 'use client';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Navigation } from 'swiper/modules';
+import { Pagination } from 'swiper/modules';
 import Image from 'next/image';
 import { useMapCommands } from '@/hooks/useMapCommands';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
-import 'swiper/css/navigation';
 
 export interface Photo {
   id: string;
@@ -30,10 +29,13 @@ export default function PhotoCarousel({ photos, className = '' }: PhotoCarouselP
   return (
     <div className={`w-full ${className}`}>
       <Swiper
-        modules={[Pagination, Navigation]}
+        modules={[Pagination]}
         spaceBetween={10}
         slidesPerView={1}
-        navigation={true}
+        navigation={false}
+        pagination={{
+          dynamicBullets: true,
+        }}
         className="h-full rounded-lg"
       >
         {photos.map((photo, index) => (
