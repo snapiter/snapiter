@@ -95,6 +95,11 @@ app.get('/marker/:uuid', corsMiddleware, cacheMiddleware, getMarkerImage(s3Clien
 app.get('/marker/:uuid/thumbnail', corsMiddleware, cacheMiddleware, getThumbnail(s3Client));
 app.get('/marker/:uuid/thumbnail/:size', corsMiddleware, cacheMiddleware, getThumbnail(s3Client));
 
+// Catch-all for debugging
+app.use('*', (req, res) => {
+  console.log(`Unmatched request: ${req.method} ${req.originalUrl}`);
+  res.status(404).json({ error: 'Route not found', path: req.originalUrl });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
