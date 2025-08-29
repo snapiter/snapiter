@@ -1,5 +1,6 @@
 import maplibregl from 'maplibre-gl';
 import type { Marker as TripMarker, Position } from '@/store/atoms';
+import { config } from '@/config';
 
 export function createTripMarkers(
   markers: TripMarker[], 
@@ -13,7 +14,7 @@ export function createTripMarkers(
     
       el.innerHTML = `
         <img 
-          src="https://cache.snapiter.com/marker/${marker.markerId}/thumbnail/500x500" 
+          src="${config.cacheApiUrl}/marker/${marker.markerId}/thumbnail/500x500" 
           class="map-marker"
           alt="marker"
           data-marker-id="${marker.markerId}"

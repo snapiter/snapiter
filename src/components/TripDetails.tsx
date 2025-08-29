@@ -3,6 +3,7 @@
 import PhotoCarousel, { type Photo } from './PhotoCarousel';
 import PhotoGrid from './PhotoGrid';
 import type { Trip } from '@/store/atoms';
+import { config } from '@/config';
 
 interface TripDetailsProps {
   trip: Trip;
@@ -22,7 +23,7 @@ export default function TripDetails({ trip}: TripDetailsProps) {
     .filter(marker => marker.hasThumbnail)
     .map(marker => ({
       id: marker.markerId, // Use markerId to match with map markers
-      url: `https://cache.snapiter.com/marker/${marker.markerId}`,
+      url: `${config.cacheApiUrl}/marker/${marker.markerId}`,
       alt: marker.title || 'Marker photo',
       caption: marker.description
     }));

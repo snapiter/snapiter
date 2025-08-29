@@ -1,4 +1,5 @@
 import type { Trip, Position, Marker, Website } from '@/store/atoms';
+import { config } from '@/config';
 
 const BASE_URL = 'https://api.partypieps.nl/api';
 
@@ -71,7 +72,7 @@ export async function fetchTripMarkers(vesselId: string, trip: Trip): Promise<Ma
 }
 
 export async function fetchWebsiteByHostname(hostname: string): Promise<Website> {
-  const response = await fetch(`https://cache.snapiter.com/api/public/vessel/hostName/${hostname}`);
+  const response = await fetch(`${config.cacheApiUrl}/api/public/vessel/hostName/${hostname}`);
   
   if (!response.ok) {
     throw new ApiError(`HTTP error! status: ${response.status}`, response.status);

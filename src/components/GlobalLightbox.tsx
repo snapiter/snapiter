@@ -4,6 +4,7 @@ import { useAtomValue } from 'jotai';
 import Lightbox from 'yet-another-react-lightbox';
 import { lightboxIndexAtom, selectedTripAtom } from '@/store/atoms';
 import { useMapCommands } from '@/hooks/useMapCommands';
+import { config } from '@/config';
 import 'yet-another-react-lightbox/styles.css';
 
 export default function GlobalLightbox() {
@@ -16,7 +17,7 @@ export default function GlobalLightbox() {
   const photos = selectedTrip?.markers
     .filter(marker => marker.hasThumbnail)
     .map(marker => ({
-      src: `https://cache.snapiter.com/marker/${marker.markerId}`,
+      src: `${config.cacheApiUrl}/marker/${marker.markerId}`,
       alt: marker.title || 'Marker photo',
       title: marker.description
     })) || [];
