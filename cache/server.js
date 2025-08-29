@@ -77,6 +77,7 @@ const corsMiddleware = (req, res, next) => {
 // API middleware
 // followmyvessel.com/api is never ending here, its routed by traefik.
 app.use('/api', async (req, res, next) => {
+    console.log(`API middleware hit: ${req.method} ${req.originalUrl}`);
     res.setHeader('Access-Control-Allow-Origin', '*'); 
     res.setHeader('Access-Control-Allow-Methods', 'GET'); 
     res.setHeader('Access-Control-Allow-Headers', '*');
