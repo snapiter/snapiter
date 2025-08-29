@@ -1,8 +1,13 @@
 'use client';
 
+import { Website } from '@/store/atoms';
 import Image from 'next/image';
 
-export default function SnapIterLoader() {
+interface SnapIterLoaderProps {
+  website: Website | null;
+}
+
+export default function SnapIterLoader({website}: SnapIterLoaderProps) {
   return (
     <div className="fixed inset-0 bg-background flex items-center justify-center overflow-hidden">
       <div className="bg-surface rounded-2xl p-12 shadow-lg border border-border flex flex-col items-center">
@@ -15,9 +20,11 @@ export default function SnapIterLoader() {
             height={64}
             className="flex-shrink-0"
           />
-          <h1 className="text-4xl font-bold text-foreground">
-            <span className="text-primary">S</span>nap<span className="text-primary">I</span>ter
-          </h1>
+          {website?.websiteTitle && (
+            <h1 className="text-4xl font-bold text-foreground">
+              {website.websiteTitle}
+            </h1>
+          )}
         </div>
 
         {/* Animated Journey Route */}

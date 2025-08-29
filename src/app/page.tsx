@@ -98,7 +98,7 @@ export default function Home() {
         {/* Loading Overlay */}
         {(!isLoaded) && (
           <div className="absolute inset-0 z-[200]">
-            <SnapIterLoader />
+            <SnapIterLoader website={website} />
           </div>
         )}
       </div>
