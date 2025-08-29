@@ -13,7 +13,7 @@ export function createTripMarkers(
     
       el.innerHTML = `
         <img 
-          src="https://cache.partypieps.nl/marker/${marker.markerId}/thumbnail/500x500" 
+          src="https://cache.snapiter.com/marker/${marker.markerId}/thumbnail/500x500" 
           class="map-marker"
           alt="marker"
           data-marker-id="${marker.markerId}"

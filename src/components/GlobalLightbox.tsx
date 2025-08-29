@@ -16,7 +16,7 @@ export default function GlobalLightbox() {
   const photos = selectedTrip?.markers
     .filter(marker => marker.hasThumbnail)
     .map(marker => ({
-      src: `https://cache.partypieps.nl/marker/${marker.markerId}`,
+      src: `https://cache.snapiter.com/marker/${marker.markerId}`,
       alt: marker.title || 'Marker photo',
       title: marker.description
     })) || [];

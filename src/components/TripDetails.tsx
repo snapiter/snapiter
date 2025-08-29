@@ -22,7 +22,7 @@ export default function TripDetails({ trip}: TripDetailsProps) {
     .filter(marker => marker.hasThumbnail)
     .map(marker => ({
       id: marker.markerId, // Use markerId to match with map markers
-      url: `https://cache.partypieps.nl/marker/${marker.markerId}`,
+      url: `https://cache.snapiter.com/marker/${marker.markerId}`,
       alt: marker.title || 'Marker photo',
       caption: marker.description
     }));
