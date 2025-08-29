@@ -83,6 +83,10 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
     const feature = e.features?.[0];
     if (feature && feature.layer.id.startsWith('route-line-')) {
       const clickedSlug = feature.layer.id.replace('route-line-', '');
+      // Weird HACK, but otherwise if you click a marker it will reselect the already selected trip.
+      if(clickedSlug == selectedTrip?.slug) {
+        return;
+      }
       setHoveredTrip(null);
       mapRef.current?.getCanvas().style.removeProperty('cursor');
       runCommand({
