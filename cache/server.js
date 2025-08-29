@@ -98,4 +98,5 @@ app.get('/marker/:uuid/thumbnail/:size', corsMiddleware, cacheMiddleware, getThu
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+  console.log(`Listening for requests on /api/* and /marker/*`);
 });
