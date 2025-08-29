@@ -1,0 +1,31 @@
+services:
+  snapiter:
+    image: registry.bestanden.online/snapiter-frontend:latest
+    restart: unless-stopped
+    environment:
+      - SPRING_MAIL_HOST=${SPRING_MAIL_HOST}
+      - SPRING_MAIL_PORT=${SPRING_MAIL_PORT}
+      - SPRING_MAIL_USERNAME=${SPRING_MAIL_USERNAME}
+      - SPRING_MAIL_PASSWORD=${SPRING_MAIL_PASSWORD}
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=${SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH}
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=${SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.snapiterfrontend.entrypoints=websecure"
+      - "traefik.http.routers.snapiterfrontend.rule=Host(`snapiter.com`) || Host(`partypieps.nl`) || Host(`cache.snapiter.com`)"
+      - "traefik.http.routers.snapiterfrontend.tls.certresolver=leresolver"
+      - "traefik.http.services.snapiterfrontend.loadbalancer.server.port=3000"
+      - "traefik.http.middlewares.snapiterfrontend-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.snapiterfrontend-headers.headers.customrequestheaders.X-Forwarded-Port=443"
+      - "traefik.http.routers.snapiterfrontend.middlewares=snapiterfrontend-headers@docker"
+    networks:
+      - traefik
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

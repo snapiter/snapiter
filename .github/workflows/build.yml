@@ -28,6 +28,7 @@ jobs:
         run: |
           docker build \
             --build-arg NEXT_PUBLIC_MAPTILER_KEY=${{ secrets.NEXT_PUBLIC_MAPTILER_KEY }} \
+            -t registry.bestanden.online/snapiter-frontend:latest \
             -t rg.nl-ams.scw.cloud/snapiter/frontend:latest .
       - name: Docker login to Scaleway
         env:
@@ -35,6 +36,13 @@ jobs:
         run: docker login -u nologin -p="$SCW_SECRET_KEY" rg.nl-ams.scw.cloud/snapiter
       - name: Publish Docker image to Scaleway
         run: docker push rg.nl-ams.scw.cloud/snapiter/frontend:latest
+      - name: Docker login to registry
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: docker login -u registry -p="$DOCKER_PASSWORD" https://registry.bestanden.online
+      - name: Publish dockerimage
+        run: docker push registry.bestanden.online/snapiter-frontend:latest
+
 
   deploy-scw:
     needs: dockerbuild
@@ -47,3 +55,43 @@ jobs:
           curl -X POST \
           -H "X-Auth-Token: $SCW_DEPLOY_TOKEN" \
           https://api.scaleway.com/containers/v1beta1/regions/nl-ams/containers/54580a8f-0e83-4a02-8c8f-551651540061/deploy
+
+
+  deploy_ssh:
+    needs: dockerbuild
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create .ssh directory
+        run: mkdir -p ~/.ssh
+
+      - name: Create SSH private key file
+        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+
+      - name: Set permissions for the private key
+        run: chmod 600 ~/.ssh/id_rsa
+
+      - name: Add SSH host to known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Create directory and copy docker-compose.yml
+        run: |
+          ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'mkdir -p /home/deploy/snapiter/'
+          scp -i ~/.ssh/id_rsa -P 22 docker-compose-prod.yml ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/deploy/snapiter/docker-compose.yml
+        
+      - name: SSH into server and deploy
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd /home/deploy/snapiter
+            docker compose pull
+            docker compose down
+            docker compose up -d
+      
