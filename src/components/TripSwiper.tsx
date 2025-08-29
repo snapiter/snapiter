@@ -21,7 +21,7 @@ export default function TripSwiper({ trips }: TripSwiperProps) {
   const handleSlideChange = (swiper: any) => {
     setActiveIndex(swiper.activeIndex);
     runCommand({
-      type: 'ANIMATE_TRIP',
+      type: 'SELECT_TRIP',
       tripSlug: trips[swiper.activeIndex].slug
     });
   };

@@ -8,6 +8,7 @@ import { useRef, useState, useEffect } from 'react';
 import { createRouteData } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
+import { mark } from 'motion/react-client';
 
 interface MapViewProps {
   className?: string;
@@ -30,16 +31,26 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
     const lastEvent = mapEvents[mapEvents.length - 1];
     if (!lastEvent) return;
 
-    if (lastEvent.type === 'TRIP_HOVERED') {
+    if(lastEvent.type === 'TRIP_SELECTED') {
+      runCommand({
+        type: 'ANIMATE_TRIP',
+        tripSlug: lastEvent.tripSlug
+      });
+    }
+    else if (lastEvent.type === 'TRIP_HOVERED') {
       setHoveredTrip(lastEvent.tripSlug);
     } else if (lastEvent.type === 'TRIP_BLURRED') {
       setHoveredTrip(null);
     }
     else if(lastEvent.type === 'MARKER_HIGHLIGHTED') {
-      console.log(selectedTrip);
       const marker = selectedTrip?.markers.filter(i => i.markerId == lastEvent.markerId).pop()
       if(marker) {
-        console.log(marker.latitude);
+        runCommand({
+          type: 'FLY_TO',
+          coordinates: [marker.longitude, marker.latitude],
+          zoom: 8,
+          duration: 1500
+        });
       }
     }
   }, [mapEvents]);
@@ -69,7 +80,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       setHoveredTrip(null);
       mapRef.current?.getCanvas().style.removeProperty('cursor');
       runCommand({
-        type: 'ANIMATE_TRIP',
+        type: 'SELECT_TRIP',
         tripSlug: clickedSlug
       });
     }

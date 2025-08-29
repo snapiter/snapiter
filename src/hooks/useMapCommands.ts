@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 
 type MapCommandWithoutId = 
   | { type: 'ANIMATE_TRIP'; tripSlug: string }
-  | { type: 'FLY_TO'; coordinates: [number, number]; zoom?: number }
+  | { type: 'FLY_TO'; coordinates: [number, number]; zoom?: number, duration?: number }
   | { type: 'FIT_BOUNDS'; tripSlug: string }
   | { type: 'HIGHLIGHT_MARKER'; markerId: string | null }
   | { type: 'LIGHTBOX_OPEN'; photoIndex: number }
@@ -12,7 +12,8 @@ type MapCommandWithoutId =
   | { type: 'MAP_READY' }
   | { type: 'LOAD_WEBSITE'; hostname: string }
   | { type: 'TRIP_HOVERED'; tripSlug: string }
-  | { type: 'TRIP_BLURRED' };
+  | { type: 'TRIP_BLURRED' }
+  | { type: 'SELECT_TRIP'; tripSlug: string };
 
 export function useMapCommands() {
   const setCommands = useSetAtom(mapCommandsAtom);

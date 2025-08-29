@@ -17,7 +17,7 @@ export default function DesktopTripView({ trips }: DesktopTripViewProps) {
   const handleTripSelect = (index: number) => {
     setActiveIndex(index);
     runCommand({
-      type: 'ANIMATE_TRIP',
+      type: 'SELECT_TRIP',
       tripSlug: trips[index].slug
     });
   };

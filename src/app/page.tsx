@@ -45,12 +45,11 @@ export default function Home() {
     if (websiteReady && mapReady && trips.length > 0) {
       setIsLoaded(true);
       runCommand({
-        type: 'ANIMATE_TRIP',
+        type: 'SELECT_TRIP',
         tripSlug: trips[0].slug
       });
     }
   }, [websiteReady, mapReady, trips])
-
 
 
   if (error) {

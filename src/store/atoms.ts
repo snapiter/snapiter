@@ -71,7 +71,7 @@ export const lightboxIndexAtom = atom<number>(-1);
 // Map Command/Event System
 export type MapCommand = 
   | { type: 'ANIMATE_TRIP'; tripSlug: string; id: string }
-  | { type: 'FLY_TO'; coordinates: [number, number]; zoom?: number; id: string }
+  | { type: 'FLY_TO'; coordinates: [number, number]; zoom?: number; duration?: number, id: string }
   | { type: 'FIT_BOUNDS'; tripSlug: string; id: string }
   | { type: 'HIGHLIGHT_MARKER'; markerId: string | null; id: string }
   | { type: 'LIGHTBOX_OPEN'; photoIndex: number; id: string }
@@ -79,7 +79,8 @@ export type MapCommand =
   | { type: 'MAP_READY'; id: string }
   | { type: 'LOAD_WEBSITE'; hostname: string; id: string }
   | { type: 'TRIP_HOVERED'; tripSlug: string; id: string }
-  | { type: 'TRIP_BLURRED'; id: string };
+  | { type: 'TRIP_BLURRED'; id: string }
+  | { type: 'SELECT_TRIP'; tripSlug: string; id: string };
 
 export type MapEvent = 
   | { type: 'ANIMATION_STARTED'; tripSlug: string; commandId: string }
@@ -93,7 +94,8 @@ export type MapEvent =
   | { type: 'MAP_READY'; commandId: string }
   | { type: 'WEBSITE_LOADED'; commandId: string }
   | { type: 'TRIP_HOVERED'; tripSlug: string; commandId: string }
-  | { type: 'TRIP_BLURRED'; commandId: string };
+  | { type: 'TRIP_BLURRED'; commandId: string }
+  | { type: 'TRIP_SELECTED'; tripSlug: string; commandId: string };
 
 export const mapCommandsAtom = atom<MapCommand[]>([]);
 export const mapEventsAtom = atom<MapEvent[]>([]);

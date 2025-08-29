@@ -1,5 +1,5 @@
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndexAtom, isLoadingWebsiteAtom, websiteAtom, errorAtom } from '@/store/atoms';
+import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndexAtom, isLoadingWebsiteAtom, websiteAtom, errorAtom, selectedTripAtom } from '@/store/atoms';
 import { fetchWebsiteByHostname } from '@/services/api';
 import { useEffect, useRef } from 'react';
 import type maplibregl from 'maplibre-gl';
@@ -19,6 +19,7 @@ export function useMapCommandHandler(
   const setError = useSetAtom(errorAtom);
 
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
+  const setSelectedTrip = useSetAtom(selectedTripAtom);
   const animationRef = useRef<number | null>(null);
   const vehicleMarkerRef = useRef<maplibregl.Marker | null>(null);
   const startTimeRef = useRef<number | null>(null);
@@ -130,13 +131,13 @@ export function useMapCommandHandler(
           map.flyTo({
             center: command.coordinates,
             zoom: command.zoom || 10,
-            duration: 1000
+            duration: command.duration || 1000
           });
           
           // Wait for flyTo to complete
           setTimeout(() => {
             emitEvent({ type: 'FLY_TO_ENDED', coordinates: command.coordinates, commandId: command.id });
-          }, 1000);
+          }, command.duration || 1000);
           break;
         }
         
@@ -207,6 +208,18 @@ export function useMapCommandHandler(
         
         case 'TRIP_BLURRED': {
           emitEvent({ type: 'TRIP_BLURRED', commandId: command.id });
+          break;
+        }
+        
+        case 'SELECT_TRIP': {
+          const trip = trips.filter(t => t.slug === command.tripSlug).pop();
+          if(trip) {
+            setSelectedTrip(trip)
+            emitEvent({ type: 'TRIP_SELECTED', tripSlug: command.tripSlug, commandId: command.id });
+          }
+          else {
+            console.error("Invalid trip found")
+          }
           break;
         }
       }
