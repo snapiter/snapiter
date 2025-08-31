@@ -61,10 +61,25 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
     }
   }, [mapEvents]);
 
-  // Calculate map height based on panel state
-  const mapHeight = isPanelExpanded 
-    ? 'calc(40vh + 36px)' // When panel expanded, map takes less height
-    : 'calc(100vh - 36px)'; // When panel collapsed, map takes full height minus panel handle
+  // Dynamic height for mobile, full height for desktop
+    useEffect(() => {
+      if(mapRef) {
+
+
+        const map = mapRef.current?.getMap();
+        if(!map) return;
+
+        const container = map.getContainer();
+        container.style.height = isPanelExpanded
+          ? "calc(40vh + 36px)"
+          : "calc(100vh - 36px)";
+
+        map.resize();
+        isPanelExpanded ? "calc(40vh + 36px)" : "calc(100vh - 80px)";
+      
+      }
+  }, [isPanelExpanded])
+
 
   const handleMouseMove = (e: MapLayerMouseEvent) => {
     const feature = e.features?.[0];
@@ -102,11 +117,9 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
   };
   
   return (
-    <div className={className}>
       <Map
         ref={mapRef}
         initialViewState={{ longitude: 5.1214201, latitude: 52.0907374, zoom: 12 }}
-        style={{ width: '100%', height: mapHeight }}
         mapStyle={`https://api.maptiler.com/maps/landscape/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
         attributionControl={{
           compact: true,
@@ -141,6 +154,5 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
           );
         })}
       </Map>
-    </div>
   );
 }

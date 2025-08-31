@@ -68,13 +68,13 @@ export default function Home() {
       <DynamicTitle />
       <div className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row">
         {/* Single MapView - responsive sizing */}
-        <div className={`flex-1 transition-all duration-300 ${
+        <div className={`flex-1 relative transition-all duration-300 ${
           // Mobile: dynamic height based on panel state
           isPanelExpanded
             ? 'h-[calc(40vh+36px)] md:h-full'
             : 'h-[calc(100vh-36px)] md:h-full'
           }`}>
-          <MapView className="w-full h-full" trips={trips} />
+          <MapView trips={trips} />
         </div>
 
         {/* Mobile: Sliding Panel */}
