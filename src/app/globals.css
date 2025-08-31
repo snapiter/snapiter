@@ -63,10 +63,12 @@ body {
 
 .map-marker:hover {
   transform: scale(1.4);
+  @apply border-primary;
 }
 
 .map-marker-highlighted {
   transform: scale(1.4);
+  @apply border-primary;
 }
 
 /* SnapIter Loader Animations */
