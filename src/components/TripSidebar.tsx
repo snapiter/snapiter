@@ -80,7 +80,7 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
           <button
             key={`button-${trip.slug}`}
             onClick={() => onTripSelect(index)}
-            onMouseOver={() => {
+            onMouseEnter={() => {
               runCommand({ type: 'HOVER_TRIP', tripSlug: trip.slug, fitBounds: true });
             }}
             className={`w-full p-3 mb-2 cursor-pointer rounded-lg text-left transition-colors hover:bg-background hover:shadow-sm ${
@@ -89,7 +89,7 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
                 : 'bg-transparent'
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-1 pointer-events-none">
               <h3 className={`font-medium truncate ${
                 index === displayActiveIndex ? 'text-primary' : 'text-foreground'
               }`}>
@@ -102,11 +102,11 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
                 />
               )}
             </div>
-            <p className="text-sm text-muted mt-1">
+            <p className="text-sm text-muted mt-1 pointer-events-none">
               {formatDate(trip.startDate)}
               {trip.endDate ? ` - ${formatDate(trip.endDate)}` : ''}
             </p>
-            <p className="text-xs text-muted mt-1">
+            <p className="text-xs text-muted mt-1 pointer-events-none">
               {trip.positionType}
             </p>
           </button>
