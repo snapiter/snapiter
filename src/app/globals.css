@@ -62,11 +62,11 @@ body {
 }
 
 .map-marker:hover {
-  transform: scale(1.2);
+  transform: scale(1.4);
 }
 
-.map-marker--highlighted {
-  transform: scale(1.2);
+.map-marker-highlighted {
+  transform: scale(1.4);
 }
 
 /* SnapIter Loader Animations */

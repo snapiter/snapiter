@@ -98,9 +98,9 @@ export function highlightMarker(
     if (img) {
       const markerId = img.getAttribute('data-marker-id');
       if (hoveredPhotoId && markerId === hoveredPhotoId) {
-        img.classList.add('map-marker--highlighted');
+        img.classList.add('map-marker-highlighted');
       } else {
-        img.classList.remove('map-marker--highlighted');
+        img.classList.remove('map-marker-highlighted');
       }
     }
   });
