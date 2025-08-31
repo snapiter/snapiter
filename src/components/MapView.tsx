@@ -58,6 +58,12 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
         });
       }
     }
+    else if(lastEvent.type === 'PANEL_EXPANDED' || lastEvent.type === 'PANEL_COLLAPSED') {
+      // Wait for CSS transition to complete before resizing map
+      setTimeout(() => {
+        runCommand({ type: 'MAP_RESIZE' });
+      }, 350);
+    }
   }, [mapEvents]);
 
   const handleMouseMove = (e: MapLayerMouseEvent) => {

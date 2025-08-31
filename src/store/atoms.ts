@@ -82,7 +82,8 @@ export type MapCommand =
   | { type: 'BLUR_TRIP'; id: string }
   | { type: 'SELECT_TRIP'; tripSlug: string; id: string }
   | { type: 'PANEL_EXPAND'; id: string }
-  | { type: 'PANEL_COLLAPSE'; id: string };
+  | { type: 'PANEL_COLLAPSE'; id: string }
+  | { type: 'MAP_RESIZE'; id: string };
 
 export type MapEvent = 
   | { type: 'ANIMATION_STARTED'; tripSlug: string; commandId: string }
@@ -98,7 +99,8 @@ export type MapEvent =
   | { type: 'TRIP_BLURRED'; commandId: string }
   | { type: 'TRIP_SELECTED'; tripSlug: string; commandId: string }
   | { type: 'PANEL_EXPANDED'; commandId: string }
-  | { type: 'PANEL_COLLAPSED'; commandId: string };
+  | { type: 'PANEL_COLLAPSED'; commandId: string }
+  | { type: 'MAP_RESIZED'; commandId: string };
 
 export const mapCommandsAtom = atom<MapCommand[]>([]);
 export const mapEventsAtom = atom<MapEvent[]>([]);

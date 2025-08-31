@@ -15,7 +15,8 @@ type MapCommandWithoutId =
   | { type: 'BLUR_TRIP' }
   | { type: 'SELECT_TRIP'; tripSlug: string }
   | { type: 'PANEL_EXPAND' }
-  | { type: 'PANEL_COLLAPSE' };
+  | { type: 'PANEL_COLLAPSE' }
+  | { type: 'MAP_RESIZE' };
 
 export function useMapCommands() {
   const setCommands = useSetAtom(mapCommandsAtom);
