@@ -2,7 +2,7 @@
 
 import Map, { Source, Layer, type MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { selectedTripAtom, type Trip, mapEventsAtom } from '@/store/atoms';
+import { selectedTripAtom, type Trip, mapEventsAtom, bottomPanelExpandedAtom } from '@/store/atoms';
 import { useAtomValue } from 'jotai';
 import { useRef, useState, useEffect } from 'react';
 import { createRouteData } from '@/utils/mapBounds';
@@ -19,6 +19,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
   const { runCommand } = useMapCommands();
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
   const mapEvents = useAtomValue(mapEventsAtom);
+  const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
 
   const mapRef = useRef<MapRef | null>(null);
   
@@ -58,13 +59,12 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
         });
       }
     }
-    else if(lastEvent.type === 'PANEL_EXPANDED' || lastEvent.type === 'PANEL_COLLAPSED') {
-      // Wait for CSS transition to complete before resizing map
-      setTimeout(() => {
-        runCommand({ type: 'MAP_RESIZE' });
-      }, 350);
-    }
   }, [mapEvents]);
+
+  // Calculate map height based on panel state
+  const mapHeight = isPanelExpanded 
+    ? 'calc(40vh + 36px)' // When panel expanded, map takes less height
+    : 'calc(100vh - 36px)'; // When panel collapsed, map takes full height minus panel handle
 
   const handleMouseMove = (e: MapLayerMouseEvent) => {
     const feature = e.features?.[0];
@@ -106,7 +106,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       <Map
         ref={mapRef}
         initialViewState={{ longitude: 5.1214201, latitude: 52.0907374, zoom: 12 }}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: mapHeight }}
         mapStyle={`https://api.maptiler.com/maps/landscape/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
         attributionControl={{
           compact: true,

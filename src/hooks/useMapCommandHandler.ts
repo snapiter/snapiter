@@ -233,15 +233,6 @@ export function useMapCommandHandler(
           emitEvent({ type: 'PANEL_COLLAPSED', commandId: command.id });
           break;
         }
-        
-        case 'MAP_RESIZE': {
-          const map = mapRef.current?.getMap();
-          if (map) {
-            map.resize();
-            emitEvent({ type: 'MAP_RESIZED', commandId: command.id });
-          }
-          break;
-        }
       }
     };
 
