@@ -108,7 +108,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
         onLoad={() => {
           runCommand({ type: 'MAP_READY' });
         }}
-        interactiveLayerIds={trips.map(trip => `route-line-${trip.slug}`)} // 👈 IMPORTANT
+        interactiveLayerIds={trips.map(trip => `route-line-${trip.slug}`)}
         onMouseMove={handleMouseMove}
         onClick={handleClick}
       >
