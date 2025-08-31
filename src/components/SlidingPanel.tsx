@@ -4,20 +4,22 @@ import { useState, useEffect } from 'react';
 import { motion, type PanInfo, useDragControls } from 'framer-motion';
 import type { ReactNode } from 'react';
 import { useOutsideClick } from '@/hooks/useOutsideClick';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { bottomPanelExpandedAtom } from '@/store/atoms';
+import { useMapCommands } from '@/hooks/useMapCommands';
 
 interface SlidingPanelProps {
   children: ReactNode;
 }
 
 export default function SlidingPanel({ children }: SlidingPanelProps) {
-  const [isExpanded, setIsExpanded] = useAtom(bottomPanelExpandedAtom);
+  const isExpanded = useAtomValue(bottomPanelExpandedAtom);
   const [expandedHeight, setExpandedHeight] = useState(0);
   const dragControls = useDragControls();
+  const { runCommand } = useMapCommands();
   
   const panelRef = useOutsideClick<HTMLDivElement>(
-    () => setIsExpanded(false),
+    () => runCommand({ type: 'PANEL_COLLAPSE' }),
     isExpanded
   );
 
@@ -45,16 +47,16 @@ export default function SlidingPanel({ children }: SlidingPanelProps) {
       dragElastic={0.2}
       onDragEnd={(_, info: PanInfo) => {
         if (info.velocity.y < -500) {
-          setIsExpanded(true);
+          runCommand({ type: 'PANEL_EXPAND' });
         } else if (info.velocity.y > 500) {
-          setIsExpanded(false);
+          runCommand({ type: 'PANEL_COLLAPSE' });
         }
       }}
     >
       <div
         className="flex items-center justify-between p-4 border-b border-border cursor-grab"
         onPointerDown={(e) => dragControls.start(e)}
-        onClick={() => setIsExpanded(!isExpanded)}
+        onClick={() => runCommand({ type: isExpanded ? 'PANEL_COLLAPSE' : 'PANEL_EXPAND' })}
       >
         <motion.div
           className="w-12 h-1 bg-border rounded-full mx-auto"

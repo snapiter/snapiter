@@ -1,5 +1,5 @@
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndexAtom, isLoadingWebsiteAtom, websiteAtom, errorAtom, selectedTripAtom } from '@/store/atoms';
+import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndexAtom, isLoadingWebsiteAtom, websiteAtom, errorAtom, selectedTripAtom, bottomPanelExpandedAtom } from '@/store/atoms';
 import { fetchWebsiteByHostname } from '@/services/api';
 import { useEffect, useRef } from 'react';
 import type maplibregl from 'maplibre-gl';
@@ -20,6 +20,7 @@ export function useMapCommandHandler(
 
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
   const setSelectedTrip = useSetAtom(selectedTripAtom);
+  const setBottomPanelExpanded = useSetAtom(bottomPanelExpandedAtom);
   const animationRef = useRef<number | null>(null);
   const vehicleMarkerRef = useRef<maplibregl.Marker | null>(null);
   const startTimeRef = useRef<number | null>(null);
@@ -218,6 +219,18 @@ export function useMapCommandHandler(
           else {
             console.error("Invalid trip found")
           }
+          break;
+        }
+        
+        case 'PANEL_EXPAND': {
+          setBottomPanelExpanded(true);
+          emitEvent({ type: 'PANEL_EXPANDED', commandId: command.id });
+          break;
+        }
+        
+        case 'PANEL_COLLAPSE': {
+          setBottomPanelExpanded(false);
+          emitEvent({ type: 'PANEL_COLLAPSED', commandId: command.id });
           break;
         }
       }

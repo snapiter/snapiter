@@ -13,7 +13,9 @@ type MapCommandWithoutId =
   | { type: 'LOAD_WEBSITE'; hostname: string }
   | { type: 'HOVER_TRIP'; tripSlug: string, fitBounds: boolean }
   | { type: 'BLUR_TRIP' }
-  | { type: 'SELECT_TRIP'; tripSlug: string };
+  | { type: 'SELECT_TRIP'; tripSlug: string }
+  | { type: 'PANEL_EXPAND' }
+  | { type: 'PANEL_COLLAPSE' };
 
 export function useMapCommands() {
   const setCommands = useSetAtom(mapCommandsAtom);
