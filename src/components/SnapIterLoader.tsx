@@ -52,7 +52,6 @@ export default function SnapIterLoader({ website }: SnapIterLoaderProps) {
           )}
         </div>
 
-        {/* Progress Bar — only show while not loaded */}
         {!loaded && (
           <div className="w-full bg-background rounded-full h-2 overflow-hidden mt-4">
             <div className="h-2 bg-primary rounded-full animate-loading" />

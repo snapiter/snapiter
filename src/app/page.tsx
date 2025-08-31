@@ -43,11 +43,14 @@ export default function Home() {
 
   useEffect(() => {
     if (websiteReady && mapReady && trips.length > 0) {
-      setIsLoaded(true);
-      runCommand({
-        type: 'SELECT_TRIP',
-        tripSlug: trips[0].slug
-      });
+      setTimeout(() => {
+        setIsLoaded(true);
+        runCommand({
+          type: 'SELECT_TRIP',
+          tripSlug: trips[0].slug
+        });
+      }, 1000)
+      
     }
   }, [websiteReady, mapReady, trips])
 
@@ -96,11 +99,11 @@ export default function Home() {
         </div>
 
         {/* Loading Overlay */}
-        {/* {(!isLoaded) && ( */}
+        {(!isLoaded) && (
           <div className="absolute inset-0 z-[200]">
             <SnapIterLoader website={website} />
           </div>
-        {/* //  )} */}
+        )} 
       </div>
     </>
   );
