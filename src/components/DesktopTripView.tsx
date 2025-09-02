@@ -34,7 +34,7 @@ export default function DesktopTripView({ trips, pageType }: DesktopTripViewProp
   }
   return (
     <div className={`flex h-full`}>
-      <div className="w-1/2">
+      <div className={pageType === PageType.TRIPS ? "w-1/2" : "w-full"}>
         <TripSidebar 
           trips={trips} 
           activeIndex={activeIndex} 
