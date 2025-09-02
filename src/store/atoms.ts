@@ -1,12 +1,17 @@
 import { atom } from 'jotai';
 
+export enum PageType {
+  TRIPS = 'trips',
+  POSITIONS = 'positions',
+}
+
 export interface Website {
   vesselId: string;
   shipName: string;
   websiteTitle: string;
   website: string;
   icon: string;
-  pageType: string;
+  pageType: PageType;
   trips: Trip[];
 }
 

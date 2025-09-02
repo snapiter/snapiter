@@ -40,14 +40,19 @@ export function createTripMarkers(
 export function createVehicleMarker(
   position: Position,
   vehicleMarkerRef: { current: maplibregl.Marker | null },
-  map: maplibregl.Map
+  map: maplibregl.Map,
+  icon?: string
 ) {
   if (!vehicleMarkerRef.current) {
     const el = document.createElement('div');
     el.style.width = '32px';
     el.style.height = '32px';
     el.style.zIndex = '100'; // Ensure vehicle marker is always on top
-    el.innerHTML = `<img src="/assets/icons/van-passenger.svg" style="width: 100%; height: 100%;" />`;
+    if(!icon) {
+      el.innerHTML = `<img src="/assets/icons/sailboat-icon.gif" style="width: 100%; height: 100%;" />`;
+    } else {
+      el.innerHTML = `<img src="/assets/icons/${icon}" style="width: 100%; height: 100%;" />`;
+    }
     vehicleMarkerRef.current = new maplibregl.Marker({ element: el, anchor: 'center' })
       .setLngLat([position.longitude, position.latitude])
       .addTo(map);

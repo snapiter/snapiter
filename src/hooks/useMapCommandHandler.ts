@@ -15,7 +15,7 @@ export function useMapCommandHandler(
   const commands = useAtomValue(mapCommandsAtom);
   const setMapEvents = useSetAtom(mapEventsAtom);
   const setIsLoadingWebsite = useSetAtom(isLoadingWebsiteAtom);
-  const setWebsite = useSetAtom(websiteAtom);
+  const [website, setWebsite] = useAtom(websiteAtom);
   const setError = useSetAtom(errorAtom);
 
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
@@ -108,7 +108,7 @@ export function useMapCommandHandler(
           createTripMarkers(trip.markers, visibleMarkersRef, (photoIndex: number) => {
             setLightboxIndex(photoIndex);
           });
-          createVehicleMarker(activePositions[0], vehicleMarkerRef, map);
+          createVehicleMarker(activePositions[0], vehicleMarkerRef, map, website?.icon);
           fitMapBounds(mapRef, activePositions);
           
           startAnimation(
