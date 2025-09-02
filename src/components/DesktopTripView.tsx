@@ -33,7 +33,7 @@ export default function DesktopTripView({ trips, pageType }: DesktopTripViewProp
     );
   }
   return (
-    <div className={`flex h-full ${pageType === PageType.TRIPS ? 'min-w-[600px]' : ''}`}>
+    <div className={`flex h-full`}>
       <TripSidebar 
         trips={trips} 
         activeIndex={activeIndex} 
