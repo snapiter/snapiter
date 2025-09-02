@@ -72,7 +72,7 @@ export default function Home() {
       <DynamicTitle />
       <div className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row">
         {/* Single MapView - responsive sizing */}
-        <div className={`flex-1 md:w-2/3 relative transition-all duration-300 ${
+        <div className={`flex-1 md:w-1/2 lg:w-2/3 relative transition-all duration-300 ${
           // Mobile: dynamic height based on panel state
           isPanelExpanded
             ? 'h-[calc(40vh+36px)] md:h-full'
@@ -95,7 +95,7 @@ export default function Home() {
         </div>
 
         {/* Desktop: Side Panel */}
-        <div className="hidden md:block md:w-1/3 bg-background shadow-xl overflow-hidden">
+        <div className="hidden md:block md:w-1/2 lg:w-1/3 bg-background shadow-xl overflow-hidden">
           <DesktopTripView trips={trips} pageType={website?.pageType ?? null} />
         </div>
 
