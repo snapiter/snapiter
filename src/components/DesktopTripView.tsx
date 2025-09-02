@@ -34,13 +34,15 @@ export default function DesktopTripView({ trips, pageType }: DesktopTripViewProp
   }
   return (
     <div className={`flex h-full`}>
-      <TripSidebar 
-        trips={trips} 
-        activeIndex={activeIndex} 
-        onTripSelect={handleTripSelect} 
-      />
+      <div className="w-1/2">
+        <TripSidebar 
+          trips={trips} 
+          activeIndex={activeIndex} 
+          onTripSelect={handleTripSelect} 
+        />
+      </div>
       {pageType === PageType.TRIPS && (
-        <div className="flex-1 overflow-y-auto">
+        <div className="w-1/2 overflow-y-auto">
           <TripDetails trip={trips[activeIndex]} />
         </div>
       )}

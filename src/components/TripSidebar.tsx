@@ -48,7 +48,7 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
   }, [mapEvents]);
 
   return (
-    <div className="w-64 bg-surface border-r border-border h-full overflow-y-auto">
+    <div className="w-full bg-surface border-r border-border h-full overflow-y-auto">
       <div className="p-4">
         <div className="flex items-center gap-3 mb-2">
           <Image 
