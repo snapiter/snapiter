@@ -1,5 +1,5 @@
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndexAtom, isLoadingWebsiteAtom, websiteAtom, errorAtom, selectedTripAtom, bottomPanelExpandedAtom } from '@/store/atoms';
+import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndexAtom, isLoadingWebsiteAtom, websiteAtom, errorAtom, selectedTripAtom, bottomPanelExpandedAtom, MapStyle } from '@/store/atoms';
 import { fetchWebsiteByHostname } from '@/services/api';
 import { useEffect, useRef } from 'react';
 import type maplibregl from 'maplibre-gl';
@@ -188,7 +188,9 @@ export function useMapCommandHandler(
             try {
               console.log('Loading website for hostname:', command.hostname);
               const websiteData = await fetchWebsiteByHostname(command.hostname);
-              setWebsite(websiteData);
+              setWebsite({...websiteData, 
+                mapStyle: command.hostname === "maps.lunaverde.nl" ? MapStyle.STREETS_V2 : MapStyle.LANDSCAPE
+              });
               emitEvent({ type: 'WEBSITE_LOADED', commandId: command.id });
             } catch (error) {
               setError(error instanceof Error ? error.message : 'Failed to load website data');

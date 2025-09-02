@@ -10,7 +10,7 @@ import DynamicTitle from '@/components/DynamicTitle';
 import { useWebsite, useHostname } from '@/hooks/useApiData';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useAtomValue } from 'jotai';
-import { errorAtom, bottomPanelExpandedAtom, mapEventsAtom, PageType } from '@/store/atoms';
+import { errorAtom, bottomPanelExpandedAtom, mapEventsAtom, PageType, MapStyle } from '@/store/atoms';
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -77,7 +77,7 @@ export default function Home() {
             ? 'h-[calc(40vh+36px)] md:h-full'
             : 'h-[calc(100vh-36px)] md:h-full'
           }`}>
-          <MapView trips={trips} />
+          <MapView trips={trips} mapStyle={website?.mapStyle ?? MapStyle.LANDSCAPE} />
         </div>
 
         {/* Mobile: Sliding Panel */}

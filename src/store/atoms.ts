@@ -4,6 +4,10 @@ export enum PageType {
   TRIPS = 'TRIPS',
   POSITIONS = 'POSITIONS',
 }
+export enum MapStyle {
+  LANDSCAPE = 'landscape',
+  STREETS_V2 = 'streets-v2',
+}
 
 export interface Website {
   vesselId: string;
@@ -13,6 +17,7 @@ export interface Website {
   icon: string;
   pageType: PageType;
   trips: Trip[];
+  mapStyle: MapStyle;
 }
 
 export interface Trip {

@@ -2,7 +2,7 @@
 
 import Map, { Source, Layer, type MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { selectedTripAtom, type Trip, mapEventsAtom, bottomPanelExpandedAtom } from '@/store/atoms';
+import { selectedTripAtom, type Trip, mapEventsAtom, bottomPanelExpandedAtom, MapStyle } from '@/store/atoms';
 import { useAtomValue } from 'jotai';
 import { useRef, useState, useEffect } from 'react';
 import { createRouteData } from '@/utils/mapBounds';
@@ -10,11 +10,11 @@ import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
 
 interface MapViewProps {
-  className?: string;
   trips?: Trip[];
+  mapStyle: MapStyle;
 }
 
-export default function MapView({ className, trips = [] }: MapViewProps) {
+export default function MapView({ trips = [], mapStyle }: MapViewProps) {
   const selectedTrip = useAtomValue(selectedTripAtom);
   const { runCommand } = useMapCommands();
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
@@ -120,7 +120,7 @@ export default function MapView({ className, trips = [] }: MapViewProps) {
       <Map
         ref={mapRef}
         initialViewState={{ longitude: 5.1214201, latitude: 52.0907374, zoom: 12 }}
-        mapStyle={`https://api.maptiler.com/maps/landscape/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
+        mapStyle={`https://api.maptiler.com/maps/${mapStyle.valueOf()}/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
         attributionControl={{
           compact: true,
         }}
