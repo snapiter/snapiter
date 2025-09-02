@@ -44,8 +44,26 @@ export function createAnimationLoop(
       }
 
       if (vehicleMarkerRef.current) {
-        const pos = activePositions[currentIndex];
-        vehicleMarkerRef.current.setLngLat([pos.longitude, pos.latitude]);
+        // This gives a smoother animation
+        const exactIndex = progress * (activePositions.length - 1);
+        const lowerIndex = Math.floor(exactIndex);
+        const upperIndex = Math.min(lowerIndex + 1, activePositions.length - 1);
+        const t = exactIndex - lowerIndex;
+        
+        const p1 = activePositions[lowerIndex];
+        const p2 = activePositions[upperIndex];
+        
+        // Linear interpolation
+        const lng = p1.longitude + (p2.longitude - p1.longitude) * t;
+        const lat = p1.latitude + (p2.latitude - p1.latitude) * t;
+        
+        if (vehicleMarkerRef.current) {
+          vehicleMarkerRef.current.setLngLat([lng, lat]);
+        }
+        
+        // old code to just push the car to the next position
+        // const pos = activePositions[currentIndex];
+        // vehicleMarkerRef.current.setLngLat([pos.longitude, pos.latitude]);
       }
 
       const currentPosition = activePositions[currentIndex];
