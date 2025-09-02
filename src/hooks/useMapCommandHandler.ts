@@ -7,6 +7,7 @@ import type { MapRef } from 'react-map-gl/maplibre';
 import { createTripMarkers, createVehicleMarker, cleanupMarkers, highlightMarker } from '@/utils/mapMarkers';
 import { startAnimation, stopAnimation } from '@/utils/mapAnimation';
 import { fitMapBounds } from '@/utils/mapBounds';
+import logger from '@/utils/logger';
 
 export function useMapCommandHandler(
   mapRef: React.RefObject<MapRef | null>,
@@ -28,7 +29,7 @@ export function useMapCommandHandler(
   const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
 
   const emitEvent = (event: MapEvent) => {
-    console.log("Dispatched:" + event.type);
+    logger.log("Dispatched:" + event.type);
     setMapEvents(prev => [...prev, event]);
   };
 
@@ -46,7 +47,7 @@ export function useMapCommandHandler(
     if (!map) return;
 
     const handleCommand = async () => {
-      console.log("Command: " + command.type);
+      logger.log("Command: " + command.type);
       switch (command.type) {
         case 'ANIMATE_TRIP': {
           const trip = findTripBySlug(command.tripSlug);
