@@ -10,7 +10,7 @@ import DynamicTitle from '@/components/DynamicTitle';
 import { useWebsite, useHostname } from '@/hooks/useApiData';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useAtomValue } from 'jotai';
-import { errorAtom, bottomPanelExpandedAtom, mapEventsAtom } from '@/store/atoms';
+import { errorAtom, bottomPanelExpandedAtom, mapEventsAtom, PageType } from '@/store/atoms';
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -94,16 +94,16 @@ export default function Home() {
         </div>
 
         {/* Desktop: Side Panel */}
-        <div className="hidden md:block w-[600px] bg-background shadow-xl overflow-hidden">
-          <DesktopTripView trips={trips} />
+        <div className="hidden md:block bg-background shadow-xl overflow-hidden">
+          <DesktopTripView trips={trips} pageType={website?.pageType ?? null} />
         </div>
 
         {/* Loading Overlay */}
-        {(!isLoaded) && (
+        {/* {(!isLoaded) && ( */}
           <div className="absolute inset-0 z-[200]">
             <SnapIterLoader website={website} />
           </div>
-        )} 
+        {/* )}  */}
       </div>
     </>
   );

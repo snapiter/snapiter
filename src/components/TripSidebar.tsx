@@ -33,8 +33,6 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
   };
 
 
-
-
   // Listen to TRIP_HOVERED and TRIP_BLURRED events to update hover state
   useEffect(() => {
     const lastEvent = mapEvents[mapEvents.length - 1];

@@ -1,4 +1,4 @@
-import type { Trip, Position, Marker, Website } from '@/store/atoms';
+import { type Trip, type Position, type Marker, type Website, PageType } from '@/store/atoms';
 import { config } from '@/config';
 
 const BASE_URL = 'https://api.partypieps.nl/api';
@@ -78,5 +78,14 @@ export async function fetchWebsiteByHostname(hostname: string): Promise<Website>
     throw new ApiError(`HTTP error! status: ${response.status}`, response.status);
   }
   
-  return await response.json();
+  const data = await response.json();
+
+  return {
+    ...data,
+    pageType: toPageType(data.pageType),
+  };
+}
+
+function toPageType(value: any): PageType {
+  return Object.values(PageType).includes(value) ? (value as PageType) : PageType.TRIPS;
 }

@@ -3,14 +3,15 @@
 import { useState } from 'react';
 import TripSidebar from './TripSidebar';
 import TripDetails from './TripDetails';
-import { type Trip } from '@/store/atoms';
+import { PageType, type Trip } from '@/store/atoms';
 import { useMapCommands } from '@/hooks/useMapCommands';
 
 interface DesktopTripViewProps {
   trips: Trip[];
+  pageType: PageType | null;
 }
 
-export default function DesktopTripView({ trips }: DesktopTripViewProps) {
+export default function DesktopTripView({ trips, pageType }: DesktopTripViewProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const { runCommand } = useMapCommands();
 
@@ -31,17 +32,18 @@ export default function DesktopTripView({ trips }: DesktopTripViewProps) {
       </div>
     );
   }
-
   return (
-    <div className="flex h-full">
+    <div className={`flex h-full ${pageType === PageType.TRIPS ? 'min-w-[600px]' : ''}`}>
       <TripSidebar 
         trips={trips} 
         activeIndex={activeIndex} 
         onTripSelect={handleTripSelect} 
       />
-      <div className="flex-1 overflow-y-auto">
-        <TripDetails trip={trips[activeIndex]} />
-      </div>
+      {pageType === PageType.TRIPS && (
+        <div className="flex-1 overflow-y-auto">
+          <TripDetails trip={trips[activeIndex]} />
+        </div>
+      )}
     </div>
   );
 }
