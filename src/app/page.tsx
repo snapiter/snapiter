@@ -7,6 +7,7 @@ import TripSwiper from '@/components/TripSwiper';
 import DesktopTripView from '@/components/DesktopTripView';
 import SnapIterLoader from '@/components/SnapIterLoader';
 import DynamicTitle from '@/components/DynamicTitle';
+import Brand from '@/components/Brand';
 import { useWebsite, useHostname } from '@/hooks/useApiData';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useAtomValue } from 'jotai';
@@ -103,7 +104,12 @@ export default function Home() {
           <div className="absolute inset-0 z-[200]">
             <SnapIterLoader website={website} />
           </div>
-        )} 
+        )}
+
+        {/* Brand - Bottom Left (Desktop Only) */}
+        <div className="hidden md:block absolute bottom-4 left-4 z-10">
+          <Brand />
+        </div>
       </div>
     </>
   );
