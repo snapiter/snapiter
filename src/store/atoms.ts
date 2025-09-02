@@ -1,8 +1,8 @@
 import { atom } from 'jotai';
 
 export enum PageType {
-  TRIPS = 'trips',
-  POSITIONS = 'positions',
+  TRIPS = 'TRIPS',
+  POSITIONS = 'POSITIONS',
 }
 
 export interface Website {
