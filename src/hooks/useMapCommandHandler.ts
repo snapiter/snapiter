@@ -187,7 +187,7 @@ export function useMapCommandHandler(
           // Perform the API call
           (async () => {
             try {
-              console.log('Loading website for hostname:', command.hostname);
+              logger.log('Loading website for hostname:', command.hostname);
               const websiteData = await fetchWebsiteByHostname(command.hostname);
               setWebsite({...websiteData, 
                 mapStyle: command.hostname === "maps.lunaverde.nl" ? MapStyle.STREETS_V2 : MapStyle.LANDSCAPE
