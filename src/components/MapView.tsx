@@ -2,8 +2,8 @@
 
 import Map, { Source, Layer, type MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { selectedTripAtom, type Trip, mapEventsAtom, bottomPanelExpandedAtom, MapStyle } from '@/store/atoms';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { selectedTripAtom, type Trip,lightboxIndexAtom, mapEventsAtom, bottomPanelExpandedAtom, MapStyle } from '@/store/atoms';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useRef, useState, useEffect } from 'react';
 import { useQueries } from '@tanstack/react-query';
 import type maplibregl from 'maplibre-gl';
@@ -13,7 +13,6 @@ import { useMapCommands } from '@/hooks/useMapCommands';
 import { fetchPositions } from '@/services/api';
 import { cleanupMarkers } from '@/utils/mapMarkers';
 import { stopAnimation } from '@/utils/mapAnimation';
-import { lightboxIndexAtom } from '@/store/atoms';
 import { animateTrip, type AnimationRefs } from '@/utils/tripAnimationHandler';
 
 interface MapViewProps {
@@ -26,9 +25,9 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
   const selectedTrip = useAtomValue(selectedTripAtom);
   const { runCommand } = useMapCommands();
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
-  const mapEvents = useAtomValue(mapEventsAtom);
   const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
+  const [mapEvents, setMapEvents] = useAtom(mapEventsAtom);
 
   const mapRef = useRef<MapRef | null>(null);
   
@@ -72,7 +71,14 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
       refs,
       websiteIcon,
       (photoIndex: number) => setLightboxIndex(photoIndex),
-      () => console.log('Animation completed for trip:', tripWithPositions.slug)
+      () => {
+        console.log('Animation completed for trip:', tripWithPositions.slug);
+        setMapEvents(prev => [...prev, { 
+          type: 'ANIMATION_ENDED', 
+          tripSlug: tripWithPositions.slug, 
+          commandId: `animation-${Date.now()}` 
+        }]);
+      }
     );
   };
 

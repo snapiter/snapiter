@@ -3,8 +3,8 @@ import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndex
 import { useEffect, useRef } from 'react';
 import type maplibregl from 'maplibre-gl';
 import type { MapRef } from 'react-map-gl/maplibre';
-import { createTripMarkers, createVehicleMarker, cleanupMarkers, highlightMarker } from '@/utils/mapMarkers';
-import { startAnimation, stopAnimation } from '@/utils/mapAnimation';
+import { cleanupMarkers, highlightMarker } from '@/utils/mapMarkers';
+import { stopAnimation } from '@/utils/mapAnimation';
 import { fitMapBounds } from '@/utils/mapBounds';
 import logger from '@/utils/logger';
 
@@ -22,7 +22,6 @@ export function useMapCommandHandler(
   const animationRef = useRef<number | null>(null);
   const vehicleMarkerRef = useRef<maplibregl.Marker | null>(null);
   const startTimeRef = useRef<number | null>(null);
-  const currentPositionIndexRef = useRef<number>(0);
   const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
 
   const emitEvent = (event: MapEvent) => {
