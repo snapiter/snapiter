@@ -33,6 +33,11 @@ export interface Trip {
   animationSpeed?: number;
   photos?: Photo[];
 }
+export interface TripDetailed extends Trip {
+  positions: Position[];
+  markers: Marker[];
+}
+
 
 export interface Position {
   id: string;
