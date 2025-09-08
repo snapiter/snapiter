@@ -5,12 +5,11 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { selectedTripAtom, type Trip, type TripDetailed, lightboxIndexAtom, mapEventsAtom, bottomPanelExpandedAtom, MapStyle } from '@/store/atoms';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useRef, useState, useEffect } from 'react';
-import { useQueries } from '@tanstack/react-query';
 import type maplibregl from 'maplibre-gl';
-import { createRouteData, fitMapBounds } from '@/utils/mapBounds';
+import { createRouteData } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
-import { fetchPositions, fetchTripMarkers } from '@/services/api';
+import { useTripDetailed, useTripPositions } from '@/hooks/useTrip';
 import { cleanupMarkers } from '@/utils/mapMarkers';
 import { stopAnimation } from '@/utils/mapAnimation';
 import { animateTrip, type AnimationRefs } from '@/utils/tripAnimationHandler';
@@ -38,29 +37,9 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
   const currentPositionIndexRef = useRef<number>(0);
   const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
 
-  // Load complete TripDetailed for all trips in parallel
-  const tripDetailedQueries = useQueries({
-    queries: trips.map(trip => ({
-      queryKey: ['tripDetailed', trip.vesselId, trip.slug],
-      queryFn: async () => {
-        const [positions, markers] = await Promise.all([
-          fetchPositions(trip.vesselId, trip.slug),
-          fetchTripMarkers(trip.vesselId, trip)
-        ]);
-        return { ...trip, positions, markers } as TripDetailed;
-      },
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      retry: 1,
-    })),
-  });
+  const detailedTrips = useTripPositions(trips);
 
-  // Extract loaded TripDetailed objects
-  const tripsWithPositions: TripDetailed[] = tripDetailedQueries
-    .map(query => query.data)
-    .filter((trip): trip is TripDetailed => trip !== undefined);
-
-  // Function to animate trip directly
-  const animateTripDirect = (tripWithPositions: typeof tripsWithPositions[0]) => {
+  const animateTripDirect = (tripWithPositions: TripDetailed) => {
     const refs: AnimationRefs = {
       animationRef,
       vehicleMarkerRef,
@@ -93,7 +72,7 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
     if (!lastEvent) return;
 
     if(lastEvent.type === 'TRIP_SELECTED') {
-      const tripWithPositions = tripsWithPositions.find(t => t.slug === lastEvent.tripSlug);
+      const tripWithPositions = detailedTrips.find(t => t.slug === lastEvent.tripSlug);
       if (tripWithPositions && tripWithPositions.positions.length > 0) {
         animateTripDirect(tripWithPositions);
       }
@@ -197,11 +176,11 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
         onLoad={() => {
           runCommand({ type: 'MAP_READY' });
         }}
-        interactiveLayerIds={tripsWithPositions.map(trip => `route-line-${trip.slug}`)}
+        interactiveLayerIds={detailedTrips.map(trip => `route-line-${trip.slug}`)}
         onMouseMove={handleMouseMove}
         onClick={handleClick}
       >
-        {tripsWithPositions.map(trip => {
+        {detailedTrips.map(trip => {
           if (trip.positions.length < 2) return null;
           const color = trip.color || '#3b82f6';
           const isSelected = trip.slug === selectedTrip?.slug;
