@@ -38,8 +38,11 @@ export interface TripWithPositions extends Trip {
   positions: Position[];
 }
 
-export interface TripDetailed extends TripWithPositions {
+export interface TripWithMarkers extends Trip {
   markers: Marker[];
+}
+
+export interface TripDetailed extends TripWithPositions, TripWithMarkers {
 }
 
 
