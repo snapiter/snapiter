@@ -32,7 +32,7 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect, websiteT
 
   useEffect(() => {
     if (selectedTrip) {
-      const selectedTripIndex = trips.findIndex(trip => trip.slug === selectedTrip.slug);
+      const selectedTripIndex = trips.findIndex(trip => trip.slug === selectedTrip.trip?.slug);
       if (selectedTripIndex !== -1) {
         setDisplayActiveIndex(selectedTripIndex);
       }
