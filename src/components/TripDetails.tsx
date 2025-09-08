@@ -11,7 +11,7 @@ interface TripDetailsProps {
 }
 
 export default function TripDetails({ trip }: TripDetailsProps) {
-  const selectedTrip = useSelectedTrip();
+  const { trip: selectedTrip } = useSelectedTrip();
   
   // Only load markers if this trip is the selected one
   const markers = selectedTrip?.slug === trip.slug ? selectedTrip.markers : [];

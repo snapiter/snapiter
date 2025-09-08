@@ -13,7 +13,7 @@ interface TripSidebarProps {
 }
 
 export default function TripSidebar({ trips, activeIndex, onTripSelect, websiteTitle }: TripSidebarProps) {
-  const selectedTrip = useSelectedTrip();
+  const { trip: selectedTrip } = useSelectedTrip();
   const [displayActiveIndex, setDisplayActiveIndex] = useState(activeIndex);
 
   // Sync displayActiveIndex with prop changes

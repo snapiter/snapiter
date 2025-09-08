@@ -11,10 +11,10 @@ import 'yet-another-react-lightbox/styles.css';
 export default function GlobalLightbox() {
   const lightboxIndex = useAtomValue(lightboxIndexAtom);
   const { runCommand } = useMapCommands();
-  const selectedTrip = useSelectedTrip();
+  const { trip } = useSelectedTrip();
 
   // Derive photos from selectedTrip markers
-  const photos = selectedTrip?.markers
+  const photos = trip?.markers
     ?.filter(marker => marker.hasThumbnail)
     .map(marker => ({
       src: `${config.cacheApiUrl}/marker/${marker.markerId}`,

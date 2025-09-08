@@ -20,7 +20,7 @@ interface MapViewProps {
 }
 
 export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewProps) {
-  const selectedTrip = useSelectedTrip();
+  const { trip: selectedTrip } = useSelectedTrip();
   
   const { runCommand } = useMapCommands();
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
@@ -37,7 +37,7 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
   const currentPositionIndexRef = useRef<number>(0);
   const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
 
-  const detailedTrips = useTripPositions(trips);
+  const { data: tripsWithPositions } = useTripPositions(trips);
 
   const animateTripDirect = (trip: TripDetailed) => {
     const refs: AnimationRefs = {
@@ -67,7 +67,7 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
 
   useEffect(() => {
     if (selectedTrip) {
-      const tripWithPositions = detailedTrips.find(t => t.slug === selectedTrip.slug);
+      const tripWithPositions = tripsWithPositions.find(t => t.slug === selectedTrip.slug);
 
       if (tripWithPositions && tripWithPositions.positions.length > 0) {
         animateTripDirect({
@@ -161,11 +161,11 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
         onLoad={() => {
           runCommand({ type: 'MAP_READY' });
         }}
-        interactiveLayerIds={detailedTrips.map(trip => `route-line-${trip.slug}`)}
+        interactiveLayerIds={tripsWithPositions.map(trip => `route-line-${trip.slug}`)}
         onMouseMove={handleMouseMove}
         onClick={handleClick}
       >
-        {detailedTrips.map(trip => {
+        {tripsWithPositions.map(trip => {
           if (trip.positions.length < 2) return null;
           const color = trip.color || '#3b82f6';
           const isSelected = trip.slug === selectedTrip?.slug;

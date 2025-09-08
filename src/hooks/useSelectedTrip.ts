@@ -5,12 +5,41 @@ import { useMemo } from "react";
 
 export function useSelectedTrip() {
     const selectedTrip = useAtomValue(selectedTripAtom);
-    const { data: markers } = useMarkers(selectedTrip?.vesselId || null, selectedTrip);
+    const { data: markers, isLoading: markersLoading, error: markersError } = useMarkers(selectedTrip?.vesselId || null, selectedTrip);
 
     return useMemo(() => {
-        if (!selectedTrip) return null;
-        if (!markers) return null;
-        
-        return { ...selectedTrip, markers } as TripWithMarkers;
-    }, [selectedTrip, markers]);
+        if (!selectedTrip) {
+            return {
+                trip: null,
+                isLoading: false,
+                hasError: false,
+                error: null
+            };
+        }
+
+        if (markersLoading || !markers) {
+            return {
+                trip: null,
+                isLoading: true,
+                hasError: false,
+                error: null
+            };
+        }
+
+        if (markersError) {
+            return {
+                trip: null,
+                isLoading: false,
+                hasError: markersError instanceof Error,
+                error: markersError
+            };
+        }
+
+        return {
+            trip: { ...selectedTrip, markers } as TripWithMarkers,
+            isLoading: false,
+            hasError: false,
+            error: null
+        };
+    }, [selectedTrip, markers, markersLoading, markersError]);
 }
