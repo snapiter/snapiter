@@ -59,20 +59,6 @@ export function useMapCommandHandler(
           break;
         }
         
-        case 'FIT_BOUNDS': {
-          const trip = findTripBySlug(command.tripSlug);
-          if (!trip) break;
-          
-          const activePositions = trip.positions.toReversed();
-          fitMapBounds(mapRef, activePositions, command.duration ?? 1000);
-          
-          // Wait for bounds animation to complete
-          setTimeout(() => {
-            emitEvent({ type: 'FIT_BOUNDS_ENDED', tripSlug: command.tripSlug, commandId: command.id });
-          }, command.duration ?? 1000);
-          break;
-        }
-        
         case 'HIGHLIGHT_MARKER': {
           highlightMarker(visibleMarkersRef, command.markerId);
           emitEvent({ type: 'MARKER_HIGHLIGHTED', markerId: command.markerId, commandId: command.id });
@@ -93,17 +79,6 @@ export function useMapCommandHandler(
         
         case 'MAP_READY': {
           emitEvent({ type: 'MAP_READY', commandId: command.id });
-          break;
-        }
-        
-        
-        case 'HOVER_TRIP': {
-          emitEvent({ type: 'TRIP_HOVERED', tripSlug: command.tripSlug, fitBounds: command.fitBounds, commandId: command.id });
-          break;
-        }
-        
-        case 'BLUR_TRIP': {
-          emitEvent({ type: 'TRIP_BLURRED', commandId: command.id });
           break;
         }
         

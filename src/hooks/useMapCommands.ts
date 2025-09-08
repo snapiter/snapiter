@@ -4,13 +4,10 @@ import { useCallback } from 'react';
 
 type MapCommandWithoutId = 
   | { type: 'FLY_TO'; coordinates: [number, number]; zoom?: number, duration?: number }
-  | { type: 'FIT_BOUNDS'; tripSlug: string, duration?: number }
   | { type: 'HIGHLIGHT_MARKER'; markerId: string | null }
   | { type: 'LIGHTBOX_OPEN'; photoIndex: number }
   | { type: 'LIGHTBOX_CLOSE' }
   | { type: 'MAP_READY' }
-  | { type: 'HOVER_TRIP'; tripSlug: string, fitBounds: boolean }
-  | { type: 'BLUR_TRIP' }
   | { type: 'SELECT_TRIP'; tripSlug: string }
   | { type: 'PANEL_EXPAND' }
   | { type: 'PANEL_COLLAPSE' };

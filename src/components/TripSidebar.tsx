@@ -1,10 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import { mapEventsAtom, type Trip } from '@/store/atoms';
-import { useMapCommands } from '@/hooks/useMapCommands';
+import { type Trip } from '@/store/atoms';
 import { useEffect, useState } from 'react';
-import { useAtomValue } from 'jotai';
+import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 
 interface TripSidebarProps {
   trips: Trip[];
@@ -14,8 +13,7 @@ interface TripSidebarProps {
 }
 
 export default function TripSidebar({ trips, activeIndex, onTripSelect, websiteTitle }: TripSidebarProps) {
-  const mapEvents = useAtomValue(mapEventsAtom);
-  const { runCommand } = useMapCommands();
+  const selectedTrip = useSelectedTrip();
   const [displayActiveIndex, setDisplayActiveIndex] = useState(activeIndex);
 
   // Sync displayActiveIndex with prop changes
@@ -31,20 +29,15 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect, websiteT
     });
   };
 
-
-  // Listen to TRIP_HOVERED and TRIP_BLURRED events to update hover state
   useEffect(() => {
-    const lastEvent = mapEvents[mapEvents.length - 1];
-    if (!lastEvent) return;
-
-    if(lastEvent.type === 'TRIP_SELECTED') {
-      // Update visual state without triggering onTripSelect side effects
-      const selectedTripIndex = trips.findIndex(trip => trip.slug === lastEvent.tripSlug);
+    if (selectedTrip) {
+      const selectedTripIndex = trips.findIndex(trip => trip.slug === selectedTrip.slug);
       if (selectedTripIndex !== -1) {
         setDisplayActiveIndex(selectedTripIndex);
       }
     }
-  }, [mapEvents]);
+  }, [selectedTrip]);
+
 
   return (
     <div className="w-full bg-surface border-r border-border h-full overflow-y-auto">
@@ -77,9 +70,6 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect, websiteT
           <button
             key={`button-${trip.slug}`}
             onClick={() => onTripSelect(index)}
-            onMouseEnter={() => {
-              runCommand({ type: 'HOVER_TRIP', tripSlug: trip.slug, fitBounds: true });
-            }}
             className={`w-full p-3 mb-2 cursor-pointer rounded-lg text-left transition-colors hover:bg-background hover:shadow-sm ${
               index === displayActiveIndex
                 ? 'bg-background shadow-sm border-l-4 border-primary'

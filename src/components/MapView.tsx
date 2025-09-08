@@ -65,9 +65,11 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
       }
     );
   };
+
+
+
   useEffect(() => {
     if (selectedTrip) {
-      // Do something when selectedTrip changes and has data
       const tripWithPositions = detailedTrips.find(t => t.slug === selectedTrip.slug);
       if (tripWithPositions && tripWithPositions.positions.length > 0) {
         animateTripDirect({
@@ -85,10 +87,7 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
     const lastEvent = mapEvents[mapEvents.length - 1];
     if (!lastEvent) return;
 
-    if (lastEvent.type === 'TRIP_BLURRED') {
-      setHoveredTrip(null);
-    }
-    else if(lastEvent.type === 'MARKER_HIGHLIGHTED') {
+    if(lastEvent.type === 'MARKER_HIGHLIGHTED') {
       const marker = selectedTrip?.markers?.filter(i => i.markerId == lastEvent.markerId).pop()
       if(marker) {
         runCommand({
@@ -137,12 +136,10 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
       if (hoveredTrip !== tripSlug && selectedTrip?.slug !== tripSlug) {
         mapRef.current?.getCanvas().style.setProperty('cursor', 'pointer');
         setHoveredTrip(tripSlug);
-        runCommand({ type: 'HOVER_TRIP', tripSlug, fitBounds: false });
       }
     } else {
       if (hoveredTrip !== null) {
         setHoveredTrip(null);
-        runCommand({ type: 'BLUR_TRIP' });
       }
       mapRef.current?.getCanvas().style.removeProperty('cursor');
     }
