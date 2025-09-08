@@ -10,7 +10,8 @@ export function useSelectedTrip() {
     useEffect(() => {
       if (selectedTrip) {
         fetchTripMarkers(selectedTrip.vesselId, selectedTrip).then(markers => {
-          setTripWithMarkers({ ...selectedTrip, markers}); 
+            setTripWithMarkers({ ...selectedTrip, markers}); 
+
         });
       } else {
         setTripWithMarkers(null);

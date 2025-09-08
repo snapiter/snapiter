@@ -2,7 +2,7 @@
 
 import Map, { Source, Layer, type MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { selectedTripAtom, type Trip, type TripDetailed, lightboxIndexAtom, mapEventsAtom, bottomPanelExpandedAtom, MapStyle } from '@/store/atoms';
+import { type Trip, type TripDetailed, lightboxIndexAtom, mapEventsAtom, bottomPanelExpandedAtom, MapStyle } from '@/store/atoms';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useRef, useState, useEffect } from 'react';
 import type maplibregl from 'maplibre-gl';
@@ -10,7 +10,7 @@ import { createRouteData } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useTripDetailed, useTripPositions } from '@/hooks/useTrip';
-import { useMarkers } from '@/hooks/useMarkers';
+import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import { cleanupMarkers } from '@/utils/mapMarkers';
 import { stopAnimation } from '@/utils/mapAnimation';
 import { animateTrip, type AnimationRefs } from '@/utils/tripAnimationHandler';
@@ -22,14 +22,12 @@ interface MapViewProps {
 }
 
 export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewProps) {
-  const selectedTrip = useAtomValue(selectedTripAtom);
+  const selectedTrip = useSelectedTrip();
   const { runCommand } = useMapCommands();
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
   const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
   const [mapEvents, setMapEvents] = useAtom(mapEventsAtom);
-  
-  const { data: selectedTripMarkers } = useMarkers(selectedTrip?.vesselId || null, selectedTrip);
 
   const mapRef = useRef<MapRef | null>(null);
   
@@ -67,6 +65,19 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
       }
     );
   };
+  useEffect(() => {
+    if (selectedTrip) {
+      // Do something when selectedTrip changes and has data
+      const tripWithPositions = detailedTrips.find(t => t.slug === selectedTrip.slug);
+      if (tripWithPositions && tripWithPositions.positions.length > 0) {
+        animateTripDirect({
+          ...tripWithPositions,
+          markers: selectedTrip.markers
+        });
+      }
+    }
+  }, [selectedTrip]);
+
 
   useMapCommandHandler(mapRef, trips);
 
@@ -74,25 +85,11 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
     const lastEvent = mapEvents[mapEvents.length - 1];
     if (!lastEvent) return;
 
-    if(lastEvent.type === 'TRIP_SELECTED') {
-      const tripWithPositions = detailedTrips.find(t => t.slug === lastEvent.tripSlug);
-      if (tripWithPositions && tripWithPositions.positions.length > 0) {
-        animateTripDirect(tripWithPositions);
-      }
-    }
-    else if (lastEvent.type === 'TRIP_HOVERED') {
-      if(lastEvent.fitBounds) {
-        runCommand({
-          type: 'FIT_BOUNDS',
-          tripSlug: lastEvent.tripSlug,
-          duration: 500
-        });
-      }
-    } else if (lastEvent.type === 'TRIP_BLURRED') {
+    if (lastEvent.type === 'TRIP_BLURRED') {
       setHoveredTrip(null);
     }
     else if(lastEvent.type === 'MARKER_HIGHLIGHTED') {
-      const marker = selectedTripMarkers?.filter(i => i.markerId == lastEvent.markerId).pop()
+      const marker = selectedTrip?.markers?.filter(i => i.markerId == lastEvent.markerId).pop()
       if(marker) {
         runCommand({
           type: 'FLY_TO',

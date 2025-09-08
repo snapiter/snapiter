@@ -2,22 +2,19 @@
 
 import { useAtomValue } from 'jotai';
 import Lightbox from 'yet-another-react-lightbox';
-import { lightboxIndexAtom, selectedTripAtom } from '@/store/atoms';
+import { lightboxIndexAtom } from '@/store/atoms';
 import { useMapCommands } from '@/hooks/useMapCommands';
-import { useMarkers } from '@/hooks/useMarkers';
+import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import { config } from '@/config';
 import 'yet-another-react-lightbox/styles.css';
 
 export default function GlobalLightbox() {
   const lightboxIndex = useAtomValue(lightboxIndexAtom);
   const { runCommand } = useMapCommands();
-  const selectedTrip = useAtomValue(selectedTripAtom);
-  
-  // Fetch markers on-demand for selected trip
-  const { data: markers } = useMarkers(selectedTrip?.vesselId || null, selectedTrip);
+  const selectedTrip = useSelectedTrip();
 
-  // Derive photos from fetched markers
-  const photos = markers
+  // Derive photos from selectedTrip markers
+  const photos = selectedTrip?.markers
     ?.filter(marker => marker.hasThumbnail)
     .map(marker => ({
       src: `${config.cacheApiUrl}/marker/${marker.markerId}`,

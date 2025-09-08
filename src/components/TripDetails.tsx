@@ -4,12 +4,14 @@ import PhotoCarousel, { type Photo } from './PhotoCarousel';
 import PhotoGrid from './PhotoGrid';
 import type { Trip } from '@/store/atoms';
 import { config } from '@/config';
+import { useMarkers } from '@/hooks/useMarkers';
 
 interface TripDetailsProps {
   trip: Trip;
 }
 
-export default function TripDetails({ trip}: TripDetailsProps) {
+export default function TripDetails({ trip }: TripDetailsProps) {
+  const { data: markers } = useMarkers(trip.vesselId, trip);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -19,7 +21,7 @@ export default function TripDetails({ trip}: TripDetailsProps) {
     });
   };
 
-  const photosFromMarkers: Photo[] = (trip.markers || [])
+  const photosFromMarkers: Photo[] = (markers || [])
     .filter(marker => marker.hasThumbnail)
     .map(marker => ({
       id: marker.markerId, // Use markerId to match with map markers
