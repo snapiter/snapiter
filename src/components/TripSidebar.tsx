@@ -65,15 +65,17 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect, websiteT
           {trips.length} {trips.length === 1 ? 'Journey' : 'Journeys'}
         </p>
       </div>
-
       <div className="p-2">
         {trips.map((trip, index) => (
           <button
             key={`button-${trip.slug}`}
             onClick={() => onTripSelect(index)}
-            className={`w-full p-3 mb-2 cursor-pointer rounded-lg text-left transition-colors hover:bg-background hover:shadow-sm ${index === displayActiveIndex
-                ? 'bg-background shadow-sm border-l-4 border-primary'
-                : 'bg-transparent'
+            style={{ '--trip-color': trip.color ?? 'transparent' } as React.CSSProperties}
+            className={`w-full p-3 mb-2 cursor-pointer rounded-lg text-left transition-colors
+              hover:bg-background hover:shadow-sm border-l-4
+              ${index === displayActiveIndex
+                ? 'bg-background shadow-sm border-[var(--trip-color)]'
+                : 'bg-transparent border-transparent hover:border-[var(--trip-color)]'
               }`}
           >
             <div className="flex items-center justify-between mb-1 pointer-events-none">
