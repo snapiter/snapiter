@@ -1,14 +1,9 @@
 import type maplibregl from 'maplibre-gl';
 import type { MapRef } from 'react-map-gl/maplibre';
-import type { Trip, Position, Marker } from '@/store/atoms';
+import type { TripDetailed } from '@/store/atoms';
 import { createTripMarkers, createVehicleMarker, cleanupMarkers } from '@/utils/mapMarkers';
 import { startAnimation, stopAnimation } from '@/utils/mapAnimation';
 import { fitMapBounds } from '@/utils/mapBounds';
-
-export interface TripWithPositions extends Trip {
-  positions: Position[];
-  markers?: Marker[];
-}
 
 export interface AnimationRefs {
   animationRef: React.RefObject<number | null>;
@@ -19,7 +14,7 @@ export interface AnimationRefs {
 }
 
 export function animateTrip(
-  tripWithPositions: TripWithPositions,
+  tripDetailed: TripDetailed,
   mapRef: React.RefObject<MapRef | null>,
   refs: AnimationRefs,
   websiteIcon?: string,
@@ -38,7 +33,7 @@ export function animateTrip(
   refs.startTimeRef.current = null;
 
   // Reset the route line to empty
-  const routeSource = map.getSource(`route-${tripWithPositions.slug}`) as any;
+  const routeSource = map.getSource(`route-${tripDetailed.slug}`) as any;
   if (routeSource) {
     routeSource.setData({
       type: 'FeatureCollection',
@@ -53,9 +48,9 @@ export function animateTrip(
     });
   }
 
-  const activePositions = tripWithPositions.positions.toReversed();
+  const activePositions = tripDetailed.positions.toReversed();
   
-  createTripMarkers(tripWithPositions.markers || [], refs.visibleMarkersRef, (photoIndex: number) => {
+  createTripMarkers(tripDetailed.markers, refs.visibleMarkersRef, (photoIndex: number) => {
     onPhotoClick?.(photoIndex);
   });
   
@@ -64,7 +59,7 @@ export function animateTrip(
 
   startAnimation(
     mapRef,
-    tripWithPositions,
+    tripDetailed,
     activePositions,
     refs.vehicleMarkerRef,
     refs.visibleMarkersRef,

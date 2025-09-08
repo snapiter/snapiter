@@ -2,7 +2,7 @@
 
 import Map, { Source, Layer, type MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { selectedTripAtom, type Trip,lightboxIndexAtom, mapEventsAtom, bottomPanelExpandedAtom, MapStyle } from '@/store/atoms';
+import { selectedTripAtom, type Trip, type TripDetailed, lightboxIndexAtom, mapEventsAtom, bottomPanelExpandedAtom, MapStyle } from '@/store/atoms';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useRef, useState, useEffect } from 'react';
 import { useQueries } from '@tanstack/react-query';
@@ -10,7 +10,7 @@ import type maplibregl from 'maplibre-gl';
 import { createRouteData, fitMapBounds } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
-import { fetchPositions } from '@/services/api';
+import { fetchPositions, fetchTripMarkers } from '@/services/api';
 import { cleanupMarkers } from '@/utils/mapMarkers';
 import { stopAnimation } from '@/utils/mapAnimation';
 import { animateTrip, type AnimationRefs } from '@/utils/tripAnimationHandler';
@@ -38,22 +38,26 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
   const currentPositionIndexRef = useRef<number>(0);
   const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
 
-  // Load positions for all trips in parallel
-  const positionQueries = useQueries({
+  // Load complete TripDetailed for all trips in parallel
+  const tripDetailedQueries = useQueries({
     queries: trips.map(trip => ({
-      queryKey: ['tripPositions', trip.vesselId, trip.slug],
-      queryFn: () => fetchPositions(trip.vesselId, trip.slug),
+      queryKey: ['tripDetailed', trip.vesselId, trip.slug],
+      queryFn: async () => {
+        const [positions, markers] = await Promise.all([
+          fetchPositions(trip.vesselId, trip.slug),
+          fetchTripMarkers(trip.vesselId, trip)
+        ]);
+        return { ...trip, positions, markers } as TripDetailed;
+      },
       staleTime: 5 * 60 * 1000, // 5 minutes
       retry: 1,
     })),
   });
 
-  // Create enriched trips with loaded positions
-  const tripsWithPositions = trips.map((trip, index) => ({
-    ...trip,
-    positions: positionQueries[index]?.data || [],
-    isLoadingPositions: positionQueries[index]?.isLoading || false,
-  }));
+  // Extract loaded TripDetailed objects
+  const tripsWithPositions: TripDetailed[] = tripDetailedQueries
+    .map(query => query.data)
+    .filter((trip): trip is TripDetailed => trip !== undefined);
 
   // Function to animate trip directly
   const animateTripDirect = (tripWithPositions: typeof tripsWithPositions[0]) => {
