@@ -14,7 +14,7 @@ export interface AnimationRefs {
 }
 
 export function animateTrip(
-  tripDetailed: TripDetailed,
+  trip: TripDetailed,
   mapRef: React.RefObject<MapRef | null>,
   refs: AnimationRefs,
   websiteIcon?: string,
@@ -33,7 +33,7 @@ export function animateTrip(
   refs.startTimeRef.current = null;
 
   // Reset the route line to empty
-  const routeSource = map.getSource(`route-${tripDetailed.slug}`) as any;
+  const routeSource = map.getSource(`route-${trip.slug}`) as any;
   if (routeSource) {
     routeSource.setData({
       type: 'FeatureCollection',
@@ -48,9 +48,9 @@ export function animateTrip(
     });
   }
 
-  const activePositions = tripDetailed.positions.toReversed();
+  const activePositions = trip.positions.toReversed();
   
-  createTripMarkers(tripDetailed.markers, refs.visibleMarkersRef, (photoIndex: number) => {
+  createTripMarkers(trip.markers, refs.visibleMarkersRef, (photoIndex: number) => {
     onPhotoClick?.(photoIndex);
   });
   
@@ -59,13 +59,14 @@ export function animateTrip(
 
   startAnimation(
     mapRef,
-    tripDetailed,
+    trip,
     activePositions,
     refs.vehicleMarkerRef,
     refs.visibleMarkersRef,
     refs.currentPositionIndexRef,
     refs.startTimeRef,
     refs.animationRef,
+    trip.markers,
     () => {
       onComplete?.();
     }

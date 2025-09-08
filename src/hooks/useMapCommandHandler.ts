@@ -10,8 +10,7 @@ import logger from '@/utils/logger';
 
 export function useMapCommandHandler(
   mapRef: React.RefObject<MapRef | null>,
-  trips: Trip[],
-  websiteIcon?: string,
+  trips: Trip[]
 ) {
   const commands = useAtomValue(mapCommandsAtom);
   const setMapEvents = useSetAtom(mapEventsAtom);

@@ -74,7 +74,6 @@ export interface Photo {
 
 export const selectedTripAtom = atom<Trip | null>(null);
 
-
 export const errorAtom = atom<string | null>(null);
 
 export const bottomPanelExpandedAtom = atom<boolean>(false);

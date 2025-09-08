@@ -10,6 +10,7 @@ import { createRouteData } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useTripDetailed, useTripPositions } from '@/hooks/useTrip';
+import { useMarkers } from '@/hooks/useMarkers';
 import { cleanupMarkers } from '@/utils/mapMarkers';
 import { stopAnimation } from '@/utils/mapAnimation';
 import { animateTrip, type AnimationRefs } from '@/utils/tripAnimationHandler';
@@ -27,6 +28,8 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
   const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
   const [mapEvents, setMapEvents] = useAtom(mapEventsAtom);
+  
+  const { data: selectedTripMarkers } = useMarkers(selectedTrip?.vesselId || null, selectedTrip);
 
   const mapRef = useRef<MapRef | null>(null);
   
@@ -65,7 +68,7 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
     );
   };
 
-  useMapCommandHandler(mapRef, trips, websiteIcon);
+  useMapCommandHandler(mapRef, trips);
 
   useEffect(() => {
     const lastEvent = mapEvents[mapEvents.length - 1];
@@ -89,7 +92,7 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
       setHoveredTrip(null);
     }
     else if(lastEvent.type === 'MARKER_HIGHLIGHTED') {
-      const marker = selectedTrip?.markers.filter(i => i.markerId == lastEvent.markerId).pop()
+      const marker = selectedTripMarkers?.filter(i => i.markerId == lastEvent.markerId).pop()
       if(marker) {
         runCommand({
           type: 'FLY_TO',
