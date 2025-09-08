@@ -27,10 +27,6 @@ async function fetchApi<T>(endpoint: string): Promise<T> {
   }
 }
 
-export async function fetchTrips(vesselId: string): Promise<Trip[]> {
-  return fetchApi<Trip[]>(`/public/vessel/${vesselId}/trips`);
-}
-
 export async function fetchPositions(
   vesselId: string, 
   tripName: string, 
@@ -82,6 +78,12 @@ export async function fetchWebsiteByHostname(hostname: string): Promise<Website>
 
   return {
     ...data,
+    // THIS is temporary untill we fixed position and markers fetching in the api
+    trips: data.trips.map((trip: any) => ({
+      ...trip,
+      positions: [],
+      markers: [],
+    })),
     pageType: toPageType(data.pageType),
   };
 }
