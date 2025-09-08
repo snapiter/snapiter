@@ -43,7 +43,6 @@ export default function Home() {
     }
   }, [website, mapReady, trips, isLoading, runCommand]);
 
-
   if (error) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -54,7 +53,6 @@ export default function Home() {
       </div>
     );
   }
-
 
   return (
     <>

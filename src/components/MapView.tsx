@@ -11,8 +11,6 @@ import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useTripPositions } from '@/hooks/useTrip';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
-import { cleanupMarkers } from '@/utils/mapMarkers';
-import { stopAnimation } from '@/utils/mapAnimation';
 import { animateTrip, type AnimationRefs } from '@/utils/tripAnimationHandler';
 
 interface MapViewProps {
@@ -71,6 +69,8 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
   useEffect(() => {
     if (selectedTrip) {
       const tripWithPositions = detailedTrips.find(t => t.slug === selectedTrip.slug);
+
+      console.log("SELECTED TRIP: " + selectedTrip.slug);
       if (tripWithPositions && tripWithPositions.positions.length > 0) {
         animateTripDirect({
           ...tripWithPositions,
@@ -100,14 +100,6 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
     }
   }, [mapEvents]);
 
-  // Cleanup effect for animation state
-  useEffect(() => {
-    return () => {
-      stopAnimation(animationRef);
-      cleanupMarkers(visibleMarkersRef, vehicleMarkerRef);
-      startTimeRef.current = null;
-    };
-  }, []);
 
   // Dynamic height for mobile, full height for desktop
     useEffect(() => {

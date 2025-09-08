@@ -1,17 +1,16 @@
 import type maplibregl from 'maplibre-gl';
-import type { Trip, Position, Marker } from '@/store/atoms';
+import type { Trip, Position, Marker, TripDetailed } from '@/store/atoms';
 import { getVisibleMarkers, updateMarkersOnMap } from './mapMarkers';
 
 export function createAnimationLoop(
   mapRef: { current: any },
-  selectedTrip: Trip,
+  selectedTrip: TripDetailed,
   activePositions: Position[],
   vehicleMarkerRef: { current: maplibregl.Marker | null },
   visibleMarkersRef: { current: Record<string, maplibregl.Marker> },
   currentPositionIndexRef: { current: number },
   startTimeRef: { current: number | null },
   animationRef: { current: number | null },
-  markers: Marker[],
   onComplete?: () => void
 ) {
   const animate = () => {
@@ -68,7 +67,7 @@ export function createAnimationLoop(
       }
 
       const currentPosition = activePositions[currentIndex];
-      const visibleMarkers = getVisibleMarkers(markers, currentPosition);
+      const visibleMarkers = getVisibleMarkers(selectedTrip.markers, currentPosition);
       updateMarkersOnMap(visibleMarkers, visibleMarkersRef, map);
     }
 
@@ -86,14 +85,13 @@ export function createAnimationLoop(
 
 export function startAnimation(
   mapRef: { current: any },
-  selectedTrip: Trip,
+  selectedTrip: TripDetailed,
   activePositions: Position[],
   vehicleMarkerRef: { current: maplibregl.Marker | null },
   visibleMarkersRef: { current: Record<string, maplibregl.Marker> },
   currentPositionIndexRef: { current: number },
   startTimeRef: { current: number | null },
   animationRef: { current: number | null },
-  markers: Marker[],
   onComplete?: () => void
 ) {
   const animate = createAnimationLoop(
@@ -105,7 +103,6 @@ export function startAnimation(
     currentPositionIndexRef,
     startTimeRef,
     animationRef,
-    markers,
     onComplete
   );
 
