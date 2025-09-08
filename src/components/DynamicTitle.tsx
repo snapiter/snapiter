@@ -1,16 +1,17 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useWebsite } from '@/hooks/useApiData';
 
-export default function DynamicTitle() {
-  const { website } = useWebsite();
+interface DynamicTitleProps {
+  title?: string;
+}
 
+export default function DynamicTitle({ title }: DynamicTitleProps) {
   useEffect(() => {
-    if (website?.websiteTitle) {
-      document.title = website.websiteTitle;
+    if (title) {
+      document.title = title;
     }
-  }, [website?.websiteTitle]);
+  }, [title]);
 
   return null; // This component doesn't render anything
 }

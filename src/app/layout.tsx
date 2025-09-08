@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Provider } from "jotai";
+import QueryProvider from "@/components/QueryProvider";
 import GlobalLightbox from "@/components/GlobalLightbox";
 
 const geistSans = Geist({
@@ -29,10 +30,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Provider>
-          {children}
-          <GlobalLightbox />
-        </Provider>
+        <QueryProvider>
+          <Provider>
+            {children}
+            <GlobalLightbox />
+          </Provider>
+        </QueryProvider>
       </body>
     </html>
   );

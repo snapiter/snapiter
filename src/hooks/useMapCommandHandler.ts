@@ -1,6 +1,5 @@
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndexAtom, isLoadingWebsiteAtom, websiteAtom, errorAtom, selectedTripAtom, bottomPanelExpandedAtom, MapStyle } from '@/store/atoms';
-import { fetchWebsiteByHostname } from '@/services/api';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndexAtom, selectedTripAtom, bottomPanelExpandedAtom } from '@/store/atoms';
 import { useEffect, useRef } from 'react';
 import type maplibregl from 'maplibre-gl';
 import type { MapRef } from 'react-map-gl/maplibre';
@@ -12,12 +11,10 @@ import logger from '@/utils/logger';
 export function useMapCommandHandler(
   mapRef: React.RefObject<MapRef | null>,
   trips: Trip[],
+  websiteIcon?: string,
 ) {
   const commands = useAtomValue(mapCommandsAtom);
   const setMapEvents = useSetAtom(mapEventsAtom);
-  const setIsLoadingWebsite = useSetAtom(isLoadingWebsiteAtom);
-  const [website, setWebsite] = useAtom(websiteAtom);
-  const setError = useSetAtom(errorAtom);
 
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
   const setSelectedTrip = useSetAtom(selectedTripAtom);
@@ -109,7 +106,7 @@ export function useMapCommandHandler(
           createTripMarkers(trip.markers, visibleMarkersRef, (photoIndex: number) => {
             setLightboxIndex(photoIndex);
           });
-          createVehicleMarker(activePositions[0], vehicleMarkerRef, map, website?.icon);
+          createVehicleMarker(activePositions[0], vehicleMarkerRef, map, websiteIcon);
           fitMapBounds(mapRef, activePositions);
           
           startAnimation(
@@ -180,28 +177,6 @@ export function useMapCommandHandler(
           break;
         }
         
-        case 'LOAD_WEBSITE': {
-          setIsLoadingWebsite(true);
-          setError(null);
-          
-          // Perform the API call
-          (async () => {
-            try {
-              logger.log('Loading website for hostname:', command.hostname);
-              const websiteData = await fetchWebsiteByHostname(command.hostname);
-              setWebsite({...websiteData, 
-                mapStyle: command.hostname === "maps.lunaverde.nl" ? MapStyle.STREETS_V2 : MapStyle.LANDSCAPE
-              });
-              emitEvent({ type: 'WEBSITE_LOADED', commandId: command.id });
-            } catch (error) {
-              setError(error instanceof Error ? error.message : 'Failed to load website data');
-              console.error('Error loading website:', error);
-            } finally {
-              setIsLoadingWebsite(false);
-            }
-          })();
-          break;
-        }
         
         case 'HOVER_TRIP': {
           emitEvent({ type: 'TRIP_HOVERED', tripSlug: command.tripSlug, fitBounds: command.fitBounds, commandId: command.id });
@@ -240,7 +215,7 @@ export function useMapCommandHandler(
     };
 
     handleCommand();
-  }, [commands, setLightboxIndex, setMapEvents, setIsLoadingWebsite, setWebsite, setError, mapRef]);
+  }, [commands, setLightboxIndex, setMapEvents, mapRef]);
 
   // Cleanup function
   useEffect(() => {

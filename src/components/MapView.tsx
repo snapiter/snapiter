@@ -12,9 +12,10 @@ import { useMapCommands } from '@/hooks/useMapCommands';
 interface MapViewProps {
   trips?: Trip[];
   mapStyle: MapStyle;
+  websiteIcon?: string;
 }
 
-export default function MapView({ trips = [], mapStyle }: MapViewProps) {
+export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewProps) {
   const selectedTrip = useAtomValue(selectedTripAtom);
   const { runCommand } = useMapCommands();
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
@@ -24,7 +25,7 @@ export default function MapView({ trips = [], mapStyle }: MapViewProps) {
   const mapRef = useRef<MapRef | null>(null);
   
   // This handles the commands
-  useMapCommandHandler(mapRef, trips);
+  useMapCommandHandler(mapRef, trips, websiteIcon);
 
   // Listen to TRIP_HOVERED and TRIP_BLURRED events to update hover state
   useEffect(() => {

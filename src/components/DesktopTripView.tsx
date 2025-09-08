@@ -9,9 +9,10 @@ import { useMapCommands } from '@/hooks/useMapCommands';
 interface DesktopTripViewProps {
   trips: Trip[];
   pageType: PageType | null;
+  websiteTitle?: string;
 }
 
-export default function DesktopTripView({ trips, pageType }: DesktopTripViewProps) {
+export default function DesktopTripView({ trips, pageType, websiteTitle }: DesktopTripViewProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const { runCommand } = useMapCommands();
 
@@ -38,7 +39,8 @@ export default function DesktopTripView({ trips, pageType }: DesktopTripViewProp
         <TripSidebar 
           trips={trips} 
           activeIndex={activeIndex} 
-          onTripSelect={handleTripSelect} 
+          onTripSelect={handleTripSelect}
+          websiteTitle={websiteTitle}
         />
       </div>
       {pageType === PageType.TRIPS && (

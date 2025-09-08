@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { mapEventsAtom, type Trip } from '@/store/atoms';
-import { useWebsite } from '@/hooks/useApiData';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useEffect, useState } from 'react';
 import { useAtomValue } from 'jotai';
@@ -11,10 +10,10 @@ interface TripSidebarProps {
   trips: Trip[];
   activeIndex: number;
   onTripSelect: (index: number) => void;
+  websiteTitle?: string;
 }
 
-export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSidebarProps) {
-  const website = useWebsite()
+export default function TripSidebar({ trips, activeIndex, onTripSelect, websiteTitle }: TripSidebarProps) {
   const mapEvents = useAtomValue(mapEventsAtom);
   const { runCommand } = useMapCommands();
   const [displayActiveIndex, setDisplayActiveIndex] = useState(activeIndex);
@@ -59,7 +58,7 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect }: TripSi
             className="flex-shrink-0"
           />
           <h1 className="text-xl font-bold text-foreground">
-            {website.website?.websiteTitle ?? (
+            {websiteTitle ?? (
               <>
                 <span className="text-primary">S</span>nap
                 <span className="text-primary">I</span>ter

@@ -1,8 +1,4 @@
-import { useAtomValue } from 'jotai';
 import { useState, useEffect } from 'react';
-import {
-  websiteAtom,
-} from '@/store/atoms';
 
 function useHostname() {
   const [hostname, setHostname] = useState<string>('');
@@ -37,9 +33,5 @@ function useHostname() {
   return hostname;
 }
 
-export function useWebsite() {
-  const website = useAtomValue(websiteAtom);
-  return { website };
-}
 
 export { useHostname };
