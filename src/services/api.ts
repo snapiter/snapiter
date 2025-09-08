@@ -41,7 +41,6 @@ export async function fetchPositions(
 }
 
 export async function fetchTripMarkers(vesselId: string, trip: Trip): Promise<Marker[]> {
-  console.log('fetchTripMarkers called with:', vesselId, trip.slug);
   return fetchMarkers(vesselId, trip.startDate, trip.endDate);
 }
 
