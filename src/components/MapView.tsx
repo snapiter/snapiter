@@ -67,7 +67,6 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
   };
 
 
-
   useEffect(() => {
     if (selectedTrip) {
       const tripWithPositions = detailedTrips.find(t => t.slug === selectedTrip.slug);

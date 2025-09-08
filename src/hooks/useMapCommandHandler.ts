@@ -5,7 +5,6 @@ import type maplibregl from 'maplibre-gl';
 import type { MapRef } from 'react-map-gl/maplibre';
 import { cleanupMarkers, highlightMarker } from '@/utils/mapMarkers';
 import { stopAnimation } from '@/utils/mapAnimation';
-import { fitMapBounds } from '@/utils/mapBounds';
 import logger from '@/utils/logger';
 
 export function useMapCommandHandler(
@@ -26,10 +25,6 @@ export function useMapCommandHandler(
   const emitEvent = (event: MapEvent) => {
     logger.log("Dispatched:" + event.type);
     setMapEvents(prev => [...prev, event]);
-  };
-
-  const findTripBySlug = (slug: string) => {
-    return trips.find(trip => trip.slug === slug);
   };
 
   useEffect(() => {
