@@ -11,9 +11,10 @@ import { createRouteData, fitMapBounds } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { fetchPositions } from '@/services/api';
-import { createTripMarkers, createVehicleMarker, cleanupMarkers } from '@/utils/mapMarkers';
-import { startAnimation, stopAnimation } from '@/utils/mapAnimation';
+import { cleanupMarkers } from '@/utils/mapMarkers';
+import { stopAnimation } from '@/utils/mapAnimation';
 import { lightboxIndexAtom } from '@/store/atoms';
+import { animateTrip, type AnimationRefs } from '@/utils/tripAnimationHandler';
 
 interface MapViewProps {
   trips?: Trip[];
@@ -57,61 +58,26 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
 
   // Function to animate trip directly
   const animateTripDirect = (tripWithPositions: typeof tripsWithPositions[0]) => {
-    const map = mapRef.current?.getMap();
-    if (!map) return;
-
-    // Stop current animation and clean up
-    stopAnimation(animationRef);
-    cleanupMarkers(visibleMarkersRef, vehicleMarkerRef);
-
-    // Reset animation state
-    currentPositionIndexRef.current = 0;
-    startTimeRef.current = null;
-
-    // Reset the route line to empty
-    const routeSource = map.getSource(`route-${tripWithPositions.slug}`) as any;
-    if (routeSource) {
-      routeSource.setData({
-        type: 'FeatureCollection',
-        features: [{
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'LineString',
-            coordinates: []
-          }
-        }]
-      });
-    }
-
-    const activePositions = tripWithPositions.positions.toReversed();
-    
-    createTripMarkers(tripWithPositions.markers || [], visibleMarkersRef, (photoIndex: number) => {
-      setLightboxIndex(photoIndex);
-    });
-    
-    createVehicleMarker(activePositions[0], vehicleMarkerRef, map, websiteIcon);
-    fitMapBounds(mapRef, activePositions);
-
-    startAnimation(
-      mapRef,
-      tripWithPositions,
-      activePositions,
-      vehicleMarkerRef,
-      visibleMarkersRef,
-      currentPositionIndexRef,
-      startTimeRef,
+    const refs: AnimationRefs = {
       animationRef,
-      () => {
-        console.log('Animation completed for trip:', tripWithPositions.slug);
-      }
+      vehicleMarkerRef,
+      startTimeRef,
+      currentPositionIndexRef,
+      visibleMarkersRef,
+    };
+
+    animateTrip(
+      tripWithPositions,
+      mapRef,
+      refs,
+      websiteIcon,
+      (photoIndex: number) => setLightboxIndex(photoIndex),
+      () => console.log('Animation completed for trip:', tripWithPositions.slug)
     );
   };
 
-  // This handles the commands (no longer handles ANIMATE_TRIP)
   useMapCommandHandler(mapRef, trips, websiteIcon);
 
-  // Listen to TRIP_HOVERED and TRIP_BLURRED events to update hover state
   useEffect(() => {
     const lastEvent = mapEvents[mapEvents.length - 1];
     if (!lastEvent) return;

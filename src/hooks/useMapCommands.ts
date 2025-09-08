@@ -3,7 +3,6 @@ import { mapCommandsAtom, type MapCommand } from '@/store/atoms';
 import { useCallback } from 'react';
 
 type MapCommandWithoutId = 
-  | { type: 'ANIMATE_TRIP'; tripSlug: string }
   | { type: 'FLY_TO'; coordinates: [number, number]; zoom?: number, duration?: number }
   | { type: 'FIT_BOUNDS'; tripSlug: string, duration?: number }
   | { type: 'HIGHLIGHT_MARKER'; markerId: string | null }
