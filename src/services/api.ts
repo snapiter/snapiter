@@ -78,12 +78,6 @@ export async function fetchWebsiteByHostname(hostname: string): Promise<Website>
 
   return {
     ...data,
-    // THIS is temporary untill we fixed position and markers fetching in the api
-    trips: data.trips.map((trip: any) => ({
-      ...trip,
-      positions: [],
-      markers: [],
-    })),
     pageType: toPageType(data.pageType),
   };
 }
