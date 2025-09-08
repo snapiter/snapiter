@@ -5,6 +5,7 @@ import { useCallback } from 'react';
 type MapCommandWithoutId = 
   | { type: 'FLY_TO'; coordinates: [number, number]; zoom?: number, duration?: number }
   | { type: 'HIGHLIGHT_MARKER'; markerId: string | null }
+  | { type: 'HIGHLIGHT_MARKER_LEAVE'; markerId: string | null }
   | { type: 'LIGHTBOX_OPEN'; photoIndex: number }
   | { type: 'LIGHTBOX_CLOSE' }
   | { type: 'MAP_READY' }

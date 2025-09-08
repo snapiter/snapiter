@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useMapCommands } from '@/hooks/useMapCommands';
 
 export interface Photo {
@@ -16,43 +16,77 @@ interface PhotoGridProps {
   className?: string;
 }
 
+const BOUNCE_MS = 150; // tune this "bounce rate" window
+
 export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
   const { runCommand } = useMapCommands();
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set(photos.map(p => p.id)));
 
-  const handlePhotoClick = (index: number) => {
-    runCommand({ type: 'LIGHTBOX_OPEN', photoIndex: index });
+  // track the last hovered photo and a pending leave timeout
+  const lastHoverIdRef = useRef<string | null>(null);
+  const leaveTimerRef = useRef<number | null>(null);
+
+  const clearLeaveTimer = () => {
+    if (leaveTimerRef.current !== null) {
+      window.clearTimeout(leaveTimerRef.current);
+      leaveTimerRef.current = null;
+    }
   };
 
-  const handlePhotoHover = (markerId: string) => {
-    runCommand({ type: 'HIGHLIGHT_MARKER', markerId });
+  const scheduleLeave = () => {
+    clearLeaveTimer();
+    leaveTimerRef.current = window.setTimeout(() => {
+      if (lastHoverIdRef.current) {
+        runCommand({ type: 'HIGHLIGHT_MARKER_LEAVE', markerId: lastHoverIdRef.current });
+        lastHoverIdRef.current = null;
+      }
+      leaveTimerRef.current = null;
+    }, BOUNCE_MS);
+  };
+
+  const handlePhotoEnter = (photoId: string) => {
+    clearLeaveTimer();                // user is still inside grid; cancel any pending leave
+    lastHoverIdRef.current = photoId; // remember current hovered photo
+    runCommand({ type: 'HIGHLIGHT_MARKER', markerId: photoId });
+  };
+
+  const handleGridMouseEnter = () => {
+    clearLeaveTimer();
+  };
+
+  const handleGridMouseLeave = () => {
+    // pointer left the entire grid; only then schedule the leave
+    scheduleLeave();
   };
 
   const handleImageLoad = (photoId: string) => {
     setLoadingImages(prev => {
-      const newSet = new Set(prev);
-      newSet.delete(photoId);
-      return newSet;
+      const next = new Set(prev);
+      next.delete(photoId);
+      return next;
     });
   };
 
   return (
     <div className={`w-full ${className}`}>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 px-4">
+      <div
+        className="grid grid-cols-1 lg:grid-cols-2 gap-3 px-4"
+        onMouseEnter={handleGridMouseEnter}
+        onMouseLeave={handleGridMouseLeave}
+      >
         {photos.map((photo, index) => (
-          <div 
+          <div
             key={photo.id}
-            className="relative aspect-square cursor-pointer hover:opacity-90 transition-opacity group "
-            onClick={() => handlePhotoClick(index)}
-            onMouseEnter={() => handlePhotoHover(photo.id)}
+            className="relative aspect-square cursor-pointer hover:opacity-90 transition-opacity group"
+            onClick={() => runCommand({ type: 'LIGHTBOX_OPEN', photoIndex: index })}
+            onMouseEnter={() => handlePhotoEnter(photo.id)}
           >
-            {/* Loading skeleton */}
             {loadingImages.has(photo.id) && (
               <div className="absolute inset-0 bg-muted rounded-lg animate-pulse flex items-center justify-center">
                 <div className="w-8 h-8 border-2 border-border border-t-primary rounded-full animate-spin"></div>
               </div>
             )}
-            
+
             <Image
               src={`${photo.url}/thumbnail/500x500`}
               alt={photo.alt}
@@ -63,8 +97,9 @@ export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
               onLoad={() => handleImageLoad(photo.id)}
             />
+
             {photo.caption && (
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity rounded-lg flex items-end p-2">
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-opacity rounded-lg flex items-end p-2">
                 <p className="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity line-clamp-2">
                   {photo.caption}
                 </p>
@@ -73,7 +108,6 @@ export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
           </div>
         ))}
       </div>
-
     </div>
   );
 }

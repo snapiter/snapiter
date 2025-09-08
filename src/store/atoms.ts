@@ -87,6 +87,7 @@ export const lightboxIndexAtom = atom<number>(-1);
 export type MapCommand = 
   | { type: 'FLY_TO'; coordinates: [number, number]; zoom?: number; duration?: number, id: string }
   | { type: 'HIGHLIGHT_MARKER'; markerId: string | null; id: string }
+  | { type: 'HIGHLIGHT_MARKER_LEAVE'; markerId: string | null; id: string }
   | { type: 'LIGHTBOX_OPEN'; photoIndex: number; id: string }
   | { type: 'LIGHTBOX_CLOSE'; id: string }
   | { type: 'MAP_READY'; id: string }
@@ -98,6 +99,7 @@ export type MapEvent =
   | { type: 'ANIMATION_ENDED'; tripSlug: string; commandId: string }
   | { type: 'FLY_TO_ENDED'; coordinates: [number, number]; commandId: string }
   | { type: 'MARKER_HIGHLIGHTED'; markerId: string | null; commandId: string }
+  | { type: 'MARKER_HIGHLIGHTED_LEAVE'; markerId: string | null; commandId: string }
   | { type: 'LIGHTBOX_OPENED'; photoIndex: number; commandId: string }
   | { type: 'LIGHTBOX_CLOSED'; commandId: string }
   | { type: 'MAP_READY'; commandId: string }

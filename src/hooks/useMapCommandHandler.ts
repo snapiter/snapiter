@@ -60,6 +60,12 @@ export function useMapCommandHandler(
           break;
         }
         
+        case 'HIGHLIGHT_MARKER_LEAVE': {
+          // highlightMarker(visibleMarkersRef, command.markerId);
+          emitEvent({ type: 'MARKER_HIGHLIGHTED_LEAVE', markerId: command.markerId, commandId: command.id });
+          break;
+        }
+        
         case 'LIGHTBOX_OPEN': {
           setLightboxIndex(command.photoIndex);
           emitEvent({ type: 'LIGHTBOX_OPENED', photoIndex: command.photoIndex, commandId: command.id });

@@ -6,7 +6,7 @@ import { type Trip, type TripDetailed, lightboxIndexAtom, mapEventsAtom, bottomP
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useRef, useState, useEffect } from 'react';
 import type maplibregl from 'maplibre-gl';
-import { createRouteData } from '@/utils/mapBounds';
+import { createRouteData, fitMapBounds } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useTripPositions } from '@/hooks/useTrip';
@@ -85,6 +85,7 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
     const lastEvent = mapEvents[mapEvents.length - 1];
     if (!lastEvent) return;
 
+    // If the marker is highlighted, fly to the marker
     if(lastEvent.type === 'MARKER_HIGHLIGHTED') {
       const marker = selectedTrip?.markers?.filter(i => i.markerId == lastEvent.markerId).pop()
       if(marker) {
@@ -96,8 +97,16 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
         });
       }
     }
-  }, [mapEvents]);
 
+    // If the marker is left, fit the map bounds to the trip
+    if(lastEvent.type === 'MARKER_HIGHLIGHTED_LEAVE') {
+      const trip = tripsWithPositions.find(t => t.slug == selectedTrip?.slug);
+      
+      if(trip) {
+        fitMapBounds(mapRef, trip?.positions);
+      }
+    }
+  }, [mapEvents]);
 
   // Dynamic height for mobile, full height for desktop
     useEffect(() => {
