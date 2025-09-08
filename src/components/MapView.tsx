@@ -3,13 +3,17 @@
 import Map, { Source, Layer, type MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { selectedTripAtom, type Trip, mapEventsAtom, bottomPanelExpandedAtom, MapStyle } from '@/store/atoms';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useRef, useState, useEffect } from 'react';
 import { useQueries } from '@tanstack/react-query';
-import { createRouteData } from '@/utils/mapBounds';
+import type maplibregl from 'maplibre-gl';
+import { createRouteData, fitMapBounds } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { fetchPositions } from '@/services/api';
+import { createTripMarkers, createVehicleMarker, cleanupMarkers } from '@/utils/mapMarkers';
+import { startAnimation, stopAnimation } from '@/utils/mapAnimation';
+import { lightboxIndexAtom } from '@/store/atoms';
 
 interface MapViewProps {
   trips?: Trip[];
@@ -23,8 +27,16 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
   const mapEvents = useAtomValue(mapEventsAtom);
   const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
+  const setLightboxIndex = useSetAtom(lightboxIndexAtom);
 
   const mapRef = useRef<MapRef | null>(null);
+  
+  // Animation state refs
+  const animationRef = useRef<number | null>(null);
+  const vehicleMarkerRef = useRef<maplibregl.Marker | null>(null);
+  const startTimeRef = useRef<number | null>(null);
+  const currentPositionIndexRef = useRef<number>(0);
+  const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
 
   // Load positions for all trips in parallel
   const positionQueries = useQueries({
@@ -43,7 +55,60 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
     isLoadingPositions: positionQueries[index]?.isLoading || false,
   }));
 
-  // This handles the commands
+  // Function to animate trip directly
+  const animateTripDirect = (tripWithPositions: typeof tripsWithPositions[0]) => {
+    const map = mapRef.current?.getMap();
+    if (!map) return;
+
+    // Stop current animation and clean up
+    stopAnimation(animationRef);
+    cleanupMarkers(visibleMarkersRef, vehicleMarkerRef);
+
+    // Reset animation state
+    currentPositionIndexRef.current = 0;
+    startTimeRef.current = null;
+
+    // Reset the route line to empty
+    const routeSource = map.getSource(`route-${tripWithPositions.slug}`) as any;
+    if (routeSource) {
+      routeSource.setData({
+        type: 'FeatureCollection',
+        features: [{
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'LineString',
+            coordinates: []
+          }
+        }]
+      });
+    }
+
+    const activePositions = tripWithPositions.positions.toReversed();
+    
+    createTripMarkers(tripWithPositions.markers || [], visibleMarkersRef, (photoIndex: number) => {
+      setLightboxIndex(photoIndex);
+    });
+    
+    createVehicleMarker(activePositions[0], vehicleMarkerRef, map, websiteIcon);
+    fitMapBounds(mapRef, activePositions);
+
+    startAnimation(
+      mapRef,
+      tripWithPositions,
+      activePositions,
+      vehicleMarkerRef,
+      visibleMarkersRef,
+      currentPositionIndexRef,
+      startTimeRef,
+      animationRef,
+      () => {
+        console.log('Animation completed for trip:', tripWithPositions.slug);
+      }
+    );
+  };
+
+  // This handles the commands (no longer handles ANIMATE_TRIP)
   useMapCommandHandler(mapRef, trips, websiteIcon);
 
   // Listen to TRIP_HOVERED and TRIP_BLURRED events to update hover state
@@ -52,10 +117,10 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
     if (!lastEvent) return;
 
     if(lastEvent.type === 'TRIP_SELECTED') {
-      runCommand({
-        type: 'ANIMATE_TRIP',
-        tripSlug: lastEvent.tripSlug
-      });
+      const tripWithPositions = tripsWithPositions.find(t => t.slug === lastEvent.tripSlug);
+      if (tripWithPositions && tripWithPositions.positions.length > 0) {
+        animateTripDirect(tripWithPositions);
+      }
     }
     else if (lastEvent.type === 'TRIP_HOVERED') {
       if(lastEvent.fitBounds) {
@@ -80,6 +145,15 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
       }
     }
   }, [mapEvents]);
+
+  // Cleanup effect for animation state
+  useEffect(() => {
+    return () => {
+      stopAnimation(animationRef);
+      cleanupMarkers(visibleMarkersRef, vehicleMarkerRef);
+      startTimeRef.current = null;
+    };
+  }, []);
 
   // Dynamic height for mobile, full height for desktop
     useEffect(() => {
