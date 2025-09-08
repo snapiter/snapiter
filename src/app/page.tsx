@@ -12,7 +12,7 @@ import { useHostname } from '@/hooks/useApiData';
 import { useWebsite } from '@/hooks/useWebsite';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useAtomValue } from 'jotai';
-import { bottomPanelExpandedAtom, mapEventsAtom, PageType, MapStyle } from '@/store/atoms';
+import { bottomPanelExpandedAtom, mapEventsAtom, MapStyle } from '@/store/atoms';
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -55,6 +55,7 @@ export default function Home() {
     );
   }
 
+
   return (
     <>
       <DynamicTitle title={website?.websiteTitle} />
@@ -90,7 +91,7 @@ export default function Home() {
         {/* Loading Overlay */}
         {(!isLoaded) && (
           <div className="absolute inset-0 z-[200]">
-            <SnapIterLoader website={website} />
+            <SnapIterLoader website={website ?? null} />
           </div>
         )}
 

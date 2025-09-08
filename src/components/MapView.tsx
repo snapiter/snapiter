@@ -9,7 +9,7 @@ import type maplibregl from 'maplibre-gl';
 import { createRouteData } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
-import { useTripDetailed, useTripPositions } from '@/hooks/useTrip';
+import { useTripPositions } from '@/hooks/useTrip';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import { cleanupMarkers } from '@/utils/mapMarkers';
 import { stopAnimation } from '@/utils/mapAnimation';
@@ -23,6 +23,7 @@ interface MapViewProps {
 
 export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewProps) {
   const selectedTrip = useSelectedTrip();
+  
   const { runCommand } = useMapCommands();
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
   const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
@@ -40,7 +41,7 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
 
   const detailedTrips = useTripPositions(trips);
 
-  const animateTripDirect = (tripWithPositions: TripDetailed) => {
+  const animateTripDirect = (trip: TripDetailed) => {
     const refs: AnimationRefs = {
       animationRef,
       vehicleMarkerRef,
@@ -50,16 +51,16 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
     };
 
     animateTrip(
-      tripWithPositions,
+      trip,
       mapRef,
       refs,
       websiteIcon,
       (photoIndex: number) => setLightboxIndex(photoIndex),
       () => {
-        console.log('Animation completed for trip:', tripWithPositions.slug);
+        console.log('Animation completed for trip:', trip.slug);
         setMapEvents(prev => [...prev, { 
           type: 'ANIMATION_ENDED', 
-          tripSlug: tripWithPositions.slug, 
+          tripSlug: trip.slug, 
           commandId: `animation-${Date.now()}` 
         }]);
       }
