@@ -5,9 +5,11 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { selectedTripAtom, type Trip, mapEventsAtom, bottomPanelExpandedAtom, MapStyle } from '@/store/atoms';
 import { useAtomValue } from 'jotai';
 import { useRef, useState, useEffect } from 'react';
+import { useQueries } from '@tanstack/react-query';
 import { createRouteData } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
+import { fetchPositions } from '@/services/api';
 
 interface MapViewProps {
   trips?: Trip[];
@@ -23,7 +25,24 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
   const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
 
   const mapRef = useRef<MapRef | null>(null);
-  
+
+  // Load positions for all trips in parallel
+  const positionQueries = useQueries({
+    queries: trips.map(trip => ({
+      queryKey: ['tripPositions', trip.vesselId, trip.slug],
+      queryFn: () => fetchPositions(trip.vesselId, trip.slug),
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      retry: 1,
+    })),
+  });
+
+  // Create enriched trips with loaded positions
+  const tripsWithPositions = trips.map((trip, index) => ({
+    ...trip,
+    positions: positionQueries[index]?.data || [],
+    isLoadingPositions: positionQueries[index]?.isLoading || false,
+  }));
+
   // This handles the commands
   useMapCommandHandler(mapRef, trips, websiteIcon);
 
@@ -128,11 +147,11 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
         onLoad={() => {
           runCommand({ type: 'MAP_READY' });
         }}
-        interactiveLayerIds={trips.map(trip => `route-line-${trip.slug}`)}
+        interactiveLayerIds={tripsWithPositions.map(trip => `route-line-${trip.slug}`)}
         onMouseMove={handleMouseMove}
         onClick={handleClick}
       >
-        {trips.map(trip => {
+        {tripsWithPositions.map(trip => {
           if (trip.positions.length < 2) return null;
           const color = trip.color || '#3b82f6';
           const isSelected = trip.slug === selectedTrip?.slug;

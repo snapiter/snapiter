@@ -32,8 +32,6 @@ export interface Trip {
   color?: string;
   animationSpeed?: number;
   photos?: Photo[];
-  positions: Position[];
-  markers: Marker[];
 }
 
 export interface Position {
