@@ -14,7 +14,7 @@ export function createTripMarkers(
     
       el.innerHTML = `
         <img 
-          src="${config.cacheApiUrl}/marker/${marker.markerId}/thumbnail/500x500" 
+          src="${config.cacheApiUrl}/marker/${marker.markerId}/thumbnail/100x100" 
           class="map-marker"
           alt="marker"
           data-marker-id="${marker.markerId}"
