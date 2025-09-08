@@ -44,7 +44,11 @@ export async function fetchPositions(
   return fetchApi<Position[]>(`/public/vessel/${vesselId}/positions/${tripName}?${params}`);
 }
 
-export async function fetchMarkers(
+export async function fetchTripMarkers(vesselId: string, trip: Trip): Promise<Marker[]> {
+  return fetchMarkers(vesselId, trip.startDate, trip.endDate);
+}
+
+async function fetchMarkers(
   vesselId: string,
   fromDate?: string,
   untilDate?: string,
@@ -65,10 +69,6 @@ export async function fetchMarkers(
   }
 
   return fetchApi<Marker[]>(`/public/vessel/${vesselId}/markers?${params}`);
-}
-
-export async function fetchTripMarkers(vesselId: string, trip: Trip): Promise<Marker[]> {
-  return fetchMarkers(vesselId, trip.startDate, trip.endDate);
 }
 
 export async function fetchWebsiteByHostname(hostname: string): Promise<Website> {

@@ -9,7 +9,7 @@ import SnapIterLoader from '@/components/SnapIterLoader';
 import DynamicTitle from '@/components/DynamicTitle';
 import Brand from '@/components/Brand';
 import { useHostname } from '@/hooks/useApiData';
-import { useWebsiteData } from '@/hooks/useWebsiteData';
+import { useWebsite } from '@/hooks/useWebsite';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useAtomValue } from 'jotai';
 import { bottomPanelExpandedAtom, mapEventsAtom, PageType, MapStyle } from '@/store/atoms';
@@ -18,7 +18,7 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const hostname = useHostname();
-  const { data: website, isLoading, error } = useWebsiteData(hostname);
+  const { data: website, isLoading, error } = useWebsite(hostname);
   const { runCommand } = useMapCommands();
   const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
   const mapEvents = useAtomValue(mapEventsAtom);

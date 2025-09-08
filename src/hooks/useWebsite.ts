@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchWebsiteByHostname } from '@/services/api';
 import { MapStyle, type Website } from '@/store/atoms';
 
-export function useWebsiteData(hostname: string | null) {
+export function useWebsite(hostname: string | null) {
   return useQuery({
     queryKey: ['website', hostname],
     queryFn: async () => {

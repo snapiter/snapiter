@@ -1,17 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchPositions } from '@/services/api';
 
-export function usePositionsData(
-  vesselId: string | null,
-  tripName: string | null,
-  page: number = 0,
-  size: number = 2000
-) {
+export function useTripPositions(vesselId: string | null, tripName: string | null) {
   return useQuery({
-    queryKey: ['positions', vesselId, tripName, page, size],
+    queryKey: ['tripPositions', vesselId, tripName],
     queryFn: async () => {
       if (!vesselId || !tripName) throw new Error('Vessel ID and trip name are required');
-      return fetchPositions(vesselId, tripName, page, size);
+      return fetchPositions(vesselId, tripName);
     },
     enabled: !!vesselId && !!tripName,
     staleTime: 5 * 60 * 1000, // 5 minutes
