@@ -55,7 +55,6 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
       websiteIcon,
       (photoIndex: number) => setLightboxIndex(photoIndex),
       () => {
-        console.log('Animation completed for trip:', trip.slug);
         setMapEvents(prev => [...prev, { 
           type: 'ANIMATION_ENDED', 
           tripSlug: trip.slug, 
@@ -70,7 +69,6 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
     if (selectedTrip) {
       const tripWithPositions = detailedTrips.find(t => t.slug === selectedTrip.slug);
 
-      console.log("SELECTED TRIP: " + selectedTrip.slug);
       if (tripWithPositions && tripWithPositions.positions.length > 0) {
         animateTripDirect({
           ...tripWithPositions,
