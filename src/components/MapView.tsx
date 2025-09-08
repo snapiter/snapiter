@@ -104,8 +104,6 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
   // Dynamic height for mobile, full height for desktop
     useEffect(() => {
       if(mapRef) {
-
-
         const map = mapRef.current?.getMap();
         if(!map) return;
 
@@ -178,17 +176,46 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
           if (coordinates.length < 2) return null;
           const routeData = createRouteData(trip.positions, isSelected);
           return (
-            <Source key={trip.slug} id={`route-${trip.slug}`} type="geojson" data={routeData}>
-              <Layer
-                id={`route-line-${trip.slug}`}
-                type="line"
-                layout={{ 'line-cap': 'round', 'line-join': 'round' }} paint={{
-                  'line-width': isHovered ? 6 : 4, // thicker on hover
-                  'line-color': color,
-                  'line-opacity': (isSelected || isHovered) ? 1 : 0.3,
-                }}
-              />
-            </Source>
+            <div key={trip.slug}>
+              {/* Base route layer - hidden when selected */}
+              <Source id={`route-${trip.slug}`} type="geojson" data={routeData}>
+                <Layer
+                  id={`route-line-${trip.slug}`}
+                  type="line"
+                  layout={{ 'line-cap': 'round', 'line-join': 'round' }} paint={{
+                    'line-width': isHovered ? 6 : 4, // thicker on hover
+                    'line-color': color,
+                    'line-opacity': isSelected ? 0 : (isHovered ? 1 : 0.3),
+                  }}
+                />
+              </Source>
+              
+              {/* Animation layer - only for selected trip */}
+              {isSelected && (
+                <Source id={`route-${trip.slug}-animation`} type="geojson" data={{
+                  type: 'FeatureCollection',
+                  features: [{
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {
+                      type: 'LineString',
+                      coordinates: []
+                    }
+                  }]
+                }}>
+                  <Layer
+                    id={`route-line-${trip.slug}-animation`}
+                    type="line"
+                    layout={{ 'line-cap': 'round', 'line-join': 'round' }}
+                    paint={{
+                      'line-width': 4,
+                      'line-color': color,
+                      'line-opacity': 1,
+                    }}
+                  />
+                </Source>
+              )}
+            </div>
           );
         })}
       </Map>

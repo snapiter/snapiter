@@ -1,5 +1,5 @@
 import type maplibregl from 'maplibre-gl';
-import type { Trip, Position, Marker, TripDetailed } from '@/store/atoms';
+import type { Position, TripDetailed } from '@/store/atoms';
 import { getVisibleMarkers, updateMarkersOnMap } from './mapMarkers';
 
 export function createAnimationLoop(
@@ -28,7 +28,7 @@ export function createAnimationLoop(
     if (currentIndex < activePositions.length) {
       const progressCoordinates = activePositions.slice(0, currentIndex + 1)
         .map(p => [p.longitude, p.latitude]);
-      const source = map.getSource(`route-${selectedTrip.slug}`) as any;
+      const source = map.getSource(`route-${selectedTrip.slug}-animation`) as any;
       if (source) {
         source.setData({
           type: 'FeatureCollection',

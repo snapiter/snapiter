@@ -28,16 +28,14 @@ export function animateTrip(
   stopAnimation(refs.animationRef);
   cleanupMarkers(refs.visibleMarkersRef, refs.vehicleMarkerRef);
 
-  console.log("CLICKED TRIP: " + tripDetailed.slug);
-  
   // Reset animation state
   refs.currentPositionIndexRef.current = 0;
   refs.startTimeRef.current = null;
 
-  // Reset the route line to empty
-  const routeSource = map.getSource(`route-${tripDetailed.slug}`) as any;
-  if (routeSource) {
-    routeSource.setData({
+  // Reset the animation route line to empty
+  const animationRouteSource = map.getSource(`route-${tripDetailed.slug}-animation`) as any;
+  if (animationRouteSource) {
+    animationRouteSource.setData({
       type: 'FeatureCollection',
       features: [{
         type: 'Feature',
