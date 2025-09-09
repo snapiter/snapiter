@@ -15,7 +15,7 @@ interface TripDetailsProps {
 
 export default function TripDetails({ trip, isSelected, selectedTripMarkers }: TripDetailsProps) {
   return (
-    <div className={`h-full overflow-y-auto`}>
+    <div className="h-full flex flex-col">
       {/* Desktop */}
       <div className="hidden md:block">
         <div className="p-0 md:p-4 sticky top-0 z-[101] bg-background">
@@ -25,12 +25,12 @@ export default function TripDetails({ trip, isSelected, selectedTripMarkers }: T
           </div>
           <DayAndPhoto startDate={trip.startDate} endDate={trip.endDate} isSelected={isSelected} markersLength={selectedTripMarkers.length} />
         </div>
+        {selectedTripMarkers.length > 0 && (
+          <div className="overflow-y-auto">
+            <PhotoGrid markers={selectedTripMarkers} />
+          </div>
+        )}
       </div>
-      {selectedTripMarkers.length > 0 && (
-        <div className="hidden md:block">
-          <PhotoGrid markers={selectedTripMarkers} />
-        </div>
-      )}
 
       {/* This is visible on mobile while bar is NOT expanded */}
       <div className="block md:hidden">
