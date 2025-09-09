@@ -54,18 +54,20 @@ export default function TripDetails({ trip, isSelected, selectedTripMarkers }: T
 
       <div className="block md:hidden">
         <div className="flex border border-border rounded-lg items-center space-x-2 p-2 min-h-[88px]">
-          {isSelected && selectedTripMarkers.length > 0 ? (
-            <div className="max-w-1/3 flex-shrink-0">
-              <Image
-                src={getMarkerUrlThumbnail(selectedTripMarkers[0].markerId)}
-                alt={selectedTripMarkers[0].title}
-                className="object-cover rounded-lg h-16 w-16"
-                width={64}
-                height={64}
-              />
-            </div>
-          ) : (
-            <div className="h-16 w-16 rounded-lg bg-surface flex-shrink-0 animate-pulse" />
+        {selectedTripMarkers.length > 0 && (
+            isSelected ? (
+              <div className="max-w-1/3 flex-shrink-0">
+                <Image
+                  src={getMarkerUrlThumbnail(selectedTripMarkers[0].markerId)}
+                  alt={selectedTripMarkers[0].title}
+                  className="object-cover rounded-lg h-16 w-16"
+                  width={64}
+                  height={64}
+                />
+              </div>
+            ) : (
+              <div className="h-16 w-16 rounded-lg bg-surface flex-shrink-0 animate-pulse" />
+            )
           )}
 
           <div className="flex-1">
