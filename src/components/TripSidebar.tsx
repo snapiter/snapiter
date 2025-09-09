@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { type Trip } from '@/store/atoms';
 import { useEffect, useState } from 'react';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
-import RouteIcon from './RouteIcon';
 import { FaRoute } from 'react-icons/fa6';
 
 interface TripSidebarProps {
