@@ -15,7 +15,6 @@ interface SlidingPanelProps {
 
 export default function SlidingPanel({ children }: SlidingPanelProps) {
   const isExpanded = useAtomValue(bottomPanelExpandedAtom);
-  // const isExpanded = true;
   const [expandedHeight, setExpandedHeight] = useState(0);
   const dragControls = useDragControls();
   const { runCommand } = useMapCommands();
@@ -26,7 +25,7 @@ export default function SlidingPanel({ children }: SlidingPanelProps) {
   );
 
   useEffect(() => {
-    setExpandedHeight(window.innerHeight * 0.6);
+    setExpandedHeight(window.innerHeight * 0.55);
   }, []);
 
   const expandedY = 0;
