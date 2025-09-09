@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import TripSidebar from './TripSidebar';
 import TripDetails from './TripDetails';
 import { type Trip } from '@/store/atoms';
@@ -13,15 +12,17 @@ interface DesktopTripViewProps {
 }
 
 export default function DesktopTripView({ trips, websiteTitle }: DesktopTripViewProps) {
-  const [activeIndex, setActiveIndex] = useState(0);
   const { runCommand } = useMapCommands();
 
-  const { trip: selectedTrip, isLoading } = useSelectedTrip();
+  const { trip: selectedTrip } = useSelectedTrip();
 
-  const markers = selectedTrip?.slug === trips[activeIndex]?.slug ? selectedTrip?.markers : [];
+  const activeIndex = trips.findIndex(trip => trip.slug === selectedTrip?.slug);
+
+
+  const markers = selectedTrip?.markers ?? [];
+
 
   const handleTripSelect = (index: number) => {
-    setActiveIndex(index);
     runCommand({
       type: 'SELECT_TRIP',
       tripSlug: trips[index].slug
@@ -37,6 +38,7 @@ export default function DesktopTripView({ trips, websiteTitle }: DesktopTripView
       </div>
     );
   }
+
   return (
     <div className={`flex h-full`}>
       <div className={markers.length > 0 ? "w-1/2" : "w-full"}>

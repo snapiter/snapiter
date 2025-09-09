@@ -1,16 +1,14 @@
 'use client';
 
-import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import TripDetails from './TripDetails';
-import { Photo, type Trip } from '@/store/atoms';
+import { type Trip } from '@/store/atoms';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
-import { config } from '@/config';
 import PhotoCarousel from './PhotoCarousel';
 
 interface TripSwiperProps {
@@ -18,14 +16,13 @@ interface TripSwiperProps {
 }
 
 export default function TripSwiper({ trips }: TripSwiperProps) {
-  const [activeIndex, setActiveIndex] = useState(0);
   const { runCommand } = useMapCommands();
   
   const { trip: selectedTrip } = useSelectedTrip();
-  const markers = selectedTrip?.slug === trips[activeIndex]?.slug ? selectedTrip?.markers : [];
+
+  const markers = selectedTrip?.markers ?? [];
 
   const handleSlideChange = (swiper: any) => {
-    setActiveIndex(swiper.activeIndex);
     runCommand({
       type: 'SELECT_TRIP',
       tripSlug: trips[swiper.activeIndex].slug
