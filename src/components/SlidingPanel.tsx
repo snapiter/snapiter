@@ -25,7 +25,7 @@ export default function SlidingPanel({ children }: SlidingPanelProps) {
   );
 
   useEffect(() => {
-    setExpandedHeight(window.innerHeight * 0.55);
+    setExpandedHeight(window.innerHeight * config.expandedHeightCalculation);
   }, []);
 
   const expandedY = 0;

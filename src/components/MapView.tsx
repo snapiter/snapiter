@@ -110,22 +110,27 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
   }, [mapEvents]);
 
   // Dynamic height for mobile, full height for desktop
-    useEffect(() => {
-      if(mapRef) {
-        const map = mapRef.current?.getMap();
-        if(!map) return;
-
-        const container = map.getContainer();
-        container.style.height = isPanelExpanded
-          ? "calc(40vh + 36px)"
-          : "calc(100vh - 36px)";
-
+  useEffect(() => {
+    if (isPanelExpanded !== null && mapRef.current) {
+      const map = mapRef.current?.getMap();
+      if (!map) return;
+  
+      const isMobile = window.innerWidth < 768; // adjust breakpoint if needed
+  
+      if (isMobile) {
+        map.getContainer().style.height = isPanelExpanded
+          ? window.innerHeight * config.expandedHeightCalculation + "px"
+          : "calc(100vh - " + (config.collapsedHeight - config.panelDragBarHeight) + "px)";
+        
         map.resize();
-        isPanelExpanded ? "calc(40vh + 36px)" : "calc(100vh - " + config.collapsedHeight + "px)";
-      
+      } else {
+        // Desktop: full height
+        map.getContainer().style.height = "100vh";
+        map.resize();
       }
-  }, [isPanelExpanded])
-
+    }
+  }, [isPanelExpanded, mapRef.current]);
+  
 
   const handleMouseMove = (e: MapLayerMouseEvent) => {
     const feature = e.features?.[0];
@@ -174,6 +179,10 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
         interactiveLayerIds={tripsWithPositions.map(trip => `route-line-${trip.slug}`)}
         onMouseMove={handleMouseMove}
         onClick={handleClick}
+        style={{
+          height: "100%"
+        }}
+       
       >
         {tripsWithPositions.map(trip => {
           if (trip.positions.length < 2) return null;

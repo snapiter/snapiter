@@ -59,12 +59,8 @@ export default function Home() {
       <DynamicTitle title={website?.websiteTitle} />
       <div className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row">
         {/* Single MapView - responsive sizing */}
-        <div className={`flex-1 md:w-1/2 lg:w-2/3 relative transition-all duration-300 ${
-          // Mobile: dynamic height based on panel state
-          isPanelExpanded
-            ? 'h-[calc(40vh+36px)] md:h-full'
-            : 'h-[calc(100vh-36px)] md:h-full'
-          }`}>
+        <div className={`flex-1 md:w-1/2 lg:w-2/3 relative transition-all duration-300 h-full
+          `}>
           <MapView trips={trips} mapStyle={website?.mapStyle ?? MapStyle.LANDSCAPE} websiteIcon={website?.icon} />
         </div>
 
