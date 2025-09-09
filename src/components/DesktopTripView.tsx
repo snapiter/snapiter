@@ -3,18 +3,22 @@
 import { useState } from 'react';
 import TripSidebar from './TripSidebar';
 import TripDetails from './TripDetails';
-import { PageType, type Trip } from '@/store/atoms';
+import { type Trip } from '@/store/atoms';
 import { useMapCommands } from '@/hooks/useMapCommands';
+import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 
 interface DesktopTripViewProps {
   trips: Trip[];
-  pageType: PageType | null;
   websiteTitle?: string;
 }
 
-export default function DesktopTripView({ trips, pageType, websiteTitle }: DesktopTripViewProps) {
+export default function DesktopTripView({ trips, websiteTitle }: DesktopTripViewProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const { runCommand } = useMapCommands();
+
+  const { trip: selectedTrip, isLoading } = useSelectedTrip();
+
+  const markers = selectedTrip?.slug === trips[activeIndex]?.slug ? selectedTrip?.markers : [];
 
   const handleTripSelect = (index: number) => {
     setActiveIndex(index);
@@ -35,7 +39,7 @@ export default function DesktopTripView({ trips, pageType, websiteTitle }: Deskt
   }
   return (
     <div className={`flex h-full`}>
-      <div className={pageType === PageType.TRIPS ? "w-1/2" : "w-full"}>
+      <div className={markers.length > 0 ? "w-1/2" : "w-full"}>
         <TripSidebar 
           trips={trips} 
           activeIndex={activeIndex} 
@@ -43,9 +47,9 @@ export default function DesktopTripView({ trips, pageType, websiteTitle }: Deskt
           websiteTitle={websiteTitle}
         />
       </div>
-      {pageType === PageType.TRIPS && (
+      {markers.length > 0 && (
         <div className="w-1/2 overflow-y-auto">
-          <TripDetails trip={trips[activeIndex]} />
+          <TripDetails trip={trips[activeIndex]} selectedTripMarkers={markers} />
         </div>
       )}
     </div>

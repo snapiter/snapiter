@@ -85,3 +85,7 @@ export async function fetchWebsiteByHostname(hostname: string): Promise<Website>
 function toPageType(value: any): PageType {
   return Object.values(PageType).includes(value) ? (value as PageType) : PageType.TRIPS;
 }
+
+export function getMarkerUrlThumbnail(markerId: string, size: string = '100x100'): string {
+  return `${config.cacheApiUrl}/marker/${markerId}/thumbnail/${size}`;
+}

@@ -7,6 +7,7 @@ import { useOutsideClick } from '@/hooks/useOutsideClick';
 import { useAtomValue } from 'jotai';
 import { bottomPanelExpandedAtom } from '@/store/atoms';
 import { useMapCommands } from '@/hooks/useMapCommands';
+import { config } from '@/config';
 
 interface SlidingPanelProps {
   children: ReactNode;
@@ -14,6 +15,7 @@ interface SlidingPanelProps {
 
 export default function SlidingPanel({ children }: SlidingPanelProps) {
   const isExpanded = useAtomValue(bottomPanelExpandedAtom);
+  // const isExpanded = true;
   const [expandedHeight, setExpandedHeight] = useState(0);
   const dragControls = useDragControls();
   const { runCommand } = useMapCommands();
@@ -27,9 +29,8 @@ export default function SlidingPanel({ children }: SlidingPanelProps) {
     setExpandedHeight(window.innerHeight * 0.6);
   }, []);
 
-  const collapsedHeight = 80;
   const expandedY = 0;
-  const collapsedY = expandedHeight - collapsedHeight;
+  const collapsedY = expandedHeight - config.collapsedHeight;
 
   if (!expandedHeight) return null; // wait until measured
 
@@ -54,7 +55,7 @@ export default function SlidingPanel({ children }: SlidingPanelProps) {
       }}
     >
       <div
-        className="flex items-center justify-between p-4 border-b border-border cursor-grab"
+        className="flex items-center justify-between p-4 cursor-grab"
         onPointerDown={(e) => dragControls.start(e)}
         onClick={() => runCommand({ type: isExpanded ? 'PANEL_COLLAPSE' : 'PANEL_EXPAND' })}
       >
@@ -64,7 +65,7 @@ export default function SlidingPanel({ children }: SlidingPanelProps) {
         />
       </div>
 
-      <div className="px-4 pb-4 h-full overflow-y-auto">{children}</div>
+      <div className="px-2 pb-4 h-full overflow-y-auto">{children}</div>
     </motion.div>
   );
 }

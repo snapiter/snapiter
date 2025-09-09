@@ -83,7 +83,7 @@ export default function Home() {
 
         {/* Desktop: Side Panel */}
         <div className="hidden md:block md:w-1/2 lg:w-1/3 bg-background shadow-xl overflow-hidden">
-          <DesktopTripView trips={trips} pageType={website?.pageType ?? null} websiteTitle={website?.websiteTitle} />
+          <DesktopTripView trips={trips} websiteTitle={website?.websiteTitle} />
         </div>
 
         {/* Loading Overlay */}

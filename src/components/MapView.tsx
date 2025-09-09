@@ -12,6 +12,7 @@ import { useMapCommands } from '@/hooks/useMapCommands';
 import { useTripPositions } from '@/hooks/useTrip';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import { animateTrip, type AnimationRefs } from '@/utils/tripAnimationHandler';
+import { config } from '@/config';
 
 interface MapViewProps {
   trips?: Trip[];
@@ -120,7 +121,7 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
           : "calc(100vh - 36px)";
 
         map.resize();
-        isPanelExpanded ? "calc(40vh + 36px)" : "calc(100vh - 80px)";
+        isPanelExpanded ? "calc(40vh + 36px)" : "calc(100vh - " + config.collapsedHeight + "px)";
       
       }
   }, [isPanelExpanded])

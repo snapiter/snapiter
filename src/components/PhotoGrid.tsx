@@ -3,24 +3,20 @@
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { useMapCommands } from '@/hooks/useMapCommands';
+import { Marker } from '@/store/atoms';
+import { getMarkerUrlThumbnail } from '@/services/api';
 
-export interface Photo {
-  id: string;
-  url: string;
-  alt: string;
-  caption?: string;
-}
 
 interface PhotoGridProps {
-  photos: Photo[];
+  markers: Marker[];
   className?: string;
 }
 
 const BOUNCE_MS = 150; // tune this "bounce rate" window
 
-export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
+export default function PhotoGrid({ markers, className = '' }: PhotoGridProps) {
   const { runCommand } = useMapCommands();
-  const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set(photos.map(p => p.id)));
+  const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set(markers.map(p => p.id)));
 
   // track the last hovered photo and a pending leave timeout
   const lastHoverIdRef = useRef<string | null>(null);
@@ -44,10 +40,10 @@ export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
     }, BOUNCE_MS);
   };
 
-  const handlePhotoEnter = (photoId: string) => {
+  const handlePhotoEnter = (markerId: string) => {
     clearLeaveTimer();                // user is still inside grid; cancel any pending leave
-    lastHoverIdRef.current = photoId; // remember current hovered photo
-    runCommand({ type: 'HIGHLIGHT_MARKER', markerId: photoId });
+    lastHoverIdRef.current = markerId; // remember current hovered photo
+    runCommand({ type: 'HIGHLIGHT_MARKER', markerId: markerId });
   };
 
   const handleGridMouseEnter = () => {
@@ -59,10 +55,10 @@ export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
     scheduleLeave();
   };
 
-  const handleImageLoad = (photoId: string) => {
+  const handleImageLoad = (markerId: string) => {
     setLoadingImages(prev => {
       const next = new Set(prev);
-      next.delete(photoId);
+      next.delete(markerId);
       return next;
     });
   };
@@ -74,34 +70,34 @@ export default function PhotoGrid({ photos, className = '' }: PhotoGridProps) {
         onMouseEnter={handleGridMouseEnter}
         onMouseLeave={handleGridMouseLeave}
       >
-        {photos.map((photo, index) => (
+        {markers.map((marker, index) => (
           <div
-            key={photo.id}
+            key={marker.markerId}
             className="relative aspect-square cursor-pointer hover:opacity-90 transition-opacity group"
             onClick={() => runCommand({ type: 'LIGHTBOX_OPEN', photoIndex: index })}
-            onMouseEnter={() => handlePhotoEnter(photo.id)}
+            onMouseEnter={() => handlePhotoEnter(marker.markerId)}
           >
-            {loadingImages.has(photo.id) && (
+            {loadingImages.has(marker.markerId) && (
               <div className="absolute inset-0 bg-muted rounded-lg animate-pulse flex items-center justify-center">
                 <div className="w-8 h-8 border-2 border-border border-t-primary rounded-full animate-spin"></div>
               </div>
             )}
 
             <Image
-              src={`${photo.url}/thumbnail/500x500`}
-              alt={photo.alt}
+              src={getMarkerUrlThumbnail(marker.markerId, "500x500")}
+              alt={marker.title}
               fill
               className={`object-cover rounded-lg transition-opacity duration-300 ${
-                loadingImages.has(photo.id) ? 'opacity-0' : 'opacity-100'
+                loadingImages.has(marker.markerId) ? 'opacity-0' : 'opacity-100'
               }`}
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-              onLoad={() => handleImageLoad(photo.id)}
+              onLoad={() => handleImageLoad(marker.markerId)}
             />
 
-            {photo.caption && (
+            {marker.description && (
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-opacity rounded-lg flex items-end p-2">
                 <p className="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity line-clamp-2">
-                  {photo.caption}
+                  {marker.description}
                 </p>
               </div>
             )}

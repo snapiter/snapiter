@@ -8,6 +8,8 @@ import { useMapCommands } from '@/hooks/useMapCommands';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { Marker } from '@/store/atoms';
+import { getMarkerUrlThumbnail } from '@/services/api';
 
 export interface Photo {
   id: string;
@@ -18,10 +20,10 @@ export interface Photo {
 }
 
 interface PhotoCarouselProps {
-  photos: Photo[];
+  markers: Marker[];
   className?: string;
 }
-export default function PhotoCarousel({ photos, className = '' }: PhotoCarouselProps) {
+export default function PhotoCarousel({ markers, className = '' }: PhotoCarouselProps) {
   const { runCommand } = useMapCommands();
 
   const handlePhotoClick = (index: number) => {
@@ -30,7 +32,7 @@ export default function PhotoCarousel({ photos, className = '' }: PhotoCarouselP
 
   const handleSlideChange = (swiper: SwiperType) => {
     const activeIndex = swiper.activeIndex;
-    const activePhoto = photos[activeIndex];
+    const activePhoto = markers[activeIndex];
     if (activePhoto) {
       runCommand({ type: 'HIGHLIGHT_MARKER', markerId: activePhoto.id });
     }
@@ -41,7 +43,7 @@ export default function PhotoCarousel({ photos, className = '' }: PhotoCarouselP
       <Swiper
         modules={[Pagination]}
         spaceBetween={10}
-        slidesPerView={1}
+        slidesPerView={markers.length > 1 ? 1.2 : 1}
         navigation={false}
         pagination={{
           dynamicBullets: true,
@@ -49,23 +51,23 @@ export default function PhotoCarousel({ photos, className = '' }: PhotoCarouselP
         onSlideChange={handleSlideChange}
         className="h-full rounded-lg"
       >
-        {photos.map((photo, index) => (
-          <SwiperSlide key={photo.id} className="relative">
+        {markers.map((marker: Marker, index: number) => (
+          <SwiperSlide key={marker.markerId} className="relative">
             <div 
               className="relative w-full h-64 cursor-pointer hover:opacity-90 transition-opacity"
               onClick={() => handlePhotoClick(index)}
             >
               <Image
-                src={`${photo.url}/thumbnail/500x500`}
-                alt={photo.alt}
+                src={getMarkerUrlThumbnail(marker.markerId, "500x500")}
+                alt={marker.title  || 'Marker photo'}
                 fill
                 className="object-cover rounded-lg"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             </div>
-            {photo.caption && (
+            {marker.description && (
               <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-3 rounded-b-lg">
-                <p className="text-sm">{photo.caption}</p>
+                <p className="text-sm">{marker.description}</p>
               </div>
             )}
           </SwiperSlide>
