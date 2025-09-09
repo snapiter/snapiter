@@ -34,7 +34,7 @@ export default function PhotoCarousel({ markers, className = '' }: PhotoCarousel
     const activeIndex = swiper.activeIndex;
     const activePhoto = markers[activeIndex];
     if (activePhoto) {
-      runCommand({ type: 'HIGHLIGHT_MARKER', markerId: activePhoto.id });
+      runCommand({ type: 'HIGHLIGHT_MARKER', markerId: activePhoto.markerId });
     }
   };
 
