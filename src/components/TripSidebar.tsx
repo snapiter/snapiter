@@ -5,6 +5,7 @@ import { type Trip } from '@/store/atoms';
 import { useEffect, useState } from 'react';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import RouteIcon from './RouteIcon';
+import { FaRoute } from 'react-icons/fa6';
 
 interface TripSidebarProps {
   trips: Trip[];
@@ -91,7 +92,7 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect, websiteT
               </div>
 
               {trip.color && (
-                  <RouteIcon className="w-12 h-12" color={trip.color} />
+                <FaRoute className="w-10 h-10" color={trip.color} />
               )}
             </div>
           </button>

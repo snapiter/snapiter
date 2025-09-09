@@ -5,6 +5,7 @@ import type { Marker, Trip } from '@/store/atoms';
 import { getMarkerUrlThumbnail } from '@/services/api';
 import Image from 'next/image';
 import { formatDate } from '@/utils/formatDate';
+import { FaCalendar, FaCamera, FaRegCalendar, FaRoute } from 'react-icons/fa6';
 
 interface TripDetailsProps {
   trip: Trip;
@@ -18,21 +19,16 @@ export default function TripDetails({ trip, isSelected, selectedTripMarkers }: T
       {/* Desktop */}
       <div className="hidden md:block">
         <div className="p-0 md:p-4 sticky top-0 z-[101] bg-background">
-          <h2 className="text-xl font-bold text-foreground mb-2 mt-2 text-center">{trip.title}</h2>
+          <h2 className="text-xl font-bold text-foreground mb-2 mt-2">{trip.title}</h2>
           <div className="flex flex-wrap gap-4 text-sm text-muted mb-3">
-            <span>
-              {formatDate(trip.startDate)}
-              {trip.endDate ? ` - ${formatDate(trip.endDate)}` : ''}
-            </span>
             {trip.color && (
               <span className="flex items-center gap-1">
-                <div
-                  className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: trip.color }}
-                />
-                Route
+                <FaRoute className="w-4 h-4" color={trip.color} />
               </span>
             )}
+            <span>
+              {formatDate(trip.startDate, trip.endDate)}
+            </span>
           </div>
           <p className="text-foreground text-sm leading-relaxed">{trip.description}</p>
         </div>
@@ -72,9 +68,22 @@ export default function TripDetails({ trip, isSelected, selectedTripMarkers }: T
             >
               {trip.title}
             </h2>
-            <p className="mt-2 text-foreground">
-            {formatDate(trip.startDate, trip.endDate)} {isSelected && <div>{selectedTripMarkers.length} Photos</div>}
+            <p className="mt-2 text-foreground flex items-center space-x-4 text-sm">
+              {/* Duration */}
+              <span className="flex items-center space-x-1 text-muted">
+                <FaRegCalendar className="w-4 h-4" />
+                <span>{formatDate(trip.startDate, trip.endDate)}</span>
+              </span>
+
+              {/* Photos (only if selected & has photos) */}
+              {isSelected && selectedTripMarkers.length > 0 && (
+                <span className="flex items-center space-x-1 text-muted">
+                  <FaCamera className="w-4 h-4" />
+                  <span>{selectedTripMarkers.length}</span>
+                </span>
+              )}
             </p>
+
           </div>
         </div>
       </div>
