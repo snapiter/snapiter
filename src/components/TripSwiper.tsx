@@ -45,6 +45,7 @@ export default function TripSwiper({ trips }: TripSwiperProps) {
           <SwiperSlide key={`swiper-${trip.slug}`} className="">
             <TripDetails 
               trip={trip} 
+              isSelected={selectedTrip?.slug === trip.slug}
               selectedTripMarkers={markers}
             />
           </SwiperSlide>

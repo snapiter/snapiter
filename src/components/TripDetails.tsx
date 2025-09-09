@@ -7,10 +7,11 @@ import Image from 'next/image';
 
 interface TripDetailsProps {
   trip: Trip;
+  isSelected: boolean;
   selectedTripMarkers: Marker[];
 }
 
-export default function TripDetails({ trip, selectedTripMarkers }: TripDetailsProps) {
+export default function TripDetails({ trip, isSelected, selectedTripMarkers }: TripDetailsProps) {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -18,6 +19,7 @@ export default function TripDetails({ trip, selectedTripMarkers }: TripDetailsPr
       day: 'numeric'
     });
   };
+
 
   return (
     <div className={`h-full overflow-y-auto`}>
@@ -50,10 +52,9 @@ export default function TripDetails({ trip, selectedTripMarkers }: TripDetailsPr
       )}
 
 
-      {/* Mobile */}
       <div className="block md:hidden">
-        <div className="flex border border-border rounded-lg items-center space-x-2 p-2 min-h-22">
-          {selectedTripMarkers.length > 0 && (
+        <div className="flex border border-border rounded-lg items-center space-x-2 p-2 min-h-[88px]">
+          {isSelected && selectedTripMarkers.length > 0 ? (
             <div className="max-w-1/3 flex-shrink-0">
               <Image
                 src={getMarkerUrlThumbnail(selectedTripMarkers[0].markerId)}
@@ -63,16 +64,20 @@ export default function TripDetails({ trip, selectedTripMarkers }: TripDetailsPr
                 height={64}
               />
             </div>
+          ) : (
+            <div className="h-16 w-16 rounded-lg bg-surface flex-shrink-0 animate-pulse" />
           )}
+
           <div className="flex-1">
             <h2 className="text-xl font-bold">{trip.title}</h2>
-            <p className="mt-2 text-forground">
+            <p className="mt-2 text-foreground">
               {formatDate(trip.startDate)}
               {trip.endDate ? ` - ${formatDate(trip.endDate)}` : ''}
             </p>
           </div>
         </div>
       </div>
+
     </div>
   );
 }

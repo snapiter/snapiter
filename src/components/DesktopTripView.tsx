@@ -49,7 +49,7 @@ export default function DesktopTripView({ trips, websiteTitle }: DesktopTripView
       </div>
       {markers.length > 0 && (
         <div className="w-1/2 overflow-y-auto">
-          <TripDetails trip={trips[activeIndex]} selectedTripMarkers={markers} />
+          <TripDetails trip={trips[activeIndex]} isSelected={selectedTrip?.slug === trips[activeIndex]?.slug} selectedTripMarkers={markers} />
         </div>
       )}
     </div>
