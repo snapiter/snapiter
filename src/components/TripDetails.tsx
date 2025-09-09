@@ -4,6 +4,7 @@ import PhotoGrid from './PhotoGrid';
 import type { Marker, Trip } from '@/store/atoms';
 import { getMarkerUrlThumbnail } from '@/services/api';
 import Image from 'next/image';
+import { formatDate } from '@/utils/formatDate';
 
 interface TripDetailsProps {
   trip: Trip;
@@ -12,15 +13,6 @@ interface TripDetailsProps {
 }
 
 export default function TripDetails({ trip, isSelected, selectedTripMarkers }: TripDetailsProps) {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
-
-
   return (
     <div className={`h-full overflow-y-auto`}>
       {/* Desktop */}
@@ -51,10 +43,13 @@ export default function TripDetails({ trip, isSelected, selectedTripMarkers }: T
         </div>
       )}
 
-
+      {/* This is visible on mobile while bar is NOT expanded */}
       <div className="block md:hidden">
-        <div className="flex border border-border rounded-lg items-center space-x-2 p-2 min-h-[88px]">
-        {selectedTripMarkers.length > 0 && (
+        <div
+          style={{ '--trip-color': trip.color ?? 'transparent' } as React.CSSProperties}
+          className="flex border border-[var(--trip-color)] rounded-lg items-center space-x-2 p-2 min-h-22"
+        >
+          {selectedTripMarkers.length > 0 && (
             isSelected ? (
               <div className="max-w-1/3 flex-shrink-0">
                 <Image
@@ -71,10 +66,14 @@ export default function TripDetails({ trip, isSelected, selectedTripMarkers }: T
           )}
 
           <div className="flex-1">
-            <h2 className="text-xl font-bold">{trip.title}</h2>
+            <h2
+              title={trip.title}
+              className="font-bold text-lg line-clamp-1"
+            >
+              {trip.title}
+            </h2>
             <p className="mt-2 text-foreground">
-              {formatDate(trip.startDate)}
-              {trip.endDate ? ` - ${formatDate(trip.endDate)}` : ''}
+            {formatDate(trip.startDate, trip.endDate)} {isSelected && <div>{selectedTripMarkers.length} Photos</div>}
             </p>
           </div>
         </div>
