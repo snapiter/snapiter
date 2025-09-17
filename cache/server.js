@@ -74,16 +74,34 @@ const corsMiddleware = (req, res, next) => {
   next();
 };
 
-// API middleware
-// followmyvessel.com/api is never ending here, its routed by traefik.
-app.use('/api', async (req, res, next) => {
-    console.log(`API middleware hit: ${req.method} ${req.originalUrl}`);
-    res.setHeader('Access-Control-Allow-Origin', '*'); 
-    res.setHeader('Access-Control-Allow-Methods', 'GET'); 
-    res.setHeader('Access-Control-Allow-Headers', '*');
-    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+const corsForApi = (req, res, next) => {
+  const origin = req.headers.origin || '*'; // if you plan to use credentials, set this to the exact origin instead of '*'
+  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Vary', 'Origin');
 
-    await handleApi(s3Client, s3BucketName, apiBackendURL, req, res);
+  // Allow the method the browser is about to use; GET is fine here, include others if needed
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+
+  // Echo back requested headers or provide an explicit allow-list
+  const reqHeaders = req.header('Access-Control-Request-Headers');
+  res.setHeader('Access-Control-Allow-Headers', reqHeaders || 'Content-Type, Authorization, Accept');
+
+  // Cache the preflight to avoid repeating it
+  res.setHeader('Access-Control-Max-Age', '600');
+
+  // If you’ll use cookies/Authorization AND need them to be sent across origins:
+  // res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  next();
+};
+
+// Handle all API preflights quickly
+app.options('/api/*', corsForApi, (req, res) => res.sendStatus(200));
+
+// Apply CORS to actual API requests too
+app.use('/api', corsForApi, async (req, res, next) => {
+  console.log(`API middleware hit: ${req.method} ${req.originalUrl}`);
+  await handleApi(s3Client, s3BucketName, apiBackendURL, req, res);
 });
 
 app.options('/marker/:uuid', corsMiddleware, (req, res) => {
