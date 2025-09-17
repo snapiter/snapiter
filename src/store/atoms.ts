@@ -9,6 +9,25 @@ export enum MapStyle {
   STREETS_V2 = 'streets-v2',
 }
 
+// This is the NEW Website type, vesselId is gone.
+export type Trackable = {
+  name: string;
+  websiteTitle: string;
+  website: string;
+  hostName: string;
+  // icon: string; //@TODO
+};
+
+//   createdAt: new Date(raw.createdAt),
+//   lastReportedAt: new Date(raw.lastReportedAt),
+
+export type Device = {
+  trackableId: string;
+  deviceId: string;
+  createdAt: Date;
+  lastReportedAt: Date;
+};
+
 export interface Website {
   vesselId: string;
   shipName: string;
