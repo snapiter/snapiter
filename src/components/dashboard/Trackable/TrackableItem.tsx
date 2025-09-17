@@ -54,7 +54,7 @@ export default function TrackableItem({ t, devices }: { t: Trackable, devices: D
       </div>
 
       <div className="mt-3">
-        {devices.length ? (
+        {devices.length > 0 && (
           <ul className="space-y-2">
             {devices.map((d) => (
               <li
@@ -65,15 +65,15 @@ export default function TrackableItem({ t, devices }: { t: Trackable, devices: D
               </li>
             ))}
           </ul>
-        ) : (
-          <button
+        ) }
+
+<button
             type="button"
             className="mt-2 inline-flex items-center rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-hover"
             onClick={() => setModalOpen(true)}
           >
             + Add device
           </button>
-        )}
       </div>
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
