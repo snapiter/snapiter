@@ -32,6 +32,7 @@ async function makeProxyRequest(
 
 async function refreshTokens(cookieStore: Awaited<ReturnType<typeof cookies>>) {
   try {
+    console.log("Check for refresh token")
     const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
       method: 'POST',
       headers: {
@@ -45,6 +46,8 @@ async function refreshTokens(cookieStore: Awaited<ReturnType<typeof cookies>>) {
       const setCookieHeader = response.headers.get('set-cookie')
       return { success: true, setCookieHeader }
     }
+
+    console.log("Check for refresh token failed", response)
 
     return { success: false }
   } catch (error) {

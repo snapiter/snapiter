@@ -11,9 +11,10 @@ export enum MapStyle {
 
 // This is the NEW Website type, vesselId is gone.
 export type Trackable = {
+  trackableId: string;
   name: string;
   websiteTitle: string;
-  website: string;
+  website: string; // @TODO should not use this
   hostName: string;
   // icon: string; //@TODO
 };

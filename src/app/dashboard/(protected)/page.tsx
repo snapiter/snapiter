@@ -2,37 +2,43 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { config } from "@/config";
 import { apiClient } from "@/utils/apiClient";
+import { Device, Trackable } from "@/store/atoms";
+import TrackableItem from "@/components/dashboard/Trackable/TrackableItem";
 
-export type Trackable = {
-  name: string;
-  websiteTitle: string;
-  website: string;
-  hostName: string;
-};
 
 export default function Dashboard() {
   const router = useRouter();
   const [trackables, setTrackables] = useState<Trackable[] | null>(null);
+  const [devicesByTrackable, setDevicesByTrackable] = useState<Record<string, Device[]> | null>(null);
 
   useEffect(() => {
     async function load() {
       try {
         const res = await apiClient.request<Trackable[]>("/api/trackables");
+        if (res.length === 0) {
+          router.replace("/dashboard/trackables/create");
+        }
         setTrackables(res);
       } catch (err: any) {
-        // If your apiClient throws on 404
-        if (err?.response?.status === 404) {
-          router.replace("/trackables/create");
-        } else {
-          console.error("Failed to load trackables:", err?.response);
-        }
+        console.error("Failed to load trackables:", err?.response);
       }
     }
     load();
   }, [router]);
-  
+
+  useEffect(() => {
+    async function loadDevices() {
+      trackables?.forEach(async (trackable) => {
+        const res = await apiClient.request<Device[]>("/api/trackables/" + trackable.trackableId + "/devices");
+        setDevicesByTrackable((prev) => ({
+          ...prev,
+          [trackable.trackableId]: res,
+        }));
+      });
+    }
+    loadDevices();
+  }, [trackables]);
 
   if (trackables === null) {
     return (
@@ -44,26 +50,10 @@ export default function Dashboard() {
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-4">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Trackables</h1>
+      <h1 className="text-2xl font-bold  mb-6">Trackables</h1>
       <ul className="space-y-4">
         {trackables.map((t) => (
-          <li
-            key={t.name}
-            className="p-4 border border-gray-200 rounded-lg shadow-sm bg-white hover:shadow-md transition"
-          >
-            <h2 className="text-lg font-semibold text-gray-900">
-              {t.websiteTitle}
-            </h2>
-            <p className="text-sm text-gray-500 mb-2">{t.hostName}</p>
-            <a
-              href={t.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-indigo-600 hover:text-indigo-800 font-medium"
-            >
-              Visit Website →
-            </a>
-          </li>
+          <TrackableItem key={t.trackableId} t={t} devices={devicesByTrackable?.[t.trackableId] || []} />
         ))}
       </ul>
     </div>
