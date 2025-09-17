@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState, useRef } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import MapView from '@/components/MapView';
 import SlidingPanel from '@/components/SlidingPanel';
 import TripSwiper from '@/components/TripSwiper';
@@ -12,7 +12,7 @@ import { useHostname } from '@/hooks/useApiData';
 import { useWebsite } from '@/hooks/useWebsite';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useAtomValue } from 'jotai';
-import { bottomPanelExpandedAtom, mapEventsAtom, MapStyle } from '@/store/atoms';
+import { mapEventsAtom, MapStyle } from '@/store/atoms';
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -20,7 +20,6 @@ export default function Home() {
   const hostname = useHostname();
   const { data: website, isLoading, error } = useWebsite(hostname);
   const { runCommand } = useMapCommands();
-  const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
   const mapEvents = useAtomValue(mapEventsAtom);
 
   // Check if map is ready by looking for MAP_READY events
