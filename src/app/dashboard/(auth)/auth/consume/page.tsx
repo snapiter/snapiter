@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { use, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-export default function ConsumePage() {
+export default function ConsumePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ token?: string }>
+}) {
   const router = useRouter();
-  const sp = useSearchParams();
-  const token = sp.get("token");
+  const params = use(searchParams);
+  const token = params.token;
 
   const [state, setState] = useState<"loading" | "ok" | "error">("loading");
   const [error, setError] = useState<string | null>(null);
