@@ -1,5 +1,5 @@
 export const config = {
-  apiUrl: 'https://api.partypieps.nl',
+  apiUrl: 'https://api.snapiter.com',
   markerUrl: 'https://cache.snapiter.com',
   collapsedHeight: 130,
   panelDragBarHeight: 36,
