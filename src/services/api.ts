@@ -1,7 +1,7 @@
 import { type Trip, type Position, type Marker, type Website, PageType } from '@/store/atoms';
 import { config } from '@/config';
 
-const BASE_URL = 'https://api.partypieps.nl/api';
+const BASE_URL = `${config.apiUrl}/api`;
 
 class ApiError extends Error {
   constructor(message: string, public status: number) {
@@ -68,7 +68,7 @@ async function fetchMarkers(
 }
 
 export async function fetchWebsiteByHostname(hostname: string): Promise<Website> {
-  const response = await fetch(`${config.cacheApiUrl}/api/public/vessel/hostName/${hostname}`);
+  const response = await fetch(`${config.apiUrl}/api/public/vessel/hostName/${hostname}`);
   
   if (!response.ok) {
     throw new ApiError(`HTTP error! status: ${response.status}`, response.status);
@@ -87,5 +87,5 @@ function toPageType(value: any): PageType {
 }
 
 export function getMarkerUrlThumbnail(markerId: string, size: string = '100x100'): string {
-  return `${config.cacheApiUrl}/marker/${markerId}/thumbnail/${size}`;
+  return `${config.markerUrl}/marker/${markerId}/thumbnail/${size}`;
 }

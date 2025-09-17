@@ -17,7 +17,7 @@ export default function GlobalLightbox() {
   const photos = trip?.markers
     ?.filter(marker => marker.hasThumbnail)
     .map(marker => ({
-      src: `${config.cacheApiUrl}/marker/${marker.markerId}`,
+      src: `${config.apiUrl}/marker/${marker.markerId}`,
       alt: marker.title || 'Marker photo',
       title: marker.description
     })) || [];

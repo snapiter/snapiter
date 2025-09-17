@@ -1,6 +1,6 @@
 import maplibregl from 'maplibre-gl';
 import type { Marker as TripMarker, Position } from '@/store/atoms';
-import { config } from '@/config';
+import { getMarkerUrlThumbnail } from '@/services/api';
 
 export function createTripMarkers(
   markers: TripMarker[], 
@@ -14,7 +14,7 @@ export function createTripMarkers(
     
       el.innerHTML = `
         <img 
-          src="${config.cacheApiUrl}/marker/${marker.markerId}/thumbnail/100x100" 
+          src="${getMarkerUrlThumbnail(marker.markerId, '100x100')}" 
           class="map-marker"
           alt="marker"
           data-marker-id="${marker.markerId}"
