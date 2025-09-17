@@ -18,15 +18,21 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function load() {
-      const res = await apiClient.request<Trackable[]>("/api/trackables", { cache: "no-store" });
-      if (res.length === 0) {
-        router.replace("/trackables/create");
-      } else {
+      try {
+        const res = await apiClient.request<Trackable[]>("/api/trackables");
         setTrackables(res);
+      } catch (err: any) {
+        // If your apiClient throws on 404
+        if (err?.response?.status === 404) {
+          router.replace("/trackables/create");
+        } else {
+          console.error("Failed to load trackables:", err?.response);
+        }
       }
     }
     load();
   }, [router]);
+  
 
   if (trackables === null) {
     return (

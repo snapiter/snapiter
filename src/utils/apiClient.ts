@@ -27,7 +27,10 @@ class ApiClient {
         }
       }
 
-      throw new Error(`API request failed: ${response.status} ${response.statusText}`)
+      // Create an error that includes the response object
+      const error = new Error(`${response.status} ${response.statusText}`) as any
+      error.response = response
+      throw error
     }
 
     const contentType = response.headers.get('content-type')

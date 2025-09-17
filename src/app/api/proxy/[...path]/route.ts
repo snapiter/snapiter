@@ -77,13 +77,14 @@ export async function GET(
         // Retry the original request
         response = await makeProxyRequest(path, 'GET', undefined, newAccessToken)
 
+        console.log("response", response)
+
         // Create response with new cookies
-        const data = await response.text()
+        const data = await response.arrayBuffer()
         const nextResponse = new NextResponse(data, {
           status: response.status,
-          headers: {
-            'Content-Type': response.headers.get('Content-Type') || 'application/json',
-          },
+          statusText: response.statusText,
+          headers: response.headers,
         })
 
         // Forward the new cookies
@@ -98,12 +99,11 @@ export async function GET(
       }
     }
 
-    const data = await response.text()
+    const data = await response.arrayBuffer()
     return new NextResponse(data, {
       status: response.status,
-      headers: {
-        'Content-Type': response.headers.get('Content-Type') || 'application/json',
-      },
+      statusText: response.statusText,
+      headers: response.headers,
     })
   } catch (error) {
     console.error('Proxy request failed:', error)
@@ -150,12 +150,11 @@ export async function POST(
       }
     }
 
-    const data = await response.text()
+    const data = await response.arrayBuffer()
     return new NextResponse(data, {
       status: response.status,
-      headers: {
-        'Content-Type': response.headers.get('Content-Type') || 'application/json',
-      },
+      statusText: response.statusText,
+      headers: response.headers,
     })
   } catch (error) {
     console.error('Proxy request failed:', error)
@@ -201,12 +200,11 @@ export async function PUT(
       }
     }
 
-    const data = await response.text()
+    const data = await response.arrayBuffer()
     return new NextResponse(data, {
       status: response.status,
-      headers: {
-        'Content-Type': response.headers.get('Content-Type') || 'application/json',
-      },
+      statusText: response.statusText,
+      headers: response.headers,
     })
   } catch (error) {
     console.error('Proxy request failed:', error)
@@ -251,12 +249,11 @@ export async function DELETE(
       }
     }
 
-    const data = await response.text()
+    const data = await response.arrayBuffer()
     return new NextResponse(data, {
       status: response.status,
-      headers: {
-        'Content-Type': response.headers.get('Content-Type') || 'application/json',
-      },
+      statusText: response.statusText,
+      headers: response.headers,
     })
   } catch (error) {
     console.error('Proxy request failed:', error)
