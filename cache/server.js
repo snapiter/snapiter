@@ -81,7 +81,8 @@ app.use('/api', async (req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*'); 
     res.setHeader('Access-Control-Allow-Methods', 'GET'); 
     res.setHeader('Access-Control-Allow-Headers', '*');
-    
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+
     await handleApi(s3Client, s3BucketName, apiBackendURL, req, res);
 });
 
