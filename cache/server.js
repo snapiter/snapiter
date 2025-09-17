@@ -49,7 +49,7 @@ const s3Client = new S3Client({
 app.use(helmet());
 app.use((req, res, next) => {
   res.setHeader('Strict-Transport-Security', 'max-age=31449600; includeSubDomains');
-  res.setHeader('Content-Security-Policy', "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' analytics.bestanden.online 'unsafe-inline'; connect-src 'self' followmyvessel.eu.auth0.com *.partypieps.nl partypieps.nl *.snapiter.com snapiter.com *.arnovanrossum.nl; img-src 'self' data: *");
+  res.setHeader('Content-Security-Policy', "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' analytics.bestanden.online 'unsafe-inline'; connect-src 'self' followmyvessel.eu.auth0.com *.partypieps.nl partypieps.nl *.snapiter.com snapiter.com *.arnovanrossum.nl maps.lunaverde.nl; img-src 'self' data: *");
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('Referrer-Policy', 'strict-origin');
