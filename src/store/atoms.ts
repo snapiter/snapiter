@@ -71,7 +71,6 @@ export interface Position {
 }
 
 export interface Marker {
-  id: string;
   trackableId: string;
   markerId: string;
   fileSize: number;

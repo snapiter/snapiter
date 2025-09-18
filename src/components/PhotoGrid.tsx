@@ -16,7 +16,7 @@ const BOUNCE_MS = 150; // tune this "bounce rate" window
 
 export default function PhotoGrid({ markers, className = '' }: PhotoGridProps) {
   const { runCommand } = useMapCommands();
-  const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set(markers.map(p => p.id)));
+  const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set(markers.map(p => p.markerId)));
 
   // track the last hovered photo and a pending leave timeout
   const lastHoverIdRef = useRef<string | null>(null);

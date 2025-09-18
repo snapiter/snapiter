@@ -8,7 +8,7 @@ export function createTripMarkers(
   onMarkerClick: (photoIndex: number) => void
 ) {
   markers.forEach(marker => {
-    if (!visibleMarkersRef.current[marker.id]) {
+    if (!visibleMarkersRef.current[marker.markerId]) {
       const el = document.createElement('div');
       el.className = '';
     
@@ -31,7 +31,7 @@ export function createTripMarkers(
         }
       });
     
-      visibleMarkersRef.current[marker.id] = new maplibregl.Marker({ element: el })
+      visibleMarkersRef.current[marker.markerId] = new maplibregl.Marker({ element: el })
         .setLngLat([marker.longitude, marker.latitude]);
     }
   });
@@ -75,7 +75,7 @@ export function updateMarkersOnMap(
   map: maplibregl.Map
 ) {
   visibleMarkers.forEach(marker => {
-    const m = visibleMarkersRef.current[marker.id];
+    const m = visibleMarkersRef.current[marker.markerId];
     if (m && !m.getElement().parentNode) {
       m.addTo(map);
     }
