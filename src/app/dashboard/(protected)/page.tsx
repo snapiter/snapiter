@@ -16,9 +16,16 @@ export default function Dashboard() {
     async function load() {
       try {
         const res = await apiClient.request<Trackable[]>("/api/trackables");
+        // If nothing, create a new trackable
         if (res.length === 0) {
           router.replace("/dashboard/trackables/create");
         }
+        // If there is 1 trackable automaticaly go to that page
+        if (res.length === 1) {
+          router.replace("/dashboard/trackables/" + res[0].trackableId);
+        }
+        
+        // Show a list of trakcables.
         setTrackables(res);
       } catch (err: any) {
         console.error("Failed to load trackables:", err?.response);
@@ -28,6 +35,9 @@ export default function Dashboard() {
   }, [router]);
 
   useEffect(() => {
+    // only load devices if there are enough trakcables
+    if(trackables === null || trackables.length === 0 || trackables.length === 1) return;
+
     async function loadDevices() {
       trackables?.forEach(async (trackable) => {
         const res = await apiClient.request<Device[]>("/api/trackables/" + trackable.trackableId + "/devices");

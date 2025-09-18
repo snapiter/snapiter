@@ -45,7 +45,7 @@ export default function TrackableItem({ t, devices }: { t: Trackable, devices: D
     >
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold">{t.websiteTitle}</h2>
+          <h2 className="text-lg font-semibold">{t.title}</h2>
           <p className="text-sm text-muted">{t.hostName}</p>
         </div>
         <span className="text-sm text-muted">

@@ -1,5 +1,20 @@
 import { atom } from 'jotai';
 
+
+
+
+export const dashboardLoading = atom<boolean>(true);
+
+
+
+
+
+
+
+
+
+
+
 export enum PageType {
   TRIPS = 'TRIPS',
   POSITIONS = 'POSITIONS',
@@ -13,8 +28,7 @@ export enum MapStyle {
 export type Trackable = {
   trackableId: string;
   name: string;
-  websiteTitle: string;
-  website: string; // @TODO should not use this
+  title: string;
   hostName: string;
   // icon: string; //@TODO
 };
