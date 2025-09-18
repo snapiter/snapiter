@@ -3,23 +3,22 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import apiClient from "@/utils/apiClient";
+import { Trackable } from "@/store/atoms";
 
-type Trackable = {
+type TrackableRequest = {
   name: string;
-  websiteTitle: string;
-  website: string;
+  title: string;
   hostName: string;
 };
 
 export default function CreateTrackablePage() {
   const router = useRouter();
-  const [form, setForm] = useState<Trackable>({
+  const [form, setForm] = useState<TrackableRequest>({
     name: "",
-    websiteTitle: "",
-    website: "",
+    title: "",
     hostName: "",
   });
-  const [errors, setErrors] = useState<Partial<Record<keyof Trackable, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof TrackableRequest, string>>>({});
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   async function onSubmit(e: FormEvent) {
@@ -27,8 +26,8 @@ export default function CreateTrackablePage() {
     setServerError(null);
   
     // simple required validation
-    const req: (keyof Trackable)[] = ["name", "websiteTitle", "website", "hostName"];
-    const nextErrors: Partial<Record<keyof Trackable, string>> = {};
+    const req: (keyof TrackableRequest)[] = ["name", "title", "hostName"];
+    const nextErrors: Partial<Record<keyof TrackableRequest, string>> = {};
     for (const key of req) {
       if (!form[key].trim()) nextErrors[key] = "Required";
     }
@@ -37,11 +36,8 @@ export default function CreateTrackablePage() {
   
     setSubmitting(true);
     try {
-      // This will throw if !response.ok
-      await apiClient.post<void>("/api/trackables", form);
-  
-      // success
-      router.replace("/dashboard");
+      const res = await apiClient.post<Trackable>("/api/trackables", form);
+      router.replace("/dashboard/trackables/" + res.trackableId);
       router.refresh();
     } catch (err: any) {
       // apiClient.request throws with err.response attached
@@ -83,23 +79,15 @@ export default function CreateTrackablePage() {
           value={form.name}
           onChange={(v) => setForm((f) => ({ ...f, name: v }))}
           error={errors.name}
-          placeholder="My Blog"
+          placeholder="Give a name"
         />
         <Field
-          id="websiteTitle"
-          label="Website Title"
-          value={form.websiteTitle}
-          onChange={(v) => setForm((f) => ({ ...f, websiteTitle: v }))}
-          error={errors.websiteTitle}
-          placeholder="Awesome Blog by Jane"
-        />
-        <Field
-          id="website"
-          label="Website URL"
-          value={form.website}
-          onChange={(v) => setForm((f) => ({ ...f, website: v }))}
-          error={errors.website}
-          placeholder="https://example.com"
+          id="title"
+          label="Title"
+          value={form.title}
+          onChange={(v) => setForm((f) => ({ ...f, title: v }))}
+          error={errors.title}
+          placeholder="A title visible on the website"
         />
         <Field
           id="hostName"
