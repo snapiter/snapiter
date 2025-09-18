@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Trackable } from "@/store/atoms";
 import TrackableItem from "@/components/dashboard/Trackable/TrackableItem";
-import { useApiClient } from "@/hooks/dashboard/useApiClient";
+import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 
 
 export default function Dashboard() {
-  const apiClient = useApiClient()
+  const apiClient = useDashboardApiClient()
 
   const router = useRouter();
   const [trackables, setTrackables] = useState<Trackable[] | null>(null);

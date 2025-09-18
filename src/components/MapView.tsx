@@ -16,11 +16,10 @@ import { config } from '@/config';
 
 interface MapViewProps {
   trips?: Trip[];
-  mapStyle: MapStyle;
   websiteIcon?: string;
 }
 
-export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewProps) {
+export default function MapView({ trips = [], websiteIcon }: MapViewProps) {
   const { trip: selectedTrip } = useSelectedTrip();
   
   const { runCommand } = useMapCommands();
@@ -169,7 +168,7 @@ export default function MapView({ trips = [], mapStyle, websiteIcon }: MapViewPr
       <Map
         ref={mapRef}
         initialViewState={{ longitude: 5.1214201, latitude: 52.0907374, zoom: 12 }}
-        mapStyle={`https://api.maptiler.com/maps/${mapStyle.valueOf()}/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
+        mapStyle={`https://api.maptiler.com/maps/landscape/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
         attributionControl={{
           compact: true,
         }}

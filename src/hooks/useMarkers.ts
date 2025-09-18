@@ -1,15 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchTripMarkers } from '@/services/api';
-import type { Trip } from '@/store/atoms';
+import type { Marker, Trip } from '@/store/atoms';
+import { useApiClient } from './useApiClient';
 
-export function useMarkers(vesselId: string | null, trip: Trip | null) {
+export function useMarkers(trackableId: string | null, trip: Trip | null) {
+  const api = useApiClient()
+  
   return useQuery({
-    queryKey: ['markers', vesselId, trip?.slug],
+    queryKey: ['markers', trackableId, trip?.slug],
     queryFn: async () => {
-      if (!vesselId || !trip) throw new Error('Vessel ID and trip are required');
-      return fetchTripMarkers(vesselId, trip);
+      if (!trackableId || !trip) throw new Error('Trackable ID and trip are required');
+      return api.get<Marker[]>(`/api/trackables/${trackableId}/trips/${trip.slug}/markers`)
     },
-    enabled: !!vesselId && !!trip,
+    enabled: !!trackableId && !!trip,
     staleTime: 10 * 60 * 1000, // 10 minutes - markers change less frequently
     retry: (failureCount, error) => {
       if (error instanceof Error && error.message.includes('404')) {

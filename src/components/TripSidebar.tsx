@@ -10,10 +10,10 @@ interface TripSidebarProps {
   trips: Trip[];
   activeIndex: number;
   onTripSelect: (index: number) => void;
-  websiteTitle?: string;
+  title?: string;
 }
 
-export default function TripSidebar({ trips, activeIndex, onTripSelect, websiteTitle }: TripSidebarProps) {
+export default function TripSidebar({ trips, activeIndex, onTripSelect, title }: TripSidebarProps) {
   const selectedTrip = useSelectedTrip();
   const [displayActiveIndex, setDisplayActiveIndex] = useState(activeIndex);
 
@@ -52,7 +52,7 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect, websiteT
             className="flex-shrink-0"
           />
           <h1 className="text-xl font-bold text-foreground">
-            {websiteTitle ?? (
+            {title ?? (
               <>
                 <span className="text-primary">S</span>nap
                 <span className="text-primary">I</span>ter

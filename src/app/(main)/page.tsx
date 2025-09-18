@@ -12,7 +12,9 @@ import { useHostname } from '@/hooks/useApiData';
 import { useWebsite } from '@/hooks/useWebsite';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useAtomValue } from 'jotai';
-import { mapEventsAtom, MapStyle } from '@/store/atoms';
+import { mapEventsAtom } from '@/store/atoms';
+import { useTrips } from '@/hooks/useTrips';
+import ErrorComponent from '@/components/ErrorComponent';
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -22,45 +24,38 @@ export default function Home() {
   const { runCommand } = useMapCommands();
   const mapEvents = useAtomValue(mapEventsAtom);
 
-  // Check if map is ready by looking for MAP_READY events
   const mapReady = mapEvents.some(event => event.type === 'MAP_READY');
 
-  const trips = useMemo(() => {
-    const tripsArray = website?.trips || [];
-    return tripsArray.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
-  }, [website]);
+  const { data: trips = [], isLoading: tripsLoading } = useTrips(website?.trackableId ?? null);
 
   useEffect(() => {
-    if (website && mapReady && trips.length > 0 && !isLoading) {
+    if (website && mapReady && !isLoading && !tripsLoading) {
       setTimeout(() => {
         setIsLoaded(true);
+        if (trips.length > 0) { 
         runCommand({
           type: 'SELECT_TRIP',
-          tripSlug: trips[0].slug
-        });
+            tripSlug: trips[0].slug
+          });
+        }
       }, 1000);
     }
   }, [website, mapReady, trips, isLoading, runCommand]);
 
   if (error) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <h2 className="text-xl font-bold text-error mb-2">Error Loading Iter's</h2>
-          <p className="text-muted">{error.message}</p>
-        </div>
-      </div>
+      <ErrorComponent message={error.message} />
     );
   }
 
   return (
     <>
-      <DynamicTitle title={website?.websiteTitle} />
+      <DynamicTitle title={website?.title} />
       <div className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row">
         {/* Single MapView - responsive sizing */}
         <div className={`flex-1 md:w-1/2 lg:w-2/3 relative transition-all duration-300 h-full
           `}>
-          <MapView trips={trips} mapStyle={website?.mapStyle ?? MapStyle.LANDSCAPE} websiteIcon={website?.icon} />
+          <MapView trips={trips} websiteIcon={website?.icon} />
         </div>
 
         {/* Mobile: Sliding Panel */}
@@ -78,7 +73,7 @@ export default function Home() {
 
         {/* Desktop: Side Panel */}
         <div className="hidden md:block md:w-1/2 lg:w-1/3 bg-background shadow-xl overflow-hidden">
-          <DesktopTripView trips={trips} websiteTitle={website?.websiteTitle} />
+          <DesktopTripView trips={trips} title={website?.title} />
         </div>
 
         {/* Loading Overlay */}

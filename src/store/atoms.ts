@@ -23,7 +23,7 @@ export type Trackable = {
   name: string;
   title: string;
   hostName: string;
-  // icon: string; //@TODO
+  icon: string; //@TODO
 };
 
 //   createdAt: new Date(raw.createdAt),
@@ -49,7 +49,7 @@ export interface Website {
 }
 
 export interface Trip {
-  vesselId: string;
+  trackableId: string;
   startDate: string;
   endDate: string;
   title: string;
@@ -75,8 +75,7 @@ export interface TripDetailed extends TripWithPositions, TripWithMarkers {
 
 
 export interface Position {
-  id: string;
-  vesselId: string;
+  trackableId: string;
   latitude: number;
   longitude: number;
   createdAt: string;

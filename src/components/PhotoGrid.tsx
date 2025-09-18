@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { Marker } from '@/store/atoms';
-import { getMarkerUrlThumbnail } from '@/services/api';
+import { getMarkerUrlThumbnail } from '@/services/thumbnail';
 
 
 interface PhotoGridProps {

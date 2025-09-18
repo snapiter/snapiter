@@ -3,7 +3,7 @@
 import { use, useEffect, useState } from "react";
 import { FaKey, FaQrcode } from "react-icons/fa6";
 import { Device } from "@/store/atoms";
-import { useApiClient } from "@/hooks/dashboard/useApiClient";
+import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import Modal from "@/components/dashboard/modal"; // adjust import to your modal
 
 type QuickCreateRes = {
@@ -17,7 +17,7 @@ export default function TrackablePage({
   params: Promise<{ trackableId: string }>;
 }) {
   const { trackableId } = use(params);
-  const apiClient = useApiClient();
+  const apiClient = useDashboardApiClient();
   const [devices, setDevices] = useState<Device[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState<QuickCreateRes | null>(null);

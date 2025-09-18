@@ -1,6 +1,6 @@
 import maplibregl from 'maplibre-gl';
 import type { Marker as TripMarker, Position } from '@/store/atoms';
-import { getMarkerUrlThumbnail } from '@/services/api';
+import { getMarkerUrlThumbnail } from '@/services/thumbnail';
 
 export function createTripMarkers(
   markers: TripMarker[], 

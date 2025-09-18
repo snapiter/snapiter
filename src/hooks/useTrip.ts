@@ -1,13 +1,15 @@
 import { useQueries } from '@tanstack/react-query';
-import { fetchPositions } from '@/services/api';
-import type { Trip, TripWithPositions } from '@/store/atoms';
+import type { Position, Trip, TripWithPositions } from '@/store/atoms';
+import { useApiClient } from './useApiClient';
 
 export function useTripPositions(trips: Trip[]) {
+  const api = useApiClient()
+  
   const tripPositionQueries = useQueries({
     queries: trips.map(trip => ({
-      queryKey: ['tripPositions', trip.vesselId, trip.slug],
+      queryKey: ['tripPositions', trip.trackableId, trip.slug],
       queryFn: async () => {
-        const positions = await fetchPositions(trip.vesselId, trip.slug);
+        const positions = await api.get<Position[]>(`/api/trackables/${trip.trackableId}/trips/${trip.slug}/positions`)
         return { ...trip, positions } as TripWithPositions;
       },
       staleTime: 5 * 60 * 1000, // 5 minutes

@@ -2,7 +2,7 @@
 
 import PhotoGrid from './PhotoGrid';
 import type { Marker, Trip } from '@/store/atoms';
-import { getMarkerUrlThumbnail } from '@/services/api';
+import { getMarkerUrlThumbnail } from '@/services/thumbnail';
 import Image from 'next/image';
 import { FaRoute } from 'react-icons/fa6';
 import DayAndPhoto from './DayAndPhoto';

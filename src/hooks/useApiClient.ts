@@ -1,5 +1,6 @@
 import { useSetAtom } from "jotai"
 import { dashboardLoading, errorMessage } from "@/store/atoms"
+import { config } from "@/config"
 
 export function useApiClient() {
   const setLoading = useSetAtom(dashboardLoading)
@@ -8,7 +9,7 @@ export function useApiClient() {
   async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     setLoading(true)
     try {
-      const res = await fetch(`/api/proxy${endpoint}`, {
+      const res = await fetch(`${config.apiUrl}${endpoint}`, {
         ...options,
         credentials: "include",
         headers: {

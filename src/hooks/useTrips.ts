@@ -1,18 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
+import type { Trip } from '@/store/atoms';
 import { useApiClient } from './useApiClient';
-import { Trackable } from '@/store/atoms';
 
-export function useWebsite(hostname: string | null) {
+export function useTrips(trackableId: string | null) {
   const api = useApiClient()
-
+  
   return useQuery({
-    queryKey: ['website', hostname],
+    queryKey: ['trips', trackableId],
     queryFn: async () => {
-      if (!hostname) throw new Error('Hostname is required');
-      return api.get<Trackable>(`/api/trackables/host/${hostname}`)
+      if (!trackableId) throw new Error('Trackable ID is required');
+      return api.get<Trip[]>(`/api/trackables/${trackableId}/trips`)
     },
-    enabled: !!hostname,
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    enabled: !!trackableId,
+    staleTime: 10 * 60 * 1000,
     retry: (failureCount, error) => {
       if (error instanceof Error && error.message.includes('404')) {
         return false;

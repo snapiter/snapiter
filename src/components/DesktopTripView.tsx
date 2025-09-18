@@ -8,10 +8,10 @@ import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 
 interface DesktopTripViewProps {
   trips: Trip[];
-  websiteTitle?: string;
+  title?: string;
 }
 
-export default function DesktopTripView({ trips, websiteTitle }: DesktopTripViewProps) {
+export default function DesktopTripView({ trips, title }: DesktopTripViewProps) {
   const { runCommand } = useMapCommands();
 
   const { trip: selectedTrip } = useSelectedTrip();
@@ -46,7 +46,7 @@ export default function DesktopTripView({ trips, websiteTitle }: DesktopTripView
           trips={trips} 
           activeIndex={activeIndex} 
           onTripSelect={handleTripSelect}
-          websiteTitle={websiteTitle}
+          title={title}
         />
       </div>
       {markers.length > 0 && (

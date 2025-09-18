@@ -1,22 +1,22 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Website } from '@/store/atoms';
+import { Trackable } from '@/store/atoms';
 import Image from 'next/image';
 
 interface SnapIterLoaderProps {
-  website: Website | null;
+  website: Trackable | null;
 }
 
 export default function SnapIterLoader({ website }: SnapIterLoaderProps) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if (website?.websiteTitle) {
+    if (website?.title) {
       const timer = setTimeout(() => setLoaded(true), 500); // small delay
       return () => clearTimeout(timer);
     }
-  }, [website?.websiteTitle]);
+  }, [website?.title]);
 
   return (
     <div className="fixed inset-0 dark:bg-black bg-white flex items-center justify-center p-4 z-50">
@@ -41,13 +41,13 @@ export default function SnapIterLoader({ website }: SnapIterLoaderProps) {
           </div>
 
           {/* Website Title */}
-          {website?.websiteTitle && (
+          {website?.title && (
             <h1
               className={`absolute transition-all duration-700 ease-out text-2xl font-bold text-foreground ${
                 loaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
               }`}
             >
-              {website.websiteTitle}
+              {website.title}
             </h1>
           )}
         </div>

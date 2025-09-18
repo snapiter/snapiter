@@ -9,7 +9,7 @@ import { useMapCommands } from '@/hooks/useMapCommands';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Marker } from '@/store/atoms';
-import { getMarkerUrlThumbnail } from '@/services/api';
+import { getMarkerUrlThumbnail } from '@/services/thumbnail';
 
 export interface Photo {
   id: string;
