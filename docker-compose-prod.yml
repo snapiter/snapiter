@@ -1,16 +1,69 @@
 services:
-  snapiter:
+  snapiter-frontend:
     image: registry.bestanden.online/snapiter-frontend:latest
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.snapiterfrontend.entrypoints=websecure"
-      - "traefik.http.routers.snapiterfrontend.rule=Host(`snapiter.com`) || Host(`partypieps.nl`)"
-      - "traefik.http.routers.snapiterfrontend.tls.certresolver=leresolver"
+
+      # --- Router: snapiter.com/dashboard -> frontend (higher priority) ---
+      - "traefik.http.routers.snapiterfrontend-dashboard.entrypoints=websecure"
+      - "traefik.http.routers.snapiterfrontend-dashboard.rule=Host(`app.snapiter.com`) || Host(`arnovanrossum.nl`)"
+      - "traefik.http.routers.snapiterfrontend-dashboard.tls.certresolver=leresolver"
+      - "traefik.http.routers.snapiterfrontend-dashboard.priority=100"
+      - "traefik.http.routers.snapiterfrontend-dashboard.service=snapiterfrontend"
+
+      # --- Service definition for the frontend container ---
       - "traefik.http.services.snapiterfrontend.loadbalancer.server.port=3000"
+
+      # --- Middlewares (shared) ---
       - "traefik.http.middlewares.snapiterfrontend-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.middlewares.snapiterfrontend-headers.headers.customrequestheaders.X-Forwarded-Port=443"
-      - "traefik.http.routers.snapiterfrontend.middlewares=snapiterfrontend-headers@docker"
+      - "traefik.http.routers.snapiterfrontend-dashboard.middlewares=snapiterfrontend-headers@docker"
+    networks:
+      - traefik
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # New service: main snapiter.com site
+  snapiter-com:
+    image: registry.bestanden.online/snapitercom:latest
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.snapitercom.entrypoints=websecure"
+      - "traefik.http.routers.snapitercom.rule=Host(`snapiter.com`) && PathPrefix(`/`)"
+      - "traefik.http.routers.snapitercom.tls.certresolver=leresolver"
+      - "traefik.http.routers.snapitercom.priority=10"
+      - "traefik.http.services.snapitercom.loadbalancer.server.port=3000"
+      - "traefik.http.middlewares.snapitercom-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.snapitercom-headers.headers.customrequestheaders.X-Forwarded-Port=443"
+      - "traefik.http.routers.snapitercom.middlewares=snapitercom-headers@docker"
+    networks:
+      - traefik
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # New service: partypieps frontend
+  snapiter-partypieps:
+    image: registry.bestanden.online/snapiter-frontend:255
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.snapiterpartypieps.entrypoints=websecure"
+      - "traefik.http.routers.snapiterpartypieps.rule=Host(`partypieps.nl`)"
+      - "traefik.http.routers.snapiterpartypieps.tls.certresolver=leresolver"
+      - "traefik.http.services.snapiterpartypieps.loadbalancer.server.port=3000"
+      - "traefik.http.middlewares.snapiterpartypieps-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.snapiterpartypieps-headers.headers.customrequestheaders.X-Forwarded-Port=443"
+      - "traefik.http.routers.snapiterpartypieps.middlewares=snapiterpartypieps-headers@docker"
     networks:
       - traefik
     healthcheck:
