@@ -111,16 +111,9 @@ export default function CreateTrackablePage() {
           <button
             type="submit"
             disabled={submitting}
-            className="rounded bg-background px-4 py-2 text-sm font-medium text-foreground transition disabled:opacity-60"
+            className="rounded cursor-pointer bg-primary px-4 py-2 text-sm font-medium text-foreground transition disabled:opacity-60"
           >
             {submitting ? "Creating…" : "Create"}
-          </button>
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="rounded border px-4 py-2 text-sm"
-          >
-            Cancel
           </button>
         </div>
       </form>
