@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Device, Trackable } from "@/store/atoms";
+import { Trackable } from "@/store/atoms";
 import TrackableItem from "@/components/dashboard/Trackable/TrackableItem";
 import { useApiClient } from "@/hooks/dashboard/useApiClient";
 
@@ -12,7 +12,6 @@ export default function Dashboard() {
 
   const router = useRouter();
   const [trackables, setTrackables] = useState<Trackable[] | null>(null);
-  const [devicesByTrackable, setDevicesByTrackable] = useState<Record<string, Device[]> | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -35,23 +34,7 @@ export default function Dashboard() {
       }
     }
     load()
-  }, [apiClient, router])
-
-  useEffect(() => {
-    // only load devices if there are enough trakcables
-    if(trackables === null || trackables.length === 0 || trackables.length === 1) return;
-
-    async function loadDevices() {
-      trackables?.forEach(async (trackable) => {
-        const res = await apiClient.request<Device[]>("/api/trackables/" + trackable.trackableId + "/devices");
-        setDevicesByTrackable((prev) => ({
-          ...prev,
-          [trackable.trackableId]: res,
-        }));
-      });
-    }
-    loadDevices();
-  }, [trackables]);
+  }, [router])
 
   if (trackables === null) {
     return <></>;
@@ -62,7 +45,7 @@ export default function Dashboard() {
       <h1 className="text-2xl font-bold  mb-6">Trackables</h1>
       <ul className="space-y-4">
         {trackables && trackables.length > 0 && trackables.map((t) => (
-          <TrackableItem key={t.trackableId} t={t} devices={devicesByTrackable?.[t.trackableId] || []} />
+          <TrackableItem key={t.trackableId} t={t} />
         ))}
       </ul>
     </div>
