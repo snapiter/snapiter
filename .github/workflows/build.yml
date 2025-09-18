@@ -25,7 +25,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+        with:
+          fetch-depth: 0
+          
       - name: Get commit count
         id: commitcount
         run: echo "count=$(git rev-list --count HEAD)" >> $GITHUB_OUTPUT
