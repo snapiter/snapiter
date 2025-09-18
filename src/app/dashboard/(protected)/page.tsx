@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { apiClient } from "@/utils/apiClient";
 import { Device, Trackable } from "@/store/atoms";
 import TrackableItem from "@/components/dashboard/Trackable/TrackableItem";
+import { useApiClient } from "@/hooks/dashboard/useApiClient";
 
 
 export default function Dashboard() {
+  const apiClient = useApiClient()
+
   const router = useRouter();
   const [trackables, setTrackables] = useState<Trackable[] | null>(null);
   const [devicesByTrackable, setDevicesByTrackable] = useState<Record<string, Device[]> | null>(null);
@@ -15,24 +17,25 @@ export default function Dashboard() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await apiClient.request<Trackable[]>("/api/trackables");
-        // If nothing, create a new trackable
+        const res = await apiClient.get<Trackable[]>("/api/trackables")
+
         if (res.length === 0) {
-          router.replace("/dashboard/trackables/create");
+          router.replace("/dashboard/trackables/create")
+          return
         }
-        // If there is 1 trackable automaticaly go to that page
+
         if (res.length === 1) {
-          router.replace("/dashboard/trackables/" + res[0].trackableId);
+          router.replace("/dashboard/trackables/" + res[0].trackableId)
+          return
         }
-        
-        // Show a list of trakcables.
-        setTrackables(res);
-      } catch (err: any) {
-        console.error("Failed to load trackables:", err?.response);
+
+        setTrackables(res)
+      } catch (err) {
+        console.error("Failed to load trackables:", err)
       }
     }
-    load();
-  }, [router]);
+    load()
+  }, [apiClient, router])
 
   useEffect(() => {
     // only load devices if there are enough trakcables
@@ -51,18 +54,14 @@ export default function Dashboard() {
   }, [trackables]);
 
   if (trackables === null) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-gray-600 text-lg animate-pulse">Loading…</p>
-      </div>
-    );
+    return <></>;
   }
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-4">
       <h1 className="text-2xl font-bold  mb-6">Trackables</h1>
       <ul className="space-y-4">
-        {trackables.map((t) => (
+        {trackables && trackables.length > 0 && trackables.map((t) => (
           <TrackableItem key={t.trackableId} t={t} devices={devicesByTrackable?.[t.trackableId] || []} />
         ))}
       </ul>

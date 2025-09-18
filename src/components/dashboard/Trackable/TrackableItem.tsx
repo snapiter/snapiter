@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Modal from "@/components/dashboard/modal";
-import apiClient from "@/utils/apiClient";
 import { Device, Trackable } from "@/store/atoms";
+import { useApiClient } from "@/hooks/dashboard/useApiClient";
 
 type QuickCreateRes = {
   deviceToken: string;
@@ -9,34 +9,33 @@ type QuickCreateRes = {
 };
 
 export default function TrackableItem({ t, devices }: { t: Trackable, devices: Device[] }) {
+  const apiClient = useApiClient()
+  
   const [modalOpen, setModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [quickCreate, setQuickCreate] = useState<QuickCreateRes | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // fetch device data when modal opens
   useEffect(() => {
     if (!modalOpen) {
-      setQuickCreate(null);
-      setError(null);
-      return;
+      setQuickCreate(null)
+      setError(null)
+      return
     }
-
+  
     async function fetchQuickCreate() {
-      setLoading(true);
-      setError(null);
+      setError(null)
       try {
-        const res = await apiClient.post<QuickCreateRes>(`/api/trackables/${t.trackableId}/devices`)
-        setQuickCreate(res);
+        const res = await apiClient.post<QuickCreateRes>(
+          `/api/trackables/${t.trackableId}/devices`
+        )
+        setQuickCreate(res)
       } catch (err: any) {
-        setError(err.message || "Failed to create device");
-      } finally {
-        setLoading(false);
+        setError(err.message || "Failed to create device")
       }
     }
-
-    fetchQuickCreate();
-  }, [modalOpen, t.trackableId]);
+  
+    fetchQuickCreate()
+  }, [modalOpen, t.trackableId, apiClient])
 
   return (
     <li
@@ -65,21 +64,19 @@ export default function TrackableItem({ t, devices }: { t: Trackable, devices: D
               </li>
             ))}
           </ul>
-        ) }
+        )}
 
-<button
-            type="button"
-            className="mt-2 inline-flex items-center rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-hover"
-            onClick={() => setModalOpen(true)}
-          >
-            + Add device
-          </button>
+        <button
+          type="button"
+          className="mt-2 inline-flex items-center rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-hover"
+          onClick={() => setModalOpen(true)}
+        >
+          + Add device
+        </button>
       </div>
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
         <h3 className="text-lg font-semibold mb-4">Register Device</h3>
-
-        {loading && <p className="text-sm text-muted">Creating device…</p>}
 
         {error && (
           <p className="text-sm text-red-600">Error: {error}</p>

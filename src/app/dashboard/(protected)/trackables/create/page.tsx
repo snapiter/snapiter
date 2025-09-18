@@ -2,8 +2,8 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import apiClient from "@/utils/apiClient";
 import { Trackable } from "@/store/atoms";
+import { useApiClient } from "@/hooks/dashboard/useApiClient";
 
 type TrackableRequest = {
   name: string;
@@ -21,6 +21,9 @@ export default function CreateTrackablePage() {
   const [errors, setErrors] = useState<Partial<Record<keyof TrackableRequest, string>>>({});
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const apiClient = useApiClient()
+
+  
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setServerError(null);

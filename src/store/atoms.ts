@@ -1,6 +1,6 @@
 import { atom } from 'jotai';
 
-export const dashboardLoading = atom<boolean>(true);
+export const dashboardLoading = atom<boolean>(false);
 
 export enum PageType {
   TRIPS = 'TRIPS',
@@ -97,8 +97,6 @@ export interface Photo {
 }
 
 export const selectedTripAtom = atom<Trip | null>(null);
-
-export const errorAtom = atom<string | null>(null);
 
 export const bottomPanelExpandedAtom = atom<boolean>(false);
 
