@@ -92,7 +92,7 @@ export default function TrackablePage({
       <div className="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <button
           onClick={addPhone}
-          className="flex flex-col items-center justify-center gap-3 p-6 rounded-lg border border-border bg-surface hover:shadow-lg transition"
+          className="flex flex-col cursor-pointer items-center justify-center gap-3 p-6 rounded-lg border border-border bg-surface hover:shadow-lg transition"
         >
           <FaQrcode className="w-24 h-24 text-primary" />
           <span className="font-medium">Add a Phone</span>
@@ -103,7 +103,7 @@ export default function TrackablePage({
 
         <button
           onClick={createToken}
-          className="flex flex-col items-center justify-center gap-3 p-6 rounded-lg border border-border bg-surface hover:shadow-lg transition"
+          className="flex flex-col cursor-pointer items-center justify-center gap-3 p-6 rounded-lg border border-border bg-surface hover:shadow-lg transition"
         >
           <FaKey className="w-24 h-24 text-primary" />
           <span className="font-medium">Create Token</span>
