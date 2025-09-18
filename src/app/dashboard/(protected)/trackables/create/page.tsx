@@ -47,7 +47,6 @@ export default function CreateTrackablePage() {
       const res: Response | undefined = err?.response;
   
       if (res) {
-        // 401 redirect to /dashboard/auth is already handled inside apiClient
         let message = `${res.status} ${res.statusText}`;
         try {
           const ct = res.headers.get("content-type") || "";

@@ -2,6 +2,12 @@ import { atom } from 'jotai';
 
 export const dashboardLoading = atom<boolean>(false);
 
+export type ErrorMessage = {
+  message: string;
+  status: number;
+}
+export const errorMessage = atom<ErrorMessage | null>(null);
+
 export enum PageType {
   TRIPS = 'TRIPS',
   POSITIONS = 'POSITIONS',
@@ -26,6 +32,7 @@ export type Trackable = {
 export type Device = {
   trackableId: string;
   deviceId: string;
+  name: string;
   createdAt: Date;
   lastReportedAt: Date;
 };

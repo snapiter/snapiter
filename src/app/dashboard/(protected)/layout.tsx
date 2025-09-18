@@ -4,6 +4,7 @@ import "../../globals.css";
 import Header from "@/components/dashboard/Header";
 import Footer from "@/components/dashboard/Footer";
 import LoadingBar from "@/components/dashboard/LoadingBar";
+import ErrorBox from "@/components/dashboard/ErrorBox";
 import { Provider } from "jotai";
 
 const geistSans = Geist({
@@ -34,6 +35,7 @@ export default function RootLayout({
       <Provider>
         <Header />
         <LoadingBar />
+        <ErrorBox />
         <main className="container mx-auto px-4 max-w-7xl relative py-4 flex-grow">
           {children}
         </main>
