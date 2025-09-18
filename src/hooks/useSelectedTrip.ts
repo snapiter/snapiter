@@ -5,7 +5,7 @@ import { useMemo } from "react";
 
 export function useSelectedTrip() {
     const selectedTrip = useAtomValue(selectedTripAtom);
-    const { data: markers, isLoading: markersLoading, error: markersError } = useMarkers(selectedTrip?.vesselId || null, selectedTrip);
+    const { data: markers, isLoading: markersLoading, error: markersError } = useMarkers(selectedTrip);
 
     return useMemo(() => {
         if (!selectedTrip) {
