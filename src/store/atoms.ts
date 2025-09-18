@@ -62,7 +62,6 @@ export interface TripWithMarkers extends Trip {
 export interface TripDetailed extends TripWithPositions, TripWithMarkers {
 }
 
-
 export interface Position {
   trackableId: string;
   latitude: number;

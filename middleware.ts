@@ -25,6 +25,13 @@ export function middleware(request: NextRequest) {
   // Remove port if present (e.g., localhost:3000 → localhost)
   const cleanHostname = hostname.split(':')[0];
 
+
+  // 🔑 If on app.snapiter.com and not already under /dashboard → redirect
+  if (cleanHostname === 'app.snapiter.com' && !pathname.startsWith('/dashboard')) {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
+
   // Add hostname to response headers so it can be accessed in components/API routes
   const response = NextResponse.next();
   response.headers.set('x-hostname', cleanHostname);
