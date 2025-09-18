@@ -1,19 +1,6 @@
 import { atom } from 'jotai';
 
-
-
-
 export const dashboardLoading = atom<boolean>(true);
-
-
-
-
-
-
-
-
-
-
 
 export enum PageType {
   TRIPS = 'TRIPS',
