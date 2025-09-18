@@ -5,13 +5,17 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const accessToken = request.cookies.get('access_token')?.value;
 
-  // Check if the user is accessing protected dashboard routes
-  if (pathname.startsWith('/dashboard') && !pathname.startsWith('/dashboard/auth')) {
-    // If no access token, redirect to auth page
+  // Check if the user is accessing protected dashboard routes, except for auth and api
+  if (
+    pathname.startsWith('/dashboard') &&
+    !pathname.startsWith('/dashboard/auth') &&
+    !pathname.startsWith('/dashboard/api')
+  ) {
     if (!accessToken) {
       return NextResponse.redirect(new URL('/dashboard/auth', request.url));
     }
   }
+  
 
   // Extract hostname from various possible sources
   // Scaleway serverless containers + Traefik/Caddy compatible
