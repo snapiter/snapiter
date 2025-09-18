@@ -1,10 +1,15 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa6";
+import { FaMobile, FaKey, FaQrcode } from "react-icons/fa6";
 import { Device } from "@/store/atoms";
 import { useApiClient } from "@/hooks/dashboard/useApiClient";
+import Modal from "@/components/dashboard/modal"; // adjust import to your modal
 
+type QuickCreateRes = {
+  deviceToken: string;
+  qrDataUrl?: string;
+};
 
 export default function TrackablePage({
   params,
@@ -14,6 +19,9 @@ export default function TrackablePage({
   const { trackableId } = use(params);
   const apiClient = useApiClient();
   const [devices, setDevices] = useState<Device[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<QuickCreateRes | null>(null);
+  const [mode, setMode] = useState<"phone" | "token" | null>(null);
 
   // Load devices
   useEffect(() => {
@@ -26,12 +34,24 @@ export default function TrackablePage({
     load();
   }, [trackableId]);
 
-  async function addDevice() {
-    const res = await apiClient.post<Device>(
-      `/api/trackables/${trackableId}/devices`,
+  async function addPhone() {
+    const res = await apiClient.post<QuickCreateRes>(
+      `/api/trackables/${trackableId}/devices/token`,
       {}
     );
-    setDevices((prev) => [...prev, res]);
+    setMode("phone");
+    setModalContent(res);
+    setModalOpen(true);
+  }
+
+  async function createToken() {
+    const res = await apiClient.post<QuickCreateRes>(
+      `/api/trackables/${trackableId}/devices/token`,
+      {}
+    );
+    setMode("token");
+    setModalContent(res);
+    setModalOpen(true);
   }
 
   return (
@@ -56,8 +76,7 @@ export default function TrackablePage({
                 <div>
                   <p className="font-medium">{d.name}</p>
                   <p className="text-sm text-muted">
-                    Last reported:{" "}
-                    {new Date(d.lastReportedAt).toLocaleString()}
+                    Last reported: {new Date(d.lastReportedAt).toLocaleString()}
                   </p>
                 </div>
                 <span className="text-xs text-muted">ID: {d.deviceId}</span>
@@ -69,16 +88,53 @@ export default function TrackablePage({
         <p className="text-muted">No devices registered yet.</p>
       )}
 
-      {/* Add Device Button */}
-      <div className="pt-4">
+      {/* Actions */}
+      <div className="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <button
-          onClick={addDevice}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white font-medium hover:bg-primary-hover transition"
+          onClick={addPhone}
+          className="flex flex-col items-center justify-center gap-3 p-6 rounded-lg border border-border bg-surface hover:shadow-lg transition"
         >
-          <FaPlus className="w-4 h-4" />
-          Add Device
+          <FaQrcode className="w-24 h-24 text-primary" />
+          <span className="font-medium">Add a Phone</span>
+          <p className="text-sm text-muted text-center">
+            Scan a QR code to register your phone instantly
+          </p>
+        </button>
+
+        <button
+          onClick={createToken}
+          className="flex flex-col items-center justify-center gap-3 p-6 rounded-lg border border-border bg-surface hover:shadow-lg transition"
+        >
+          <FaKey className="w-24 h-24 text-primary" />
+          <span className="font-medium">Create Token</span>
+          <p className="text-sm text-muted text-center">
+            Generate a token for other devices
+          </p>
         </button>
       </div>
+
+      {/* Modal */}
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+        {modalContent && mode === "phone" && modalContent.qrDataUrl && (
+          <div className="flex flex-col items-center gap-4 p-6">
+            <h2 className="text-lg font-semibold">Scan this QR with your phone</h2>
+            <img
+              src={modalContent.qrDataUrl}
+              alt="QR code"
+              className="w-48 h-48"
+            />
+          </div>
+        )}
+
+        {modalContent && mode === "token" && (
+          <div className="flex flex-col items-center gap-4 p-6">
+            <h2 className="text-lg font-semibold">Your Device Token</h2>
+            <code className="px-3 py-2 rounded bg-surface border border-border text-sm">
+              {modalContent.deviceToken}
+            </code>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }
