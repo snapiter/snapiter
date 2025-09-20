@@ -5,6 +5,8 @@ import { FaKey, FaQrcode } from "react-icons/fa6";
 import { Device } from "@/store/atoms";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import Modal from "@/components/dashboard/modal"; // adjust import to your modal
+import Card from "@/components/dashboard/Card";
+import ActionCard from "@/components/dashboard/ActionCard";
 
 type QuickCreateRes = {
   deviceToken: string;
@@ -55,22 +57,17 @@ export default function TrackablePage({
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-6">
+    <div className="">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Devices</h1>
-        <span className="text-muted">
-          {devices.length} registered {devices.length === 1 ? "device" : "devices"}
-        </span>
-      </div>
-
       {/* Device List */}
       {devices.length > 0 ? (
-        <ul className="space-y-4">
+          <Card title="Devices" description={`${devices.length} registered ${devices.length === 1 ? "device" : "devices"}`}>
+
+<ul className="space-y-4 border-t border-border pt-4">
           {devices.map((d) => (
             <li
               key={d.deviceId}
-              className="p-4 border border-border rounded-lg bg-surface shadow-sm hover:shadow-md transition"
+              className=""
             >
               <div className="flex items-center justify-between">
                 <div>
@@ -84,33 +81,25 @@ export default function TrackablePage({
             </li>
           ))}
         </ul>
+        </Card>
       ) : (
         <p className="text-muted">No devices registered yet.</p>
       )}
 
       {/* Actions */}
       <div className="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <button
-          onClick={addPhone}
-          className="flex flex-col cursor-pointer items-center justify-center gap-3 p-6 rounded-lg border border-border bg-surface hover:shadow-lg transition"
-        >
-          <FaQrcode className="w-24 h-24 text-primary" />
-          <span className="font-medium">Add a Phone</span>
-          <p className="text-sm text-muted text-center">
-            Scan a QR code to register your phone instantly
-          </p>
-        </button>
-
-        <button
-          onClick={createToken}
-          className="flex flex-col cursor-pointer items-center justify-center gap-3 p-6 rounded-lg border border-border bg-surface hover:shadow-lg transition"
-        >
-          <FaKey className="w-24 h-24 text-primary" />
-          <span className="font-medium">Create Token</span>
-          <p className="text-sm text-muted text-center">
-            Generate a token for other devices
-          </p>
-        </button>
+        <ActionCard
+      onClick={addPhone}
+      icon={<FaQrcode className="w-24 h-24" />}
+      title="Add a Phone"
+      description="Scan a QR code to register your phone instantly"
+    />
+        <ActionCard
+      onClick={createToken}
+      icon={<FaKey className="w-24 h-24" />}
+      title="Create Token"
+      description="Generate a token for other devices"
+    />
       </div>
 
       {/* Modal */}

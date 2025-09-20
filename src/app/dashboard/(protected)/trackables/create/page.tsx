@@ -71,7 +71,7 @@ export default function CreateTrackablePage() {
   
 
   return (
-    <div className="mx-auto max-w-xl p-6 bg-surface">
+    <div className="">
       <h1 className="text-xl font-semibold">Create Trackable</h1>
 
       <form onSubmit={onSubmit} className="mt-6 space-y-4">

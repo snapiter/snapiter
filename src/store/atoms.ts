@@ -1,6 +1,7 @@
 import { atom } from 'jotai';
 
 export const dashboardLoading = atom<boolean>(false);
+export const mobileMenuOpen = atom<boolean>(false);
 
 export type ErrorMessage = {
   message: string;

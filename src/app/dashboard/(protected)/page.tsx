@@ -41,7 +41,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4">
+    <div>
       <h1 className="text-2xl font-bold  mb-6">Trackables</h1>
       <ul className="space-y-4">
         {trackables && trackables.length > 0 && trackables.map((t) => (
