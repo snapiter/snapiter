@@ -38,10 +38,7 @@ export default function RootLayout({
           <LoadingBar />
           <ErrorBox />
           <div className="flex flex-1 relative">
-            <Menu />
-            <main className="flex-1 px-2">
-              {children}
-            </main>
+            {children}
           </div>
           <Footer />
         </Provider>

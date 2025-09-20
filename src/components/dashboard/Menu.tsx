@@ -2,11 +2,10 @@
 
 import { mobileMenuOpen } from "@/store/atoms";
 import { useAtom } from "jotai";
-import { FaUser, FaX } from "react-icons/fa6";
-import MenuItem from "./layout/MenuItem";
-import { FaCog, FaHome } from "react-icons/fa";
+import { FaX } from "react-icons/fa6";
+import MenuItem, { MenuItemProps } from "./layout/MenuItem";
 
-export default function Menu() {
+export default function Menu({ items }: { items: MenuItemProps[] }) {
   const [isOpen, setIsOpen] = useAtom(mobileMenuOpen);
 
   return (
@@ -30,8 +29,17 @@ export default function Menu() {
         >
           <FaX />
         </button>
+
         <nav>
-          <MenuItem icon={<FaHome />} label="Dashboard" href="#" />
+          {items.map((item, idx) => (
+            <MenuItem
+              key={idx}
+              icon={item.icon}
+              label={item.label}
+              href={item.href}
+              submenu={item.submenu}
+            />
+          ))}
         </nav>
       </aside>
     </div>

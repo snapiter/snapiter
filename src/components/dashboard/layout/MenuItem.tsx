@@ -4,12 +4,13 @@ import { ReactNode, useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
 import Link from "next/link";
 
-interface SubItem {
+export interface SubItem {
   label: string;
   href: string;
+  icon?: ReactNode;
 }
 
-interface MenuItemProps {
+export interface MenuItemProps {
   icon: ReactNode;
   label: string;
   href?: string;
@@ -51,12 +52,13 @@ export default function MenuItem({ icon, label, href, submenu }: MenuItemProps) 
       {hasSubmenu && open && (
         <ul className="ml-11 mt-2 space-y-2">
           {submenu!.map((item) => (
-            <li key={item.href}>
+            <li key={item.href} className="flex items-center gap-3">
               <Link
                 href={item.href}
                 className="block w-full px-3 py-2 rounded-md text-sm text-gray-300 hover:bg-white/10"
               >
-                {item.label}
+                <span className="text-xl">{item.icon}</span>
+                <span className="font-medium">{item.label}</span>
               </Link>
             </li>
           ))}
