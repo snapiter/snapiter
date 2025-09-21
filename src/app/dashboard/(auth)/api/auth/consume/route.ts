@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
       value: refreshToken,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "none", // important for cross-site requests
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       path: "/",
       maxAge: 60 * 60 * 24 * 30, // 30 days
     });
@@ -51,7 +51,7 @@ export async function GET(req: NextRequest) {
     value: accessToken,
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 7, // 7 days
   });
