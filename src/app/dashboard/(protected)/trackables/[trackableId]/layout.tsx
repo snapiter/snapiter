@@ -29,16 +29,7 @@ export default function TrackableLayout({
           {
             icon: <FaPlane />,
             label: "Trips",
-            submenu: [
-              {
-                label: "List",
-                href: `/dashboard/trackables/${trackable.trackableId}/trips`,
-              },
-              {
-                label: "Create",
-                href: `/dashboard/trackables/${trackable.trackableId}/trips/create`,
-              },
-            ],
+            href: `/dashboard/trackables/${trackable.trackableId}/trips`,
           },
         ]
       : [];
