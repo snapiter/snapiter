@@ -12,13 +12,13 @@ export default function Menu({ items }: { items: MenuItemProps[] }) {
     <div>
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black md:hidden z-10"
+          className="fixed inset-0 bg-background md:hidden z-10"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       <aside
-        className={`fixed w-full top-0 left-0 h-full md:w-92 text-white p-4 transform transition-transform duration-300 ease-in-out
+        className={`fixed w-full top-0 left-0 h-full md:w-92 text-foreground p-4 transform transition-transform duration-300 ease-in-out
               ${isOpen ? "translate-x-0" : "-translate-x-full"} 
               md:static md:translate-x-0 z-20`}
       >

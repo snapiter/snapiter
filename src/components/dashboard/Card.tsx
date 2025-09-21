@@ -8,7 +8,7 @@ interface CardProps {
 
 export default function Card({ title, description, children }: CardProps) {
   return (
-    <div className="bg-surface my-4 shadow-md rounded-lg p-6 border border-border">
+    <div className="bg-surface my-4 rounded-lg p-6 border border-border">
       {title && (
         <h3 className="text-xl font-semibold text-foreground">{title}</h3>
       )}

@@ -3,6 +3,8 @@
 import { ReactNode, useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
 import Link from "next/link";
+import { useSetAtom } from "jotai";
+import { mobileMenuOpen } from "@/store/atoms";
 
 export interface SubItem {
   label: string;
@@ -18,6 +20,8 @@ export interface MenuItemProps {
 }
 
 export default function MenuItem({ icon, label, href, submenu }: MenuItemProps) {
+  const setMobileMenuOpen = useSetAtom(mobileMenuOpen);
+
   const [open, setOpen] = useState(true);
   const hasSubmenu = submenu && submenu.length > 0;
 
@@ -28,7 +32,7 @@ export default function MenuItem({ icon, label, href, submenu }: MenuItemProps) 
         <button
           onClick={() => setOpen(!open)}
           className="flex items-center cursor-pointer justify-between w-full px-4 py-3 rounded-md text-left
-                     hover:bg-white/10 transition-colors"
+                     hover:bg-background/10 transition-colors"
         >
           <span className="flex items-center gap-3">
             <span className="text-xl">{icon}</span>
@@ -41,7 +45,8 @@ export default function MenuItem({ icon, label, href, submenu }: MenuItemProps) 
       ) : (
         <Link
           href={href || "#"}
-          className="flex items-center gap-3 w-full px-4 py-3 rounded-md hover:bg-white/10 transition-colors"
+          onClick={() => setMobileMenuOpen(false)}
+          className="flex items-center gap-3 w-full px-4 py-3 rounded-md hover:bg-background/10 transition-colors"
         >
           <span className="text-xl">{icon}</span>
           <span className="font-medium">{label}</span>
@@ -52,10 +57,10 @@ export default function MenuItem({ icon, label, href, submenu }: MenuItemProps) 
       {hasSubmenu && open && (
         <ul className="mt-2 space-y-2">
           {submenu!.map((item) => (
-            <li key={item.href} className="flex items-center gap-3">
+            <li key={item.href} className="flex items-center gap-3" onClick={() => setMobileMenuOpen(false)}>
               <Link
                 href={item.href}
-                className="block w-full px-3 py-2 rounded-md text-sm text-gray-300 hover:bg-white/10 pl-11 "
+                className="block w-full px-3 py-2 rounded-md text-sm text-gray-300 hover:bg-background/10 pl-11 "
               >
                 <span className="text-xl">{item.icon}</span>
                 <span className="font-medium">{item.label}</span>

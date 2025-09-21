@@ -58,51 +58,43 @@ export default function TrackablePage({
 
   return (
     <div className="">
-      {/* Header */}
-      {/* Device List */}
-      {devices.length > 0 ? (
-          <Card title="Devices" description={`${devices.length} registered ${devices.length === 1 ? "device" : "devices"}`}>
-
-<ul className="space-y-4 border-t border-border pt-4">
-          {devices.map((d) => (
-            <li
-              key={d.deviceId}
-              className=""
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium">{d.name}</p>
-                  <p className="text-sm text-muted">
-                    Last reported: {new Date(d.lastReportedAt).toLocaleString()}
-                  </p>
+      {devices.length > 0 && (
+        <Card title="Devices" description={`${devices.length} registered ${devices.length === 1 ? "device" : "devices"}`}>
+          <ul className="space-y-4 border-t border-border pt-4">
+            {devices.map((d) => (
+              <li
+                key={d.deviceId}
+                className=""
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">{d.name}</p>
+                    <p className="text-sm text-muted">
+                      Last reported: {new Date(d.lastReportedAt).toLocaleString()}
+                    </p>
+                  </div>
+                  <span className="text-xs text-muted">ID: {d.deviceId}</span>
                 </div>
-                <span className="text-xs text-muted">ID: {d.deviceId}</span>
-              </div>
-            </li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </ul>
         </Card>
-      ) : (
-        <p className="text-muted">No devices registered yet.</p>
       )}
-
-      {/* Actions */}
       <div className="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <ActionCard
-      onClick={addPhone}
-      icon={<FaQrcode className="w-24 h-24" />}
-      title="Add a Phone"
-      description="Scan a QR code to register your phone instantly"
-    />
+          onClick={addPhone}
+          icon={<FaQrcode className="w-24 h-24" />}
+          title="Add a Phone"
+          description="Scan a QR code to register your phone instantly"
+        />
         <ActionCard
-      onClick={createToken}
-      icon={<FaKey className="w-24 h-24" />}
-      title="Create Token"
-      description="Generate a token for other devices"
-    />
+          onClick={createToken}
+          icon={<FaKey className="w-24 h-24" />}
+          title="Create Token"
+          description="Generate a token for other devices"
+        />
       </div>
 
-      {/* Modal */}
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
         {modalContent && mode === "phone" && modalContent.qrDataUrl && (
           <div className="flex flex-col items-center gap-4 p-6">
