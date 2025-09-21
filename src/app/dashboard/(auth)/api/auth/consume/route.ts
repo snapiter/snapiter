@@ -15,7 +15,6 @@ export async function GET(req: NextRequest) {
     cache: "no-store",
   });
 
-
   if (!res.ok) {
     const code = res.status === 400 ? "invalid_or_expired" : "auth_failed";
     return NextResponse.json({ ok: false, error: code }, { status: 400 });
@@ -23,41 +22,39 @@ export async function GET(req: NextRequest) {
 
   const { accessToken } = await res.json();
 
-  // collect Set-Cookie headers from backend
-  const rawSetCookies: string[] = [];
-  res.headers.forEach((value, key) => {
-    if (key.toLowerCase() === "set-cookie") rawSetCookies.push(value);
-  });
-
-  // Build headers manually
-  const headers = new Headers();
-  headers.set("content-type", "application/json");
-
-  for (let cookie of rawSetCookies) {
-    if (process.env.NODE_ENV !== "production") {
-      cookie = cookie.replace(/;\s*Secure/gi, "");
-      cookie = cookie.replace(/SameSite=Lax/gi, "SameSite=None");
+  // extract refresh_token from backend's set-cookie
+  const setCookie = res.headers.get("set-cookie");
+  let refreshToken: string | null = null;
+  if (setCookie) {
+    const match = setCookie.match(/refresh_token=([^;]+)/);
+    if (match) {
+      refreshToken = match[1];
     }
-    headers.append("set-cookie", cookie);
   }
 
-  // Also set our own access_token cookie
-  const accessCookie = [
-    `access_token=${accessToken}`,
-    "Path=/",
-    "HttpOnly",
-    `Max-Age=${60 * 60 * 24 * 7}`,
-    process.env.NODE_ENV === "production" ? "Secure; SameSite=Lax" : "SameSite=None",
-  ].join("; ");
+  const resp = NextResponse.json({ ok: true });
 
-  headers.append("set-cookie", accessCookie);
+  if (refreshToken) {
+    resp.cookies.set({
+      name: "refresh_token",
+      value: refreshToken,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none", // important for cross-site requests
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    });
+  }
 
-  const body = JSON.stringify({ ok: true });
-  const response = new NextResponse(body, { status: 200, headers });
-
-  response.headers.forEach((value, key) => {
-    console.log(`  ${key}: ${value}`);
+  resp.cookies.set({
+    name: "access_token",
+    value: accessToken,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7, // 7 days
   });
 
-  return response;
+  return resp;
 }
