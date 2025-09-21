@@ -68,7 +68,6 @@ export async function GET(
 
   try {
     let response = await makeProxyRequest(path, 'GET', undefined, accessToken)
-console.log(cookieStore.toString())
     // If unauthorized, try to refresh token
     if (response.status === 401 || response.status === 403) {
       const refreshResult = await refreshTokens(cookieStore)

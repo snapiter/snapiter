@@ -24,7 +24,7 @@ export default function TrackableLayout({
           {
             icon: <FaChartBar />, // first item icon
             label: trackable.hostName,
-            href: `/dashboard/${trackable.trackableId}`,
+            href: `/dashboard/trackables/${trackable.trackableId}`,
           },
           {
             icon: <FaPlane />,
@@ -32,11 +32,11 @@ export default function TrackableLayout({
             submenu: [
               {
                 label: "List",
-                href: `/dashboard/${trackable.trackableId}/trips`,
+                href: `/dashboard/trackables/${trackable.trackableId}/trips`,
               },
               {
                 label: "Create",
-                href: `/dashboard/${trackable.trackableId}/trips/create`,
+                href: `/dashboard/trackables/${trackable.trackableId}/trips/create`,
               },
             ],
           },
