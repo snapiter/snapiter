@@ -32,9 +32,10 @@ async function makeProxyRequest(
 
 async function refreshTokens(cookieStore: Awaited<ReturnType<typeof cookies>>) {
   try {
-    console.log("Check for refresh token")
+    console.log("Check for refresh token with cookies:", cookieStore.toString())
     const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
         'Cookie': cookieStore.toString(),
@@ -67,7 +68,7 @@ export async function GET(
 
   try {
     let response = await makeProxyRequest(path, 'GET', undefined, accessToken)
-
+console.log(cookieStore.toString())
     // If unauthorized, try to refresh token
     if (response.status === 401 || response.status === 403) {
       const refreshResult = await refreshTokens(cookieStore)
