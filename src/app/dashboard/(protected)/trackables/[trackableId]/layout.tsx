@@ -4,7 +4,7 @@ import { type ReactNode, use } from "react";
 import Menu from "@/components/dashboard/Menu";
 import Main from "@/components/dashboard/layout/Main";
 import { MenuItemProps } from "@/components/dashboard/layout/MenuItem";
-import { FaChartBar, FaCarSide, FaPlane, FaRoute } from "react-icons/fa6";
+import { FaRoute, FaVanShuttle, FaPlus } from "react-icons/fa6";
 import { useTrackable } from "@/hooks/useTrackable";
 import { dashboardLoading } from "@/store/atoms";
 import { useAtomValue } from "jotai";
@@ -34,12 +34,19 @@ export default function TrackableLayout({
       {
         icon: <FaRoute className="text-primary" />,
         label: "Trips",
-        href: `/dashboard/trackables/${trackable.trackableId}/trips`,
-        submenu: trips?.map((trip) => ({
-          icon: <FaCarSide className="text-primary"/>,
-          label: trip.title,
-          href: `/dashboard/trackables/${trackable.trackableId}/trips/${trip.slug}`,
-        })),
+        submenu: [
+          ...(trips?.map((trip) => ({
+            icon: <FaVanShuttle className="text-primary" />,
+            label: trip.title,
+            href: `/dashboard/trackables/${trackable.trackableId}/trips/${trip.slug}`,
+          })) ?? []),
+          {
+            icon: <FaPlus className="text-primary" />,
+            label: "Add Trip",
+            href: `/dashboard/trackables/${trackable.trackableId}/trips/create`,
+          },
+        ]
+        
       },
     ]
     : [];
