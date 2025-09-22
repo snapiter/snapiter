@@ -1,23 +1,35 @@
 'use client';
 
-import Image from 'next/image';
 import { type Trip } from '@/store/atoms';
-import { useEffect, useState } from 'react';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import { FaRoute } from 'react-icons/fa6';
 import Logo from './Logo';
 import { formatTripDate } from '@/utils/formatTripDate';
+import { useMapCommands } from '@/hooks/useMapCommands';
 
 interface TripSidebarProps {
   trips: Trip[];
-  onTripSelect: (index: number) => void;
   title?: string;
 }
 
-export default function TripSidebar({ trips, onTripSelect, title }: TripSidebarProps) {
+export default function TripSidebar({ trips, title }: TripSidebarProps) {
   const selectedTrip = useSelectedTrip();
+  const { runCommand } = useMapCommands();
 
   const displayActiveIndex = trips.findIndex(trip => trip.slug === selectedTrip?.trip?.slug);
+
+
+  const handleTripSelect = (index: number) => {
+    runCommand({
+      type: 'SELECT_TRIP',
+      tripSlug: trips[index].slug
+    });
+  };
+
+  
+  if(trips.length === 0) {
+    return <></>
+  }
 
   return (
     <div className="w-full bg-surface border-r border-border h-full overflow-y-auto">
@@ -33,7 +45,7 @@ export default function TripSidebar({ trips, onTripSelect, title }: TripSidebarP
         {trips.map((trip, index) => (
           <button
             key={`button-${trip.slug}`}
-            onClick={() => onTripSelect(index)}
+            onClick={() => handleTripSelect(index)}
             style={{ '--trip-color': trip.color ?? 'transparent' } as React.CSSProperties}
             className={`w-full p-3 mb-2 cursor-pointer rounded-lg text-left transition-colors
               hover:bg-background hover:shadow-sm border-l-4

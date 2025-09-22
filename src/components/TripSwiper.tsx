@@ -43,7 +43,7 @@ export default function TripSwiper({ trips }: TripSwiperProps) {
             <TripDetails 
               trip={trip} 
               isSelected={selectedTrip?.slug === trip.slug}
-              selectedTripMarkers={markers}
+              markers={markers}
             />
           </SwiperSlide>
         ))}
