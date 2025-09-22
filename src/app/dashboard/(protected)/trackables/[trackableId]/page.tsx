@@ -10,6 +10,7 @@ import ActionCard from "@/components/dashboard/ActionCard";
 import StackCard from "@/components/dashboard/StackCard";
 import { formatDate } from "@/utils/formatTripDate";
 import { FaMobileAlt } from "react-icons/fa";
+import DeviceCard from "@/components/dashboard/DeviceCard";
 
 type QuickCreateRes = {
   deviceToken: string;
@@ -69,24 +70,8 @@ export default function TrackablePage({
               <li
                 key={d.deviceId}
                 className=""
-                          >
-            <div className="flex items-center justify-between rounded-md bg-lightest">
-              <div className="flex items-start gap-3">
-                <FaMobileAlt className="w-10 h-10 text-primary mt-1" />
-                <div>
-                  <p className="font-medium text-darker">{d.name}</p>
-                  <p className="text-sm text-muted">
-                    Last reported: {formatDate(new Date(d.lastReportedAt))}
-                  </p>
-                </div>
-              </div>
-
-              {/* Right side: device ID */}
-              <span className="text-xs text-muted whitespace-nowrap">
-                ID: {d.deviceId}
-              </span>
-            </div>
-
+              >
+                <DeviceCard device={d} />
               </li>
             ))}
           </ul>
