@@ -5,11 +5,8 @@ import { FaKey, FaQrcode } from "react-icons/fa6";
 import { Device } from "@/store/atoms";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import Modal from "@/components/dashboard/modal"; // adjust import to your modal
-import Card from "@/components/dashboard/Card";
 import ActionCard from "@/components/dashboard/ActionCard";
 import StackCard from "@/components/dashboard/StackCard";
-import { formatDate } from "@/utils/formatTripDate";
-import { FaMobileAlt } from "react-icons/fa";
 import DeviceCard from "@/components/dashboard/DeviceCard";
 
 type QuickCreateRes = {
@@ -64,10 +61,8 @@ export default function TrackablePage({
     <>
       {devices.length > 0 && (
         <StackCard columns={1}>
-        <Card title="Devices" description={`${devices.length} registered ${devices.length === 1 ? "device" : "devices"}`}>
-        </Card>
             {devices.map((d) => (
-                <DeviceCard device={d} />
+                <DeviceCard device={d} key={d.deviceId} />
             ))}
         </StackCard>
       )}
