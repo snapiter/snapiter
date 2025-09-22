@@ -10,30 +10,14 @@ import { formatTripDate } from '@/utils/formatTripDate';
 
 interface TripSidebarProps {
   trips: Trip[];
-  activeIndex: number;
   onTripSelect: (index: number) => void;
   title?: string;
 }
 
-export default function TripSidebar({ trips, activeIndex, onTripSelect, title }: TripSidebarProps) {
+export default function TripSidebar({ trips, onTripSelect, title }: TripSidebarProps) {
   const selectedTrip = useSelectedTrip();
-  const [displayActiveIndex, setDisplayActiveIndex] = useState(activeIndex);
 
-  // Sync displayActiveIndex with prop changes
-  useEffect(() => {
-    setDisplayActiveIndex(activeIndex);
-  }, [activeIndex]);
-
-
-  useEffect(() => {
-    if (selectedTrip) {
-      const selectedTripIndex = trips.findIndex(trip => trip.slug === selectedTrip.trip?.slug);
-      if (selectedTripIndex !== -1) {
-        setDisplayActiveIndex(selectedTripIndex);
-      }
-    }
-  }, [selectedTrip]);
-
+  const displayActiveIndex = trips.findIndex(trip => trip.slug === selectedTrip?.trip?.slug);
 
   return (
     <div className="w-full bg-surface border-r border-border h-full overflow-y-auto">

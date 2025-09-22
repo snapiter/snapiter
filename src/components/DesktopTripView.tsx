@@ -44,7 +44,6 @@ export default function DesktopTripView({ trips, title }: DesktopTripViewProps) 
       <div className={markers.length > 0 ? "w-1/2" : "w-full"}>
         <TripSidebar 
           trips={trips} 
-          activeIndex={activeIndex} 
           onTripSelect={handleTripSelect}
           title={title}
         />
