@@ -5,3 +5,4 @@ export const config = {
   panelDragBarHeight: 36,
   expandedHeightCalculation: 0.55,
 } as const;
+

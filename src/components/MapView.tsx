@@ -1,10 +1,10 @@
 'use client';
 
-import Map, { Source, Layer, type MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
+import { Source, Layer, type MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { type Trip, type TripDetailed, lightboxIndexAtom, mapEventsAtom, bottomPanelExpandedAtom, MapStyle } from '@/store/atoms';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, RefObject } from 'react';
 import type maplibregl from 'maplibre-gl';
 import { createRouteData, fitMapBounds } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
@@ -13,6 +13,7 @@ import { useTripPositions } from '@/hooks/useTrip';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import { animateTrip, type AnimationRefs } from '@/utils/tripAnimationHandler';
 import { config } from '@/config';
+import MapWrapper from './MapWrapper';
 
 interface MapViewProps {
   trips?: Trip[];
@@ -165,23 +166,17 @@ export default function MapView({ trips = [], websiteIcon }: MapViewProps) {
   };
   
   return (
-      <Map
-        ref={mapRef}
-        initialViewState={{ longitude: 5.1214201, latitude: 52.0907374, zoom: 12 }}
-        mapStyle={`https://api.maptiler.com/maps/landscape/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
-        attributionControl={{
-          compact: true,
-        }}
-        onLoad={() => {
+      <MapWrapper
+        mapRef={mapRef as RefObject<MapRef>}
+        onMapReady={() => {
           runCommand({ type: 'MAP_READY' });
         }}
-        interactiveLayerIds={tripsWithPositions.map(trip => `route-line-${trip.slug}`)}
         onMouseMove={handleMouseMove}
         onClick={handleClick}
-        style={{
-          height: "100%"
+        interactiveLayerIds={tripsWithPositions.map(trip => `route-line-${trip.slug}`)}
+        mapStyle={{
+          height: "100%",
         }}
-       
       >
         {tripsWithPositions.map(trip => {
           if (trip.positions.length < 2) return null;
@@ -234,6 +229,6 @@ export default function MapView({ trips = [], websiteIcon }: MapViewProps) {
             </div>
           );
         })}
-      </Map>
+      </MapWrapper>
   );
 }
