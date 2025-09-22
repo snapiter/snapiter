@@ -3,6 +3,37 @@ import { cookies } from 'next/headers'
 
 const API_BASE_URL = 'https://api.snapiter.com'
 
+
+async function refreshTokens(cookieStore: Awaited<ReturnType<typeof cookies>>) {
+  try {
+    console.log("Check for refresh token with cookies:", cookieStore.toString())
+    const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': cookieStore.toString(),
+      },
+    })
+
+    if (response.ok) {
+      const setCookieHeader = response.headers.get('set-cookie')
+      const data = await response.json()
+      const newAccessToken = data.accessToken
+
+      return { success: true, setCookieHeader, newAccessToken }
+    }
+
+    console.log("Check for refresh token failed", response)
+
+    return { success: false }
+  } catch (error) {
+    console.error('Token refresh failed:', error)
+    return { success: false }
+  }
+}
+
+
 async function makeProxyRequest(
   path: string,
   method: string,
@@ -29,240 +60,85 @@ async function makeProxyRequest(
 
   return response
 }
+async function proxyWithRefresh(
+  path: string,
+  method: string,
+  body?: string
+) {
+  const cookieStore = await cookies()
+  const accessToken = cookieStore.get('access_token')?.value
 
-async function refreshTokens(cookieStore: Awaited<ReturnType<typeof cookies>>) {
-  try {
-    console.log("Check for refresh token with cookies:", cookieStore.toString())
-    const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': cookieStore.toString(),
-      },
-    })
+  let response = await makeProxyRequest(path, method, body, accessToken)
 
-    if (response.ok) {
-      // Extract new cookies from response
-      const setCookieHeader = response.headers.get('set-cookie')
-      return { success: true, setCookieHeader }
+  // If unauthorized → try refresh
+  if (response.status === 401 || response.status === 403) {
+    const refreshResult = await refreshTokens(cookieStore)
+
+    if (refreshResult.success && refreshResult.newAccessToken) {
+      response = await makeProxyRequest(path, method, body, refreshResult.newAccessToken)
+
+      // Wrap and forward cookies if needed
+      const data = await response.arrayBuffer()
+      const nextResponse = new NextResponse(data, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers,
+      })
+
+      if (refreshResult.setCookieHeader) {
+        nextResponse.headers.set('Set-Cookie', refreshResult.setCookieHeader)
+      }
+
+      return nextResponse
+    } else {
+      return NextResponse.json({ error: 'Authentication failed' }, { status: 401 })
     }
-
-    console.log("Check for refresh token failed", response)
-
-    return { success: false }
-  } catch (error) {
-    console.error('Token refresh failed:', error)
-    return { success: false }
   }
+
+  // No refresh needed
+  const data = await response.arrayBuffer()
+  return new NextResponse(data, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: response.headers,
+  })
 }
+
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> }
 ) {
-  const cookieStore = await cookies()
-  const accessToken = cookieStore.get('access_token')?.value
   const { path: pathArray } = await params
   const path = pathArray.join('/')
-
-  try {
-    let response = await makeProxyRequest(path, 'GET', undefined, accessToken)
-    // If unauthorized, try to refresh token
-    if (response.status === 401 || response.status === 403) {
-      const refreshResult = await refreshTokens(cookieStore)
-
-      console.log("refreshResult: ", refreshResult)
-
-      if (refreshResult.success && refreshResult.setCookieHeader) {
-        // Get new access token (this is a simplified approach)
-        // In production, you might need to parse the Set-Cookie header
-        const newAccessToken = cookieStore.get('access_token')?.value
-
-        // Retry the original request
-        console.log("newAccessToken: ", newAccessToken)
-        response = await makeProxyRequest(path, 'GET', undefined, newAccessToken)
-
-        console.log("response", response)
-
-        // Create response with new cookies
-        const data = await response.arrayBuffer()
-        const nextResponse = new NextResponse(data, {
-          status: response.status,
-          statusText: response.statusText,
-          headers: response.headers,
-        })
-
-        // Forward the new cookies
-        if (refreshResult.setCookieHeader) {
-          nextResponse.headers.set('Set-Cookie', refreshResult.setCookieHeader)
-        }
-
-        return nextResponse
-      } else {
-        // Refresh failed, return unauthorized
-        return NextResponse.json({ error: 'Authentication failed' }, { status: 401 })
-      }
-    }
-
-    const data = await response.arrayBuffer()
-    return new NextResponse(data, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: response.headers,
-    })
-  } catch (error) {
-    console.error('Proxy request failed:', error)
-    return NextResponse.json({ error: 'Proxy request failed' }, { status: 500 })
-  }
+  return proxyWithRefresh(path, 'GET')
 }
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> }
 ) {
-  const cookieStore = await cookies()
-  const accessToken = cookieStore.get('access_token')?.value
   const { path: pathArray } = await params
   const path = pathArray.join('/')
   const body = await request.text()
-
-  try {
-    let response = await makeProxyRequest(path, 'POST', body, accessToken)
-
-    // If unauthorized, try to refresh token
-    if (response.status === 401 || response.status === 403) {
-      const refreshResult = await refreshTokens(cookieStore)
-
-      if (refreshResult.success) {
-        const newAccessToken = cookieStore.get('access_token')?.value
-        response = await makeProxyRequest(path, 'POST', body, newAccessToken)
-
-        const data = await response.text()
-        const nextResponse = new NextResponse(data, {
-          status: response.status,
-          headers: {
-            'Content-Type': response.headers.get('Content-Type') || 'application/json',
-          },
-        })
-
-        if (refreshResult.setCookieHeader) {
-          nextResponse.headers.set('Set-Cookie', refreshResult.setCookieHeader)
-        }
-
-        return nextResponse
-      } else {
-        return NextResponse.json({ error: 'Authentication failed' }, { status: 401 })
-      }
-    }
-
-    const data = await response.arrayBuffer()
-    return new NextResponse(data, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: response.headers,
-    })
-  } catch (error) {
-    console.error('Proxy request failed:', error)
-    return NextResponse.json({ error: 'Proxy request failed' }, { status: 500 })
-  }
+  return proxyWithRefresh(path, 'POST', body)
 }
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> }
 ) {
-  const cookieStore = await cookies()
-  const accessToken = cookieStore.get('access_token')?.value
   const { path: pathArray } = await params
   const path = pathArray.join('/')
   const body = await request.text()
-
-  try {
-    let response = await makeProxyRequest(path, 'PUT', body, accessToken)
-
-    if (response.status === 401 || response.status === 403) {
-      const refreshResult = await refreshTokens(cookieStore)
-
-      if (refreshResult.success) {
-        const newAccessToken = cookieStore.get('access_token')?.value
-        response = await makeProxyRequest(path, 'PUT', body, newAccessToken)
-
-        const data = await response.text()
-        const nextResponse = new NextResponse(data, {
-          status: response.status,
-          headers: {
-            'Content-Type': response.headers.get('Content-Type') || 'application/json',
-          },
-        })
-
-        if (refreshResult.setCookieHeader) {
-          nextResponse.headers.set('Set-Cookie', refreshResult.setCookieHeader)
-        }
-
-        return nextResponse
-      } else {
-        return NextResponse.json({ error: 'Authentication failed' }, { status: 401 })
-      }
-    }
-
-    const data = await response.arrayBuffer()
-    return new NextResponse(data, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: response.headers,
-    })
-  } catch (error) {
-    console.error('Proxy request failed:', error)
-    return NextResponse.json({ error: 'Proxy request failed' }, { status: 500 })
-  }
+  return proxyWithRefresh(path, 'PUT', body)
 }
 
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> }
 ) {
-  const cookieStore = await cookies()
-  const accessToken = cookieStore.get('access_token')?.value
   const { path: pathArray } = await params
   const path = pathArray.join('/')
-
-  try {
-    let response = await makeProxyRequest(path, 'DELETE', undefined, accessToken)
-
-    if (response.status === 401 || response.status === 403) {
-      const refreshResult = await refreshTokens(cookieStore)
-
-      if (refreshResult.success) {
-        const newAccessToken = cookieStore.get('access_token')?.value
-        response = await makeProxyRequest(path, 'DELETE', undefined, newAccessToken)
-
-        const data = await response.text()
-        const nextResponse = new NextResponse(data, {
-          status: response.status,
-          headers: {
-            'Content-Type': response.headers.get('Content-Type') || 'application/json',
-          },
-        })
-
-        if (refreshResult.setCookieHeader) {
-          nextResponse.headers.set('Set-Cookie', refreshResult.setCookieHeader)
-        }
-
-        return nextResponse
-      } else {
-        return NextResponse.json({ error: 'Authentication failed' }, { status: 401 })
-      }
-    }
-
-    const data = await response.arrayBuffer()
-    return new NextResponse(data, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: response.headers,
-    })
-  } catch (error) {
-    console.error('Proxy request failed:', error)
-    return NextResponse.json({ error: 'Proxy request failed' }, { status: 500 })
-  }
+  return proxyWithRefresh(path, 'DELETE')
 }
