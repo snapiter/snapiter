@@ -5,6 +5,7 @@ import { type Trip } from '@/store/atoms';
 import { useEffect, useState } from 'react';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import { FaRoute } from 'react-icons/fa6';
+import Logo from './Logo';
 
 interface TripSidebarProps {
   trips: Trip[];
@@ -44,22 +45,7 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect, title }:
     <div className="w-full bg-surface border-r border-border h-full overflow-y-auto">
       <div className="p-4">
         <div className="flex items-center gap-3 mb-2">
-          <Image
-            src="/logo.svg"
-            alt="SnapIter"
-            width={32}
-            height={32}
-            className="flex-shrink-0"
-          />
-          <h1 className="text-xl font-bold text-foreground">
-            {title ?? (
-              <>
-                <span className="text-primary">S</span>nap
-                <span className="text-primary">I</span>ter
-              </>
-            )}
-          </h1>
-
+          <Logo size="md" showTitle={true} title={title}/>
         </div>
         <p className="text-sm text-muted">
           {trips.length} {trips.length === 1 ? 'Journey' : 'Journeys'}
