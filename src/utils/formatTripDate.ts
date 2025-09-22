@@ -31,8 +31,8 @@ export const formatDate = (date: Date): string => {
   if (isNaN(date.getTime())) {
     return "Invalid date";
   }
-
-  return date.toLocaleString("en-US", {
+  const locale = navigator.language || "en-US";
+  return date.toLocaleString(locale, {
     year: "numeric",
     month: "short",
     day: "numeric",

@@ -6,7 +6,6 @@ const API_BASE_URL = 'https://api.snapiter.com'
 
 async function refreshTokens(cookieStore: Awaited<ReturnType<typeof cookies>>) {
   try {
-    console.log("Check for refresh token with cookies:", cookieStore.toString())
     const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
       method: 'POST',
       credentials: 'include',
@@ -23,8 +22,7 @@ async function refreshTokens(cookieStore: Awaited<ReturnType<typeof cookies>>) {
 
       return { success: true, setCookieHeader, newAccessToken }
     }
-
-    console.log("Check for refresh token failed", response)
+    console.log("Check for refresh token failed, on token: ", cookieStore.get('refresh_token')?.value)
 
     return { success: false }
   } catch (error) {
