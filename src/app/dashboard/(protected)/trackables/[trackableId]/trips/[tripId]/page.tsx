@@ -7,8 +7,7 @@ import StackCard from "@/components/dashboard/StackCard";
 import { Layer, MapRef, Source } from "react-map-gl/maplibre";
 import MapWrapper from "@/components/MapWrapper";
 import { createRouteData, fitMapBounds } from "@/utils/mapBounds";
-import { mapEventsAtom } from "@/store/atoms";
-import { useAtomValue } from "jotai";
+import { formatTripDate } from "@/utils/formatTripDate";
 export default function TripsPage({
   params,
 }: {
@@ -39,6 +38,7 @@ export default function TripsPage({
     <StackCard columns={2}>
       <Card title={trip.title} description={trip.description}>
         <p>Slug: {trip.slug}</p>
+        <p>{formatTripDate(trip.startDate, trip.endDate)}</p>
         <p>Positions loaded: {trip.positions.length}</p>
       </Card>
 

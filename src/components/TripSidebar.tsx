@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import { FaRoute } from 'react-icons/fa6';
 import Logo from './Logo';
+import { formatTripDate } from '@/utils/formatTripDate';
 
 interface TripSidebarProps {
   trips: Trip[];
@@ -23,13 +24,6 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect, title }:
     setDisplayActiveIndex(activeIndex);
   }, [activeIndex]);
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: '2-digit'
-    });
-  };
 
   useEffect(() => {
     if (selectedTrip) {
@@ -71,8 +65,7 @@ export default function TripSidebar({ trips, activeIndex, onTripSelect, title }:
                   {trip.title}
                 </h3>
                 <p className="text-sm text-muted mt-1 pointer-events-none">
-                  {formatDate(trip.startDate)}
-                  {trip.endDate ? ` - ${formatDate(trip.endDate)}` : ''}
+                  {formatTripDate(trip.startDate, trip.endDate)}
                 </p>
               </div>
 

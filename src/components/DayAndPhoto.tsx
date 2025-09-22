@@ -1,4 +1,4 @@
-import { formatDate } from "@/utils/formatDate";
+import { formatTripDate } from "@/utils/formatTripDate";
 import { FaRegCalendar, FaCamera } from "react-icons/fa6";
 
 export default function ({ startDate, endDate, isSelected, markersLength }: { startDate: string, endDate: string, isSelected: boolean, markersLength: number }) {
@@ -7,7 +7,7 @@ export default function ({ startDate, endDate, isSelected, markersLength }: { st
             {/* Duration */}
             <span className="flex items-center space-x-1 text-muted">
                 <FaRegCalendar className="w-4 h-4" />
-                <span>{formatDate(startDate, endDate)}</span>
+                <span>{formatTripDate(startDate, endDate)}</span>
             </span>
 
             {/* Photos (only if selected & has photos) */}

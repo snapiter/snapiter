@@ -1,4 +1,4 @@
-export const formatDate = (dateStart: string, dateEnd?: string): string => {
+export const formatTripDate = (dateStart: string, dateEnd?: string): string => {
     if (!dateEnd) {
       return "Active";
     }
