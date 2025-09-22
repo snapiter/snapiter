@@ -1,7 +1,7 @@
 'use client';
 
 import TripSidebar from './TripSidebar';
-import TripDetails from './TripDetails';
+import DesktopTripDetails from './DesktopTripDetails';
 import { type Trip } from '@/store/atoms';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 
@@ -35,7 +35,7 @@ export default function DesktopTripView({ trips, title }: DesktopTripViewProps) 
           title={title}
         />
         <div className="flex-1 overflow-y-auto">
-          <TripDetails trip={selectedTrip} isSelected={true} markers={markers} />
+          <DesktopTripDetails trip={selectedTrip} isSelected={true} markers={markers} />
         </div>
     </div>
   );

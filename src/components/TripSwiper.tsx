@@ -2,14 +2,15 @@
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import TripDetails from './TripDetails';
-import { type Trip } from '@/store/atoms';
+import DesktopTripDetails from './DesktopTripDetails';
+import { TripWithMarkers, type Trip } from '@/store/atoms';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import PhotoCarousel from './PhotoCarousel';
+import MobileTripDetails from './MobileTripDetails';
 
 interface TripSwiperProps {
   trips: Trip[];
@@ -34,16 +35,19 @@ export default function TripSwiper({ trips }: TripSwiperProps) {
       <Swiper
         modules={[Pagination]}
         spaceBetween={16}
-        slidesPerView={1.1}
+        slidesPerView={trips.length > 1 ? 1.1 : 1} // 1.1 for multiple slides, 1 for single slide
         onSlideChange={handleSlideChange}
         className=""
       >
         {trips.map((trip) => (
           <SwiperSlide key={`swiper-${trip.slug}`} className="">
-            <TripDetails 
-              trip={trip} 
-              isSelected={selectedTrip?.slug === trip.slug}
-              markers={markers}
+            <MobileTripDetails 
+              trip={
+                {
+                  ...trip,
+                markers: markers
+              } as TripWithMarkers
+              } 
             />
           </SwiperSlide>
         ))}
