@@ -8,6 +8,7 @@ import Modal from "@/components/dashboard/modal"; // adjust import to your modal
 import Card from "@/components/dashboard/Card";
 import ActionCard from "@/components/dashboard/ActionCard";
 import StackCard from "@/components/dashboard/StackCard";
+import { formatDate } from "@/utils/formatTripDate";
 
 type QuickCreateRes = {
   deviceToken: string;
@@ -72,7 +73,7 @@ export default function TrackablePage({
                   <div>
                     <p className="font-medium">{d.name}</p>
                     <p className="text-sm text-muted">
-                      Last reported: {new Date(d.lastReportedAt).toLocaleString()}
+                      Last reported: {formatDate(new Date(d.lastReportedAt))}
                     </p>
                   </div>
                   <span className="text-xs text-muted">ID: {d.deviceId}</span>
