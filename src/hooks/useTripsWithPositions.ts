@@ -2,7 +2,7 @@ import { useQueries } from '@tanstack/react-query';
 import type { Position, Trip, TripWithPositions } from '@/store/atoms';
 import { useApiClient } from './useApiClient';
 
-export function useTripPositions(trips: Trip[]) {
+export function useTripsWithPositions(trips: Trip[]) {
   const api = useApiClient()
   
   const tripPositionQueries = useQueries({

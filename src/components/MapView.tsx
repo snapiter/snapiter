@@ -9,7 +9,7 @@ import type maplibregl from 'maplibre-gl';
 import { createRouteData, fitMapBounds } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
-import { useTripPositions } from '@/hooks/useTrip';
+import { useTripsWithPositions } from '@/hooks/useTripsWithPositions';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import { animateTrip, type AnimationRefs } from '@/utils/tripAnimationHandler';
 import { config } from '@/config';
@@ -38,7 +38,7 @@ export default function MapView({ trips = [], websiteIcon }: MapViewProps) {
   const currentPositionIndexRef = useRef<number>(0);
   const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
 
-  const { data: tripsWithPositions } = useTripPositions(trips);
+  const { data: tripsWithPositions } = useTripsWithPositions(trips);
 
   const animateTripDirect = (trip: TripDetailed) => {
     const refs: AnimationRefs = {
