@@ -4,13 +4,14 @@ import { useAtom } from "jotai";
 import { mobileMenuOpen } from "@/store/atoms";
 import Link from "next/link";
 import Image from "next/image";
+import LogoutButton from "./LogoutButton";
 
 
 export default function Header() {
   const [isOpen, setIsOpen] = useAtom(mobileMenuOpen);
 
   return (
-    <header className="bg-surface text-white p-4 flex items-center justify-between">
+    <header className="bg-surface text-white p-4 flex items-center justify-between border-b border-border">
         <div className="container mx-auto px-4 relative">
          <div className="flex items-center justify-between py-4">
           <div className="flex items-center space-x-3">

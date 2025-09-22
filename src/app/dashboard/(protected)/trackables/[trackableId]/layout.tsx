@@ -4,10 +4,12 @@ import { type ReactNode, use } from "react";
 import Menu from "@/components/dashboard/Menu";
 import Main from "@/components/dashboard/layout/Main";
 import { MenuItemProps } from "@/components/dashboard/layout/MenuItem";
-import { FaChartBar, FaPlane } from "react-icons/fa6";
+import { FaChartBar, FaCarSide, FaPlane, FaRoute } from "react-icons/fa6";
 import { useTrackable } from "@/hooks/useTrackable";
 import { dashboardLoading } from "@/store/atoms";
 import { useAtomValue } from "jotai";
+import { useTrips } from "@/hooks/useTrips";
+import Logo from "@/components/Logo";
 
 export default function TrackableLayout({
   children,
@@ -20,23 +22,29 @@ export default function TrackableLayout({
 
   const loading = useAtomValue(dashboardLoading);
   const { data: trackable, isLoading, isError } = useTrackable(trackableId);
+  const { data: trips, isLoading: isTripsLoading, isError: isTripsError } = useTrips(trackableId);
 
   const menuItems: MenuItemProps[] = trackable
     ? [
       {
-        icon: <FaChartBar />,
+        icon: <Logo />,
         label: trackable.hostName,
         href: `/dashboard/trackables/${trackable.trackableId}`,
       },
       {
-        icon: <FaPlane />,
+        icon: <FaRoute className="text-primary" />,
         label: "Trips",
         href: `/dashboard/trackables/${trackable.trackableId}/trips`,
+        submenu: trips?.map((trip) => ({
+          icon: <FaCarSide className="text-primary"/>,
+          label: trip.title,
+          href: `/dashboard/trackables/${trackable.trackableId}/trips/${trip.slug}`,
+        })),
       },
     ]
     : [];
 
-  const showOverlay = loading || isLoading;
+  const showOverlay = loading || isLoading || isTripsLoading;
 
   return (
     <div className="flex flex-1 relative">
@@ -44,9 +52,9 @@ export default function TrackableLayout({
       <Main>{children}</Main>
 
       {showOverlay && (
-  <div className="absolute inset-0 flex items-center justify-center bg-background/50 z-40">
-  </div>
-)}
+        <div className="absolute inset-0 flex items-center justify-center bg-background/50 z-40">
+        </div>
+      )}
 
     </div>
   );

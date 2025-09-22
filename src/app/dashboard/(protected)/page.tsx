@@ -47,7 +47,7 @@ export default function Dashboard() {
     <div>
       <Menu items={[
         {
-          icon: <FaLocationCrosshairs />,
+          icon: <FaLocationCrosshairs className="text-primary" />,
           label: "Create Trackable",
           href: "/trackables/create",
         },

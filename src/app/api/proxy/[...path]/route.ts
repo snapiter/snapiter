@@ -72,12 +72,15 @@ export async function GET(
     if (response.status === 401 || response.status === 403) {
       const refreshResult = await refreshTokens(cookieStore)
 
+      console.log("refreshResult: ", refreshResult)
+
       if (refreshResult.success && refreshResult.setCookieHeader) {
         // Get new access token (this is a simplified approach)
         // In production, you might need to parse the Set-Cookie header
         const newAccessToken = cookieStore.get('access_token')?.value
 
         // Retry the original request
+        console.log("newAccessToken: ", newAccessToken)
         response = await makeProxyRequest(path, 'GET', undefined, newAccessToken)
 
         console.log("response", response)

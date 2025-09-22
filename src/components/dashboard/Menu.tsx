@@ -4,6 +4,7 @@ import { mobileMenuOpen } from "@/store/atoms";
 import { useAtom } from "jotai";
 import { FaX } from "react-icons/fa6";
 import MenuItem, { MenuItemProps } from "./layout/MenuItem";
+import LogoutButton from "./LogoutButton";
 
 export default function Menu({ items }: { items: MenuItemProps[] }) {
   const [isOpen, setIsOpen] = useAtom(mobileMenuOpen);
@@ -18,9 +19,9 @@ export default function Menu({ items }: { items: MenuItemProps[] }) {
       )}
 
       <aside
-        className={`fixed w-full top-0 left-0 h-full md:w-92 text-foreground p-4 transform transition-transform duration-300 ease-in-out
-              ${isOpen ? "translate-x-0" : "-translate-x-full"} 
-              md:static md:translate-x-0 z-20`}
+        className={`fixed w-full top-0 left-0 h-full md:w-92 text-foreground p-4 flex flex-col transform transition-transform duration-300 ease-in-out
+          ${isOpen ? "translate-x-0" : "-translate-x-full"} 
+          md:static md:translate-x-0 z-20`}
       >
         {/* Close button (mobile only) */}
         <button
@@ -30,7 +31,7 @@ export default function Menu({ items }: { items: MenuItemProps[] }) {
           <FaX />
         </button>
 
-        <nav>
+        <nav className="flex-1">
           {items.map((item, idx) => (
             <MenuItem
               key={idx}
@@ -41,6 +42,11 @@ export default function Menu({ items }: { items: MenuItemProps[] }) {
             />
           ))}
         </nav>
+
+        {/* Footer text */}
+        <div className="mt-auto pt-6 text-sm text-muted text-center">
+          <LogoutButton />
+        </div>
       </aside>
     </div>
   );

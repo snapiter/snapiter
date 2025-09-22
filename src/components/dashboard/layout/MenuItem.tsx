@@ -32,7 +32,7 @@ export default function MenuItem({ icon, label, href, submenu }: MenuItemProps) 
         <button
           onClick={() => setOpen(!open)}
           className="flex items-center cursor-pointer justify-between w-full px-4 py-3 rounded-md text-left
-                     hover:bg-background/10 transition-colors"
+                     hover:bg-surface transition-colors"
         >
           <span className="flex items-center gap-3">
             <span className="text-xl">{icon}</span>
@@ -43,10 +43,11 @@ export default function MenuItem({ icon, label, href, submenu }: MenuItemProps) 
           />
         </button>
       ) : (
+        // Without submenu!
         <Link
           href={href || "#"}
           onClick={() => setMobileMenuOpen(false)}
-          className="flex items-center gap-3 w-full px-4 py-3 rounded-md hover:bg-background/10 transition-colors"
+          className="flex items-center gap-3 w-full px-4 py-3 rounded-md hover:bg-surface"
         >
           <span className="text-xl">{icon}</span>
           <span className="font-medium">{label}</span>
@@ -60,7 +61,7 @@ export default function MenuItem({ icon, label, href, submenu }: MenuItemProps) 
             <li key={item.href} className="flex items-center gap-3" onClick={() => setMobileMenuOpen(false)}>
               <Link
                 href={item.href}
-                className="block w-full px-3 py-2 rounded-md text-sm text-gray-300 hover:bg-background/10 pl-11 "
+                className="flex items-center gap-3 w-full px-4 py-3 rounded-md hover:bg-surface pl-10"
               >
                 <span className="text-xl">{item.icon}</span>
                 <span className="font-medium">{item.label}</span>

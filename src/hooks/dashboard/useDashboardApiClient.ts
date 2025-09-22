@@ -18,7 +18,7 @@ export function useDashboardApiClient() {
       })
       if (!res.ok) {
         setErrorMessage({ message: res.statusText, status: res.status });
-        throw new Error(`${res.status} ${res.statusText}`)
+        throw new Error(`${res.statusText}`)
       }
       const contentType = res.headers.get("content-type")
       if (contentType?.includes("application/json")) return res.json()
