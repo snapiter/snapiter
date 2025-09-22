@@ -65,17 +65,10 @@ export default function TrackablePage({
       {devices.length > 0 && (
         <StackCard columns={1}>
         <Card title="Devices" description={`${devices.length} registered ${devices.length === 1 ? "device" : "devices"}`}>
-          <ul className="space-y-4 border-t border-border pt-4">
-            {devices.map((d) => (
-              <li
-                key={d.deviceId}
-                className=""
-              >
-                <DeviceCard device={d} />
-              </li>
-            ))}
-          </ul>
         </Card>
+            {devices.map((d) => (
+                <DeviceCard device={d} />
+            ))}
         </StackCard>
       )}
       <StackCard columns={2}>
