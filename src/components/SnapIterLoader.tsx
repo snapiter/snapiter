@@ -22,12 +22,12 @@ export default function SnapIterLoader({ website }: SnapIterLoaderProps) {
     <div className="fixed inset-0 dark:bg-black bg-white flex items-center justify-center p-4 z-50">
       <div className="bg-surface rounded-2xl p-8 shadow-lg border border-border flex flex-col items-center gap-6 w-full max-w-sm relative">
         {/* Animated Container */}
-        <div className="w-full flex items-center justify-center relative h-20">
+        <div className={`w-full flex items-center ${loaded ? 'pl-6' : 'justify-center' } relative h-20`}>
           {/* Logo */}
           <div
             className={`transition-all duration-700 ease-out ${
               loaded
-                ? 'w-12 h-12 -translate-x-24'
+                ? 'w-12 h-12 -translate-x-full'
                 : 'w-24 h-24'
             }`}
           >
