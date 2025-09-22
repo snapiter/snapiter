@@ -2,6 +2,8 @@
 
 import Map from 'react-map-gl/maplibre';
 
+import 'maplibre-gl/dist/maplibre-gl.css';
+
 import type { CSSProperties, ReactNode, RefObject } from "react";
 import type { MapRef, MapLayerMouseEvent } from "react-map-gl/maplibre";
 

@@ -4,11 +4,12 @@ import { RefObject, use, useEffect, useRef, useState } from "react";
 import { useTripWithPosition } from "@/hooks/useTripWithPosition";
 import Card from "@/components/dashboard/Card";
 import StackCard from "@/components/dashboard/StackCard";
-import { Layer, MapRef, Source } from "react-map-gl/maplibre";
+import { Layer, MapRef, Marker, Source } from "react-map-gl/maplibre";
 import MapWrapper from "@/components/MapWrapper";
 import { createRouteData, fitMapBounds } from "@/utils/mapBounds";
 import { formatTripDate } from "@/utils/formatTripDate";
 import { useMarkers } from "@/hooks/useMarkers";
+import MarkerCard from "@/components/dashboard/MarkerCard";
 export default function TripsPage({
   params,
 }: {
@@ -19,7 +20,7 @@ export default function TripsPage({
     trackableId,
     tripId
   );
-  const { data: markers, isLoading: markersLoading, error: markersError } = useMarkers(trip ?? null);
+  const { data: markers } = useMarkers(trip ?? null);
   const [mapReady, setMapReady] = useState(false);
 
   const mapRef = useRef<MapRef | null>(null);
@@ -39,7 +40,6 @@ export default function TripsPage({
   return (
     <>
       <StackCard columns={1}>
-
         <Card title={trip.title} description={trip.description}>
           <p>Slug: {trip.slug}</p>
           <p>{formatTripDate(trip.startDate, trip.endDate)}</p>
@@ -47,20 +47,14 @@ export default function TripsPage({
         </Card>
       </StackCard>
       <StackCard columns={2}>
-        <Card title={"Markers"}>
-          {markers?.map((marker) => (
-            <div key={marker.markerId}>
-              <p>{marker.title}</p>
-            </div>
-          ))}
-        </Card>
-        <Card>
+        <MarkerCard markers={markers ?? []} />
+        <Card title="Your trip">
           <MapWrapper
             onMapReady={() => {
               setMapReady(true);
             }}
             mapRef={mapRef as RefObject<MapRef>}
-            mapStyle={{ height: "300px" }}
+            mapStyle={{ height: "400px" }}
           >
             {(() => {
               if (!trip || trip.positions.length < 2) return null;
@@ -95,7 +89,6 @@ export default function TripsPage({
               );
             })()}
           </MapWrapper>
-
         </Card>
       </StackCard>
     </>
