@@ -4,8 +4,6 @@ import { useAtom } from "jotai";
 import { mobileMenuOpen } from "@/store/atoms";
 import Link from "next/link";
 import Image from "next/image";
-import LogoutButton from "./LogoutButton";
-
 
 export default function Header() {
   const [isOpen, setIsOpen] = useAtom(mobileMenuOpen);

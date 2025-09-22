@@ -7,6 +7,7 @@ import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import Modal from "@/components/dashboard/modal"; // adjust import to your modal
 import Card from "@/components/dashboard/Card";
 import ActionCard from "@/components/dashboard/ActionCard";
+import StackCard from "@/components/dashboard/StackCard";
 
 type QuickCreateRes = {
   deviceToken: string;
@@ -57,8 +58,9 @@ export default function TrackablePage({
   }
 
   return (
-    <div className="">
+    <>
       {devices.length > 0 && (
+        <StackCard columns={1}>
         <Card title="Devices" description={`${devices.length} registered ${devices.length === 1 ? "device" : "devices"}`}>
           <ul className="space-y-4 border-t border-border pt-4">
             {devices.map((d) => (
@@ -79,8 +81,9 @@ export default function TrackablePage({
             ))}
           </ul>
         </Card>
+        </StackCard>
       )}
-      <div className="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <StackCard columns={2}>
         <ActionCard
           onClick={addPhone}
           icon={<FaQrcode className="w-24 h-24" />}
@@ -93,7 +96,7 @@ export default function TrackablePage({
           title="Create Token"
           description="Generate a token for other devices"
         />
-      </div>
+      </StackCard>
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
         {modalContent && mode === "phone" && modalContent.qrDataUrl && (
@@ -117,6 +120,6 @@ export default function TrackablePage({
           </div>
         )}
       </Modal>
-    </div>
+    </>
   );
 }

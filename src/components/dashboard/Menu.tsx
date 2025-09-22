@@ -19,7 +19,7 @@ export default function Menu({ items }: { items: MenuItemProps[] }) {
       )}
 
       <aside
-        className={`fixed w-full top-0 left-0 h-full md:w-92 text-foreground p-4 flex flex-col transform transition-transform duration-300 ease-in-out
+        className={`fixed w-full top-0 left-0 h-full border-r border-border md:w-92 text-foreground p-4 flex flex-col transform transition-transform duration-300 ease-in-out
           ${isOpen ? "translate-x-0" : "-translate-x-full"} 
           md:static md:translate-x-0 z-20`}
       >
