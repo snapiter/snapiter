@@ -19,7 +19,7 @@ export default function DesktopTripDetails({ trip, isSelected, markers }: TripDe
   }
 
   return (
-      <div className="h-full flex flex-col">
+      <div className="h-full flex flex-col flex-1">
         <div className="hidden md:block">
           <div className="p-0 md:p-4 sticky top-0 z-[101] bg-background">
             <div className="flex items-center justify-between gap-2">

@@ -29,14 +29,19 @@ export default function DesktopTripView({ trips, title }: DesktopTripViewProps) 
   }
 
   return (
-    <div className={`h-full hidden md:block md:w-1/2 lg:w-1/3 `}>
-        <TripSidebar 
-          trips={trips} 
-          title={title}
-        />
-        <div className="flex-1 overflow-y-auto">
-          <DesktopTripDetails trip={selectedTrip} isSelected={true} markers={markers} />
-        </div>
-    </div>
+<div className="h-full hidden md:block md:w-1/2 lg:w-1/3">
+  <div className="flex h-full">
+      <TripSidebar 
+        trips={trips} 
+        title={title}
+      />
+      <DesktopTripDetails 
+        trip={selectedTrip} 
+        isSelected={true} 
+        markers={markers} 
+      />
+  </div>
+</div>
+
   );
 }
