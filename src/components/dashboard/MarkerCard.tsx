@@ -14,7 +14,7 @@ export default function MarkerCard({ markers }: CardProps) {
         <Card title="Markers">
             {markers.map((marker) => (
                 <div key={marker.markerId}>
-                    <p>{marker.title}</p>
+                    <p>{marker.latitude}, {marker.longitude}</p>
                 </div>
             ))}
         </Card>
