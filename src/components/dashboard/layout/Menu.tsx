@@ -3,8 +3,8 @@
 import { mobileMenuOpen } from "@/store/atoms";
 import { useAtom } from "jotai";
 import { FaX } from "react-icons/fa6";
-import MenuItem, { MenuItemProps } from "./layout/MenuItem";
-import LogoutButton from "./LogoutButton";
+import MenuItem, { MenuItemProps } from "./MenuItem";
+import LogoutButton from "../buttons/LogoutButton";
 
 export default function Menu({ items }: { items: MenuItemProps[] }) {
   const [isOpen, setIsOpen] = useAtom(mobileMenuOpen);

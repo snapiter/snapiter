@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Trackable } from "@/store/atoms";
-import TrackableItem from "@/components/dashboard/Trackable/TrackableItem";
+import TrackableCard from "@/components/dashboard/Trackable/TrackableItem";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
-import Menu from "@/components/dashboard/Menu";
+import Menu from "@/components/dashboard/layout/Menu";
 import Main from "@/components/dashboard/layout/Main";
 import { FaLocationCrosshairs } from "react-icons/fa6";
 
@@ -56,7 +56,7 @@ export default function Dashboard() {
       <h1 className="text-2xl font-bold  mb-6">Trackables</h1>
       <ul className="space-y-4">
         {trackables && trackables.length > 0 && trackables.map((t) => (
-          <TrackableItem key={t.trackableId} t={t} />
+          <TrackableCard key={t.trackableId} t={t} />
           ))}
         </ul>
       </Main>

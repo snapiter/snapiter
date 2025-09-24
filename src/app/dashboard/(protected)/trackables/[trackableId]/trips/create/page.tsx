@@ -2,8 +2,8 @@
 
 import { use } from "react";
 import { useState } from "react";
-import Card from "@/components/dashboard/Card";
-import StackCard from "@/components/dashboard/StackCard";
+import Card from "@/components/dashboard/cards/Card";
+import StackCard from "@/components/dashboard/layout/StackCard";
 import { useRouter } from "next/navigation";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 

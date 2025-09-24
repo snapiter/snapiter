@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Trackable } from "@/store/atoms";
 import { FaArrowRight } from "react-icons/fa6";
 
-export default function TrackableItem({ t }: { t: Trackable }) {
+export default function TrackableCard({ t }: { t: Trackable }) {
   return (
     <li key={t.name}>
       <Link

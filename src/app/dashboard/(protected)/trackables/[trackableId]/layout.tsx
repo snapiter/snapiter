@@ -1,7 +1,7 @@
 "use client";
 
 import { type ReactNode, use } from "react";
-import Menu from "@/components/dashboard/Menu";
+import Menu from "@/components/dashboard/layout/Menu";
 import Main from "@/components/dashboard/layout/Main";
 import { MenuItemProps } from "@/components/dashboard/layout/MenuItem";
 import { FaRoute, FaVanShuttle, FaPlus } from "react-icons/fa6";

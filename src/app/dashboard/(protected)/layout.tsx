@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../../globals.css";
-import Header from "@/components/dashboard/Header";
-import Footer from "@/components/dashboard/Footer";
-import LoadingBar from "@/components/dashboard/LoadingBar";
-import ErrorBox from "@/components/dashboard/ErrorBox";
+import Header from "@/components/dashboard/layout/Header";
+import Footer from "@/components/dashboard/layout/Footer";
+import LoadingBar from "@/components/dashboard/layout/LoadingBar";
+import ErrorBox from "@/components/dashboard/layout/ErrorBox";
 import { Provider } from "jotai";
-import Menu from "@/components/dashboard/Menu";
+import Menu from "@/components/dashboard/layout/Menu";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

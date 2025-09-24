@@ -3,7 +3,7 @@ import { FaBars } from "react-icons/fa6";
 import { useAtom } from "jotai";
 import { mobileMenuOpen } from "@/store/atoms";
 import Link from "next/link";
-import Logo from "../Logo";
+import Logo from "../../Logo";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useAtom(mobileMenuOpen);
