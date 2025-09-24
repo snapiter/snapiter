@@ -95,6 +95,15 @@ async function proxyWithRefresh(
 
   // No refresh needed
   const data = await response.arrayBuffer()
+
+  if (response.status === 204 || response.status === 304) {
+    return new NextResponse(null, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers,
+    })
+  }
+
   return new NextResponse(data, {
     status: response.status,
     statusText: response.statusText,

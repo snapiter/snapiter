@@ -10,6 +10,7 @@ import { createRouteData, fitMapBounds } from "@/utils/mapBounds";
 import { formatTripDate } from "@/utils/formatTripDate";
 import { useMarkers } from "@/hooks/useMarkers";
 import MarkersCard from "@/components/dashboard/markers/MarkersCard";
+
 export default function TripsPage({
   params,
 }: {
@@ -33,9 +34,7 @@ export default function TripsPage({
   }, [trip?.positions, mapRef.current, mapReady]);
 
 
-  if (isLoading) return <></>;
-  if (isError || !trip) return <p>Something went wrong.</p>;
-
+  if (isLoading || isError || !trip) return <></>;
 
   return (
     <>
