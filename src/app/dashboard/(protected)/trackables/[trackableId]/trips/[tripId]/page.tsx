@@ -38,16 +38,10 @@ export default function TripsPage({
 
   return (
     <>
-      <StackCard columns={1}>
-        <Card title={trip.title} description={trip.description}>
-          <p>Slug: {trip.slug}</p>
-          <p>{formatTripDate(trip.startDate, trip.endDate)}</p>
-          <p>Positions loaded: {trip.positions.length}</p>
-        </Card>
-      </StackCard>
-      <StackCard columns={2}>
+      <StackCard columns={markers && markers.length > 0 ? 2 : 1 }>
         <MarkersCard markers={markers ?? []} />
-        <Card title="Your trip">
+        <Card title={trip.title} description={trip.description}>
+          <p>{formatTripDate(trip.startDate, trip.endDate)}</p>
           <MapWrapper
             onMapReady={() => {
               setMapReady(true);
