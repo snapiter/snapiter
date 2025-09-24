@@ -9,7 +9,7 @@ import MapWrapper from "@/components/MapWrapper";
 import { createRouteData, fitMapBounds } from "@/utils/mapBounds";
 import { formatTripDate } from "@/utils/formatTripDate";
 import { useMarkers } from "@/hooks/useMarkers";
-import MarkerCard from "@/components/dashboard/MarkerCard";
+import MarkersCard from "@/components/dashboard/markers/MarkersCard";
 export default function TripsPage({
   params,
 }: {
@@ -47,7 +47,7 @@ export default function TripsPage({
         </Card>
       </StackCard>
       <StackCard columns={2}>
-        <MarkerCard markers={markers ?? []} />
+        <MarkersCard markers={markers ?? []} />
         <Card title="Your trip">
           <MapWrapper
             onMapReady={() => {

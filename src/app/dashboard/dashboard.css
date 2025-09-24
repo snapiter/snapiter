@@ -1,14 +1,93 @@
+@reference "../globals.css";
+@reference "tailwindcss";
+
 .loading-bar {
-    width: 50%; /* chunk size */
-    animation: loading-bar 1.5s linear infinite;
+  width: 50%;
+  /* chunk size */
+  animation: loading-bar 1.5s linear infinite;
+}
+
+@keyframes loading-bar {
+  0% {
+    transform: translateX(-100%);
   }
-  
-  @keyframes loading-bar {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(200%);
-    }
+
+  100% {
+    transform: translateX(200%);
   }
-  
+}
+
+
+
+/* globals.css or any Tailwind CSS file */
+.button-primary {
+  @apply bg-primary text-foreground font-semibold rounded-md px-4 py-2 transition-colors duration-200 cursor-pointer;
+}
+
+.button-primary:hover {
+  @apply bg-[var(--primary-hover)];
+}
+
+
+.button-primary:disabled {
+  @apply opacity-70 cursor-not-allowed;
+}
+
+
+
+.button-secondary {
+  @apply bg-surface text-foreground border border-transparent font-semibold rounded-md p-2  cursor-pointer;
+}
+
+.button-secondary:hover {
+  @apply bg-surface/80 border border-border;
+}
+
+.button-secondary:disabled {
+  @apply opacity-70 cursor-not-allowed;
+}
+
+
+
+  .text-input-wrapper {
+    @apply w-full max-w-sm;
+  }
+
+  .text-input-label {
+    @apply block text-sm font-medium text-[var(--foreground)] mb-1;
+  }
+
+  .text-input {
+    @apply w-full rounded-md border border-[var(--border)]
+           bg-[var(--surface)] px-3 py-2 text-[var(--foreground)]
+           placeholder-[var(--muted)]
+           focus:outline-none focus:ring-2 focus:ring-[var(--primary)]
+           transition;
+  }
+
+  .text-input:disabled {
+    @apply bg-[var(--surface)] opacity-70 cursor-not-allowed;
+  }
+
+
+
+
+  .text-area-wrapper {
+    @apply w-full max-w-sm;
+  }
+
+  .text-area-label {
+    @apply block text-sm font-medium text-[var(--foreground)] mb-1;
+  }
+
+  .text-area {
+    @apply w-full rounded-md border border-[var(--border)]
+           bg-[var(--surface)] px-3 py-2 text-[var(--foreground)]
+           placeholder-[var(--muted)] resize-y min-h-[100px]
+           focus:outline-none focus:ring-2 focus:ring-[var(--primary)]
+           transition;
+  }
+
+  .text-area:disabled {
+    @apply bg-[var(--surface)] opacity-70 cursor-not-allowed;
+  }
