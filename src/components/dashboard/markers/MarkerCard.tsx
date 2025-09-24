@@ -7,6 +7,7 @@ import TextInput from "../TextInput";
 import TextArea from "../TextArea";
 import MarkerImage from "./MarkerImage";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
+import ConfirmDialog from "../layout/ConfirmDialog";
 
 interface MarkerCardProps {
   marker: Marker;
@@ -19,8 +20,10 @@ export default function MarkerCard({ marker, onDelete }: MarkerCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(marker);
 
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target;P
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -39,20 +42,33 @@ export default function MarkerCard({ marker, onDelete }: MarkerCardProps) {
     }
   };
 
+
   const handleDelete = async () => {
     try {
       await apiClient.delete(
         `/api/trackables/${marker.trackableId}/markers/${marker.markerId}`
       );
       setIsEditing(false);
-      // optionally trigger a refresh or callback
+      onDelete(marker.markerId);
     } catch (err) {
       console.error("Failed to delete marker:", err);
+    } finally {
+      setShowConfirm(false);
     }
   };
 
   return (
     <div className="">
+        {showConfirm && (
+        <ConfirmDialog
+          message="This will permanently delete the marker. Do you want to continue?"
+          confirmText="Yes, delete"
+          onConfirm={handleDelete}
+          onCancel={() => setShowConfirm(false)}
+          icon={<FaTrash />}
+        />
+      )}
+
       {isEditing ? (
         <div className="space-y-3">
           {/* Top bar with back + delete */}
