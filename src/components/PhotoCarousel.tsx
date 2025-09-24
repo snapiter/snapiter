@@ -58,7 +58,7 @@ export default function PhotoCarousel({ markers, className = '' }: PhotoCarousel
               onClick={() => handlePhotoClick(index)}
             >
               <Image
-                src={getMarkerUrlThumbnail(marker.markerId, "500x500")}
+                src={getMarkerUrlThumbnail(marker, "500x500")}
                 alt={marker.title  || 'Marker photo'}
                 fill
                 className="object-cover rounded-lg"

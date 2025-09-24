@@ -84,7 +84,7 @@ export default function PhotoGrid({ markers, className = '' }: PhotoGridProps) {
             )}
 
             <Image
-              src={getMarkerUrlThumbnail(marker.markerId, "500x500")}
+              src={getMarkerUrlThumbnail(marker, "500x500")}
               alt={marker.title}
               fill
               className={`object-cover rounded-lg transition-opacity duration-300 ${

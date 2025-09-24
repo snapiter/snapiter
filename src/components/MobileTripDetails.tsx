@@ -24,7 +24,7 @@ export default function MobileTripDetails({ trip }: TripDetailsProps) {
             {trip.markers.length > 0 ? (
                 <div className="max-w-1/3 flex-shrink-0">
                   <Image
-                    src={getMarkerUrlThumbnail(trip.markers[0].markerId)}
+                    src={getMarkerUrlThumbnail(trip.markers[0])}
                     alt={trip.markers[0].title}
                     className="object-cover rounded-lg h-16 w-16"
                     width={64}

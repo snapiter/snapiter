@@ -14,7 +14,7 @@ export function createTripMarkers(
     
       el.innerHTML = `
         <img 
-          src="${getMarkerUrlThumbnail(marker.markerId, '100x100')}" 
+          src="${getMarkerUrlThumbnail(marker, '100x100')}" 
           class="map-marker"
           alt="marker"
           data-marker-id="${marker.markerId}"

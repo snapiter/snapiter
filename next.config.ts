@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'cache.partypieps.nl',
+        hostname: 'api.snapiter.com',
         port: '',
         pathname: '/**',
       },
