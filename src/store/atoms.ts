@@ -90,6 +90,13 @@ export interface Photo {
   caption?: string;
 }
 
+
+
+export interface QuickCreateRes {
+  deviceToken: string;
+  qrDataUrl?: string;
+};
+
 export const selectedTripAtom = atom<Trip | null>(null);
 
 export const bottomPanelExpandedAtom = atom<boolean>(false);
