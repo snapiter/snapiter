@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, useState } from "react";
-import { FaChevronDown } from "react-icons/fa6";
+import { FaCheck, FaChevronDown, FaCircleCheck, FaRegCircleCheck } from "react-icons/fa6";
 import Link from "next/link";
 import { useSetAtom } from "jotai";
 import { mobileMenuOpen } from "@/store/atoms";
@@ -9,6 +9,7 @@ import { mobileMenuOpen } from "@/store/atoms";
 export interface SubItem {
   label: string;
   href: string;
+  active?: boolean;
   icon?: ReactNode;
 }
 
@@ -56,7 +57,7 @@ export default function MenuItem({ icon, label, href, submenu }: MenuItemProps) 
 
       {/* Submenu */}
       {hasSubmenu && open && (
-        <ul className="mt-2 space-y-2">
+        <ul className="">
           {submenu!.map((item) => (
             <li key={item.href} className="flex items-center gap-3" onClick={() => setMobileMenuOpen(false)}>
               <Link
@@ -64,7 +65,11 @@ export default function MenuItem({ icon, label, href, submenu }: MenuItemProps) 
                 className="flex items-center gap-3 w-full px-4 py-3 rounded-md hover:bg-surface pl-10"
               >
                 <span className="text-xl">{item.icon}</span>
-                <span className="font-medium">{item.label}</span>
+                <span className="flex font-medium">{item.label}
+                  {item.active && (
+                    <span className="px-2 text-sm flex items-center gap-1 text-muted"><FaCheck size={10} className="text-primary-light" />active</span>
+                  )}
+                </span>
               </Link>
             </li>
           ))}

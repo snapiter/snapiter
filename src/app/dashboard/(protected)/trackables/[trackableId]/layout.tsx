@@ -39,6 +39,7 @@ export default function TrackableLayout({
             icon: <FaVanShuttle className="text-primary" />,
             label: trip.title,
             href: `/dashboard/trackables/${trackable.trackableId}/trips/${trip.slug}`,
+            active: trip.endDate == null,
           })) ?? []),
         ]
         
