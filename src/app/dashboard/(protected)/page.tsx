@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Trackable } from "@/store/atoms";
-import TrackableCard from "@/components/dashboard/Trackable/TrackableItem";
+import TrackableCard from "@/components/dashboard/cards/trackable/TrackableCard";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import Menu from "@/components/dashboard/layout/Menu";
 import Main from "@/components/dashboard/layout/Main";

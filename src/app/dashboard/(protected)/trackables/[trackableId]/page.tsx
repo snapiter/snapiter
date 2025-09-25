@@ -4,7 +4,7 @@ import { use, useEffect, useState } from "react";
 import { FaKey, FaQrcode } from "react-icons/fa6";
 import { Device } from "@/store/atoms";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
-import Modal from "@/components/dashboard/layout/Modal"; // adjust import to your modal
+import Modal from "@/components/dashboard/layout/Modal";
 import ActionCard from "@/components/dashboard/cards/ActionCard";
 import StackCard from "@/components/dashboard/layout/StackCard";
 import DeviceCard from "@/components/dashboard/cards/DeviceCard";
