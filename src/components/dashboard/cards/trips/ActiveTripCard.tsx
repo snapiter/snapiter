@@ -12,7 +12,7 @@ interface ActiveTripCardProps {
 }
 
 export default function ActiveTripCard({ trip }: ActiveTripCardProps) {
-    const [isActive, setIsActive] = useState(true);
+    const [isActive, setIsActive] = useState(trip.endDate == null);
     const apiClient = useDashboardApiClient();
 
     const [showConfirm, setShowConfirm] = useState(false);
@@ -40,7 +40,7 @@ export default function ActiveTripCard({ trip }: ActiveTripCardProps) {
         <Card className="animate-border-pulse">
             <div className="flex items-center justify-between">
                 <div>
-                    <h3 className="text-lg font-semibold">Trip: {trip.title}</h3>
+                    <h3>Trip: {trip.title}</h3>
                     <span className="text-sm text-muted">This is your active trip</span>
                     <p className="text-sm text-muted">
                         {formatTripDate(trip.startDate, trip.endDate)}

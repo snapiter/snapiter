@@ -114,7 +114,7 @@ export default function MarkerCard({ marker, onDelete }: MarkerCardProps) {
           </div>
 
           {marker.title && (
-            <h3 className="font-semibold text-foreground">{marker.title}</h3>
+            <h3>{marker.title}</h3>
           )}
 
           {marker.description && (

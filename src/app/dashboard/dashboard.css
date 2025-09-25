@@ -105,3 +105,10 @@
   .text-area:disabled {
     @apply bg-[var(--surface)] opacity-70 cursor-not-allowed;
   }
+
+
+
+
+  h3 {
+    @apply text-lg font-semibold;
+  }

@@ -18,7 +18,7 @@ export default function Card({ title, description, icon, className, children }: 
           )}
           <div>
             {title && (
-              <h3 className="text-xl font-semibold text-foreground pb-2">
+              <h3 className="pb-2">
                 {title}
               </h3>
             )}

@@ -10,6 +10,7 @@ import AddTokenCard from "@/components/dashboard/cards/AddTokenCard";
 import { useTrips } from "@/hooks/useTrips";
 import ActiveTripCard from "@/components/dashboard/cards/trips/ActiveTripCard";
 import StartTripCard from "@/components/dashboard/cards/trips/StartTripCard";
+import TrackableCard from "@/components/dashboard/cards/TrackableCard";
 
 
 export default function TrackablePage({
@@ -35,17 +36,20 @@ export default function TrackablePage({
 
   const activeTrip = trips?.filter((t) => t.endDate == null)?.[0];
 
+  console.log(activeTrip);
+
   return (
     <>
-      {activeTrip && (
-        <StackCard columns={1}>
-          {activeTrip ? (
-            <ActiveTripCard trip={activeTrip} key={activeTrip.slug} />
-          ) : (
-            <StartTripCard trackableId={trackableId} />
-          )}
-        </StackCard>
-      )}
+      <StackCard columns={1}>
+        {activeTrip ? (
+          <ActiveTripCard trip={activeTrip} key={activeTrip.slug} />
+        ) : (
+          <StartTripCard trackableId={trackableId} />
+        )}
+      </StackCard>
+      <StackCard columns={1}>
+        <TrackableCard trackableId={trackableId } />
+      </StackCard>
       {devices.length > 0 ? (
         <StackCard columns={1}>
           {devices.map((d) => (
