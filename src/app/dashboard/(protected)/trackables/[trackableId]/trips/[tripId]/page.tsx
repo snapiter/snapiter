@@ -10,6 +10,7 @@ import { createRouteData, fitMapBounds } from "@/utils/mapBounds";
 import { formatTripDate } from "@/utils/formatTripDate";
 import { useMarkers } from "@/hooks/useMarkers";
 import MarkersCard from "@/components/dashboard/cards/markers/MarkersCard";
+import ActiveTripCard from "@/components/dashboard/cards/trips/ActiveTripCard";
 
 export default function TripsPage({
   params,
@@ -38,6 +39,9 @@ export default function TripsPage({
 
   return (
     <>
+    <StackCard columns={1}>
+      <ActiveTripCard trip={trip} key={trip.slug} />
+    </StackCard>
       <StackCard columns={markers && markers.length > 0 ? 2 : 1 }>
         <MarkersCard markers={markers ?? []} />
         <Card title={trip.title} description={trip.description}>
