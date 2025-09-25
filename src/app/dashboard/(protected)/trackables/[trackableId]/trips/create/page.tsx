@@ -6,6 +6,8 @@ import Card from "@/components/dashboard/cards/Card";
 import StackCard from "@/components/dashboard/layout/StackCard";
 import { useRouter } from "next/navigation";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
+import TextInput from "@/components/dashboard/input/TextInput";
+import TextArea from "@/components/dashboard/input/TextArea";
 
 export default function TripsCreatePage({
   params,
@@ -58,52 +60,48 @@ export default function TripsCreatePage({
       <Card>
         <h2 className="text-lg font-bold mb-4">Create Trip</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            name="title"
+          <TextInput
+            id="title"
             placeholder="Title"
             value={form.title}
             onChange={handleChange}
-            className="border border-border rounded-sm p-2 w-full"
             required
           />
-          <textarea
-            name="description"
+          <TextArea
+            id="description"
             placeholder="Description"
             value={form.description}
             onChange={handleChange}
-            className="border border-border rounded-sm p-2 w-full"
           />
-          <input
-            name="slug"
+          <TextInput
+            id="slug"
             placeholder="Readable Slug"
             value={form.slug}
             onChange={handleChange}
-            className="border border-border rounded-sm p-2 w-full"
             required
           />
           <div className="flex gap-2">
-            <input
+            <TextInput
               type="datetime-local"
-              name="startDate"
+              id="startDate"
               value={form.startDate}
               onChange={handleChange}
-              className="border border-border rounded-sm p-2 w-full"
             />
-            <input
+            <TextInput
               type="datetime-local"
-              name="endDate"
+              id="endDate"
               value={form.endDate}
               onChange={handleChange}
-              className="border border-border rounded-sm p-2 w-full"
             />
           </div>
           <div className="flex items-center gap-2">
             <label className="text-sm">Color</label>
-            <input
+            <TextInput
               type="color"
-              name="color"
+              id="color"
               value={form.color}
               onChange={handleChange}
+              className="w-10"
             />
           </div>
           <button
