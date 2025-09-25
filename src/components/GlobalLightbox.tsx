@@ -5,8 +5,8 @@ import Lightbox from 'yet-another-react-lightbox';
 import { lightboxIndexAtom } from '@/store/atoms';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
-import { config } from '@/config';
 import 'yet-another-react-lightbox/styles.css';
+import { getMarkerUrlThumbnail } from '@/services/thumbnail';
 
 export default function GlobalLightbox() {
   const lightboxIndex = useAtomValue(lightboxIndexAtom);
@@ -15,9 +15,8 @@ export default function GlobalLightbox() {
 
   // Derive photos from selectedTrip markers
   const photos = trip?.markers
-    ?.filter(marker => marker.hasThumbnail)
-    .map(marker => ({
-      src: `${config.apiUrl}/marker/${marker.markerId}`,
+      .map(marker => ({
+      src: getMarkerUrlThumbnail(marker, "500x500"),
       alt: marker.title || 'Marker photo',
       title: marker.description
     })) || [];

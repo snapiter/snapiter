@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Marker } from "@/store/atoms";
-import { getMarkerUrlThumbnail, getMarkerImage } from "@/services/thumbnail";
+import { getMarkerUrlThumbnail } from "@/services/thumbnail";
 
 interface MarkerImageProps {
   marker: Marker;
@@ -15,9 +15,7 @@ export default function MarkerImage({
   size = "500x500",
   className = "object-cover rounded",
 }: MarkerImageProps) {
-  const src = marker.hasThumbnail
-    ? getMarkerUrlThumbnail(marker, size)
-    : getMarkerImage(marker);
+  const src = getMarkerUrlThumbnail(marker, size)
 
   return (
     <Image
