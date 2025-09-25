@@ -75,14 +75,8 @@ async function proxyWithRefresh(
     if (refreshResult.success && refreshResult.newAccessToken) {
       response = await makeProxyRequest(path, method, body, refreshResult.newAccessToken)
 
-      // Wrap and forward cookies if needed
-      const data = await response.arrayBuffer()
-      const nextResponse = new NextResponse(data, {
-        status: response.status,
-        statusText: response.statusText,
-        headers: response.headers,
-      })
-
+      const nextResponse = await buildNextResponse(response)
+      
       if (refreshResult.setCookieHeader) {
         nextResponse.headers.set('Set-Cookie', refreshResult.setCookieHeader)
       }
@@ -93,24 +87,26 @@ async function proxyWithRefresh(
     }
   }
 
-  // No refresh needed
-  const data = await response.arrayBuffer()
+  return await buildNextResponse(response);
+}
 
+
+function buildNextResponse(response: Response) {
   if (response.status === 204 || response.status === 304) {
     return new NextResponse(null, {
       status: response.status,
       statusText: response.statusText,
       headers: response.headers,
-    })
+    });
   }
-
-  return new NextResponse(data, {
-    status: response.status,
-    statusText: response.statusText,
-    headers: response.headers,
-  })
+  return response.arrayBuffer().then((data) =>
+    new NextResponse(data, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers,
+    })
+  );
 }
-
 
 export async function GET(
   request: NextRequest,
