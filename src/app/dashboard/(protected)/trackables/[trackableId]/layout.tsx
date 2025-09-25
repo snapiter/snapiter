@@ -40,11 +40,6 @@ export default function TrackableLayout({
             label: trip.title,
             href: `/dashboard/trackables/${trackable.trackableId}/trips/${trip.slug}`,
           })) ?? []),
-          {
-            icon: <FaPlus className="text-primary" />,
-            label: "Add Trip",
-            href: `/dashboard/trackables/${trackable.trackableId}/trips/create`,
-          },
         ]
         
       },

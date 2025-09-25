@@ -18,6 +18,20 @@
 }
 
 
+@keyframes border-pulse {
+  0%, 100% {
+    border-color: var(--primary);
+  }
+  50% {
+    border-color: var(--surface);
+  }
+}
+
+.animate-border-pulse {
+  animation: border-pulse 2s ease-in-out infinite;
+}
+
+
 
 /* globals.css or any Tailwind CSS file */
 .button-primary {

@@ -4,12 +4,13 @@ interface CardProps {
   title?: string;
   description?: string;
   icon?: ReactNode;
+  className?: string;
   children?: ReactNode;
 }
 
-export default function Card({ title, description, icon, children }: CardProps) {
+export default function Card({ title, description, icon, className, children }: CardProps) {
   return (
-    <div className="bg-surface rounded-lg p-6 border border-border">
+    <div className={`bg-surface rounded-lg p-6 border border-border ${className}`}>
       {(title || description) && (
         <div className="flex items-start gap-3">
           {icon && (
@@ -17,12 +18,12 @@ export default function Card({ title, description, icon, children }: CardProps) 
           )}
           <div>
             {title && (
-              <h3 className="text-xl font-semibold text-foreground">
+              <h3 className="text-xl font-semibold text-foreground pb-2">
                 {title}
               </h3>
             )}
             {description && (
-              <p className="text-muted mt-2 mb-4">{description}</p>
+              <p className="text-muted mb-4">{description}</p>
             )}
           </div>
         </div>
