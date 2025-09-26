@@ -76,7 +76,7 @@ async function proxyWithRefresh(
       response = await makeProxyRequest(path, method, body, refreshResult.newAccessToken)
 
       const nextResponse = await buildNextResponse(response)
-      
+
       if (refreshResult.setCookieHeader) {
         nextResponse.headers.set('Set-Cookie', refreshResult.setCookieHeader)
       }
@@ -85,6 +85,14 @@ async function proxyWithRefresh(
     } else {
       return NextResponse.json({ error: 'Authentication failed' }, { status: 401 })
     }
+  }
+
+  if (!response.ok) {
+    console.error(`[Proxy Response Error] ${method} ${path}`, {
+      body,
+      status: response.status,
+      statusText: response.statusText,
+    })
   }
 
   return await buildNextResponse(response);

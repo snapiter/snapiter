@@ -36,8 +36,6 @@ export default function TrackablePage({
 
   const activeTrip = trips?.filter((t) => t.endDate == null)?.[0];
 
-  console.log(activeTrip);
-
   return (
     <>
       <StackCard columns={1}>
