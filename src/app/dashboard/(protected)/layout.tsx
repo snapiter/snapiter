@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../../globals.css";
 import Header from "@/components/dashboard/layout/Header";
-import Footer from "@/components/dashboard/layout/Footer";
 import LoadingBar from "@/components/dashboard/layout/LoadingBar";
 import ErrorBox from "@/components/dashboard/layout/ErrorBox";
 import { Provider } from "jotai";
-import Menu from "@/components/dashboard/layout/Menu";
+import { Footer } from "@snapiter/designsystem";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,7 +39,7 @@ export default function RootLayout({
           <div className="flex flex-1 relative">
             {children}
           </div>
-          <Footer />
+          <Footer withMenu={false} />
         </Provider>
       </body>
     </html>

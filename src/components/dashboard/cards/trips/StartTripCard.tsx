@@ -4,7 +4,7 @@ import { FaVanShuttle } from "react-icons/fa6";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import { useState } from "react";
 import Card from "../Card";
-import PrimaryButton from "../../buttons/PrimaryButton";
+import { PrimaryButton } from "@snapiter/designsystem";
 import TextInput from "../../input/TextInput";
 import TextArea from "../../input/TextArea";
 import { useRouter } from "next/navigation";

@@ -1,7 +1,7 @@
 import Card from "./Card";
 import { useTrackable } from "@/hooks/useTrackable";
 import { FaGlobe } from "react-icons/fa6";
-import SecondaryButton from "../buttons/SecondaryButton";
+import { SecondaryButton } from "@snapiter/designsystem";
 
 interface TrackableCardProps {
     trackableId: string;

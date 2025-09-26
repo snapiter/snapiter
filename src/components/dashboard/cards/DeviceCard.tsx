@@ -3,7 +3,7 @@ import { Device } from "@/store/atoms";
 import { formatDate } from "@/utils/formatTripDate";
 import { FaMobileScreen, FaTrash } from "react-icons/fa6";
 import Card from "./Card";
-import SecondaryButton from "../buttons/SecondaryButton";
+import { SecondaryButton } from "@snapiter/designsystem";
 import { useState } from "react";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import ConfirmDialog from "../layout/ConfirmDialog";

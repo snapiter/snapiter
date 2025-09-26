@@ -1,13 +1,12 @@
 import { Marker } from "@/store/atoms";
 import { useState } from "react";
 import { FaPen, FaArrowLeft, FaTrash, FaFloppyDisk, FaMapPin } from "react-icons/fa6";
-import PrimaryButton from "../../buttons/PrimaryButton";
-import SecondaryButton from "../../buttons/SecondaryButton";
 import TextInput from "../../input/TextInput";
 import TextArea from "../../input/TextArea";
 import MarkerImage from "./MarkerImage";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import ConfirmDialog from "../../layout/ConfirmDialog";
+import { PrimaryButton, SecondaryButton } from "@snapiter/designsystem";
 
 interface MarkerCardProps {
   marker: Marker;

@@ -1,6 +1,6 @@
 import { Trip } from "@/store/atoms";
 import Card from "../Card";
-import PrimaryButton from "../../buttons/PrimaryButton";
+import { PrimaryButton } from "@snapiter/designsystem";
 import { FaX } from "react-icons/fa6";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import { formatTripDate } from "@/utils/formatTripDate";

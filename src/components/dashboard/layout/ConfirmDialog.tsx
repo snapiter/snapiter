@@ -1,8 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import SecondaryButton from "../buttons/SecondaryButton";
-import PrimaryButton from "../buttons/PrimaryButton";
+import { PrimaryButton, SecondaryButton } from "@snapiter/designsystem";
 
 interface ConfirmDialogProps {
   title?: string;

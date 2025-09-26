@@ -10,6 +10,7 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "@snapiter/designsystem": "^0.0.12",
     "@tanstack/react-query": "^5.87.1",
     "jotai": "^2.13.1",
     "maplibre-gl": "^5.7.0",
