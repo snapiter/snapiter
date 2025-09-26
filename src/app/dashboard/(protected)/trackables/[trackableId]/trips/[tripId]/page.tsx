@@ -41,11 +41,13 @@ export default function TripsPage({
     <>
     <StackCard columns={1}>
       <ActiveTripCard trip={trip} key={trip.slug} />
+      <Card title={`Trip: ${trip.title}`} description={trip.description}>
+        <p>{formatTripDate(trip.startDate, trip.endDate)}</p>
+      </Card>
     </StackCard>
       <StackCard columns={markers && markers.length > 0 ? 2 : 1 }>
         <MarkersCard markers={markers ?? []} />
-        <Card title={trip.title} description={trip.description}>
-          <p>{formatTripDate(trip.startDate, trip.endDate)}</p>
+        <Card title="Map">
           <MapWrapper
             onMapReady={() => {
               setMapReady(true);
