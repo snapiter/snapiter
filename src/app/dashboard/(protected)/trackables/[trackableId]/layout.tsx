@@ -5,7 +5,7 @@ import Menu from "@/components/dashboard/layout/Menu";
 import Main from "@/components/dashboard/layout/Main";
 import { MenuItemProps } from "@/components/dashboard/layout/MenuItem";
 import { FaRoute, FaVanShuttle, FaPlus } from "react-icons/fa6";
-import { useTrackable } from "@/hooks/useTrackable";
+import { useTrackableById } from "@/hooks/useTrackableById";
 import { dashboardLoading } from "@/store/atoms";
 import { useAtomValue } from "jotai";
 import { useTrips } from "@/hooks/useTrips";
@@ -21,7 +21,7 @@ export default function TrackableLayout({
   const { trackableId } = use(params);
 
   const loading = useAtomValue(dashboardLoading);
-  const { data: trackable, isLoading, isError } = useTrackable(trackableId);
+  const { data: trackable, isLoading, isError } = useTrackableById(trackableId);
   const { data: trips, isLoading: isTripsLoading, isError: isTripsError } = useTrips(trackableId);
 
   const menuItems: MenuItemProps[] = trackable

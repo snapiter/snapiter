@@ -1,5 +1,5 @@
 import Card from "./Card";
-import { useTrackable } from "@/hooks/useTrackable";
+import { useTrackableById } from "@/hooks/useTrackableById";
 import { FaGlobe } from "react-icons/fa6";
 import { SecondaryButton } from "@snapiter/designsystem";
 
@@ -8,7 +8,7 @@ interface TrackableCardProps {
 }
 
 export default function TrackableCard({ trackableId }: TrackableCardProps) {
-    const { data: trackable } = useTrackable(trackableId);
+    const { data: trackable } = useTrackableById(trackableId);
     if (!trackable) return null;
 
     return (

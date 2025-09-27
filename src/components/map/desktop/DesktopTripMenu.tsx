@@ -1,23 +1,20 @@
 'use client';
 
-import { type Trip } from '@/store/atoms';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import { FaRoute } from 'react-icons/fa6';
 import Logo from '../../Logo';
 import { formatTripDate } from '@/utils/formatTripDate';
 import { useMapCommands } from '@/hooks/useMapCommands';
+import { useTripsByHostname } from '@/hooks/useTripsByHostname';
+import { useTrackableByHostname } from '@/hooks/useTrackableByHostname';
 
-interface DesktopTripMenuProps {
-  trips: Trip[];
-  title?: string;
-}
-
-export default function DesktopTripMenu({ trips, title }: DesktopTripMenuProps) {
+export default function DesktopTripMenu() {
+  const { data: trips } = useTripsByHostname();
   const selectedTrip = useSelectedTrip();
   const { runCommand } = useMapCommands();
+  const { data: website } = useTrackableByHostname();
 
   const displayActiveIndex = trips.findIndex(trip => trip.slug === selectedTrip?.trip?.slug);
-
 
   const handleTripSelect = (index: number) => {
     runCommand({
@@ -35,7 +32,7 @@ export default function DesktopTripMenu({ trips, title }: DesktopTripMenuProps) 
     <div className="w-full bg-surface border-r border-border h-full overflow-y-auto flex-1">
       <div className="p-4">
         <div className="flex items-center gap-3 mb-2">
-          <Logo size="md" showTitle={true} title={title}/>
+          <Logo size="md" showTitle={true} title={website?.title}/>
         </div>
         <p className="text-sm text-muted">
           {trips.length} {trips.length === 1 ? 'Journey' : 'Journeys'}

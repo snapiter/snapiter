@@ -97,7 +97,8 @@ export interface QuickCreateRes {
   qrDataUrl?: string;
 };
 
-export const selectedTripAtom = atom<Trip | null>(null);
+// slug of the selected trip
+export const selectedTripAtom = atom<string | null>(null);
 
 export const bottomPanelExpandedAtom = atom<boolean>(false);
 

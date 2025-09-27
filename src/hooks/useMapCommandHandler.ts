@@ -1,5 +1,5 @@
 import { useAtomValue, useSetAtom } from 'jotai';
-import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndexAtom, selectedTripAtom, bottomPanelExpandedAtom } from '@/store/atoms';
+import { mapCommandsAtom, mapEventsAtom, type Trip, type MapEvent, lightboxIndexAtom, selectedTripAtom, bottomPanelExpandedAtom, TripWithMarkers } from '@/store/atoms';
 import { useEffect, useRef } from 'react';
 import type maplibregl from 'maplibre-gl';
 import type { MapRef } from 'react-map-gl/maplibre';
@@ -9,7 +9,7 @@ import logger from '@/utils/logger';
 
 export function useMapCommandHandler(
   mapRef: React.RefObject<MapRef | null>,
-  trips: Trip[]
+  trips: TripWithMarkers[]
 ) {
   const commands = useAtomValue(mapCommandsAtom);
   const setMapEvents = useSetAtom(mapEventsAtom);
@@ -86,7 +86,7 @@ export function useMapCommandHandler(
         case 'SELECT_TRIP': {
           const trip = trips.filter(t => t.slug === command.tripSlug).pop();
           if(trip) {
-            setSelectedTrip(trip)
+            setSelectedTrip(command.tripSlug)
             emitEvent({ type: 'TRIP_SELECTED', tripSlug: command.tripSlug, commandId: command.id });
           }
           else {

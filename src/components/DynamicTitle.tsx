@@ -1,12 +1,12 @@
 'use client';
 
+import { useTrackableByHostname } from '@/hooks/useTrackableByHostname';
 import { useEffect } from 'react';
 
-interface DynamicTitleProps {
-  title?: string;
-}
-
-export default function DynamicTitle({ title }: DynamicTitleProps) {
+export default function DynamicTitle() {
+  const { data: website } = useTrackableByHostname();
+  const title = website?.title;
+  
   useEffect(() => {
     if (title) {
       document.title = title;

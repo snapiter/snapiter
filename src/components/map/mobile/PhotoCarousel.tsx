@@ -73,7 +73,6 @@ export default function PhotoCarousel({ markers, className = '' }: PhotoCarousel
           </SwiperSlide>
         ))}
       </Swiper>
-
     </div>
   );
 }

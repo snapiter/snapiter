@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { Trackable } from "@/store/atoms";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 
-export function useTrackable(trackableId: string | null) {
+export function useTrackableById(trackableId: string | null) {
   const apiClient = useDashboardApiClient();
 
   return useQuery({

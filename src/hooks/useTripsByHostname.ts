@@ -2,19 +2,20 @@ import { useQuery } from '@tanstack/react-query';
 import type { Marker, Trip } from '@/store/atoms';
 import { useApiClient } from './useApiClient';
 import { TripWithMarkers } from '@/store/atoms';
+import { useTrackableByHostname } from './useTrackableByHostname';
 
-
-export function useTrips(trackableId: string | null) {
+export function useTripsByHostname() {
+  const { data: website } = useTrackableByHostname();
   const api = useApiClient();
 
-  return useQuery({
-    queryKey: ['trips-with-markers', trackableId],
+  const query = useQuery({
+    queryKey: ['trips-with-markers', website?.trackableId],
     queryFn: async (): Promise<TripWithMarkers[]> => {
-      if (!trackableId) throw new Error('Trackable ID is required');
+      if (!website?.trackableId) return []; // no id yet → just empty trips
 
-      const trips = await api.get<Trip[]>(`/api/trackables/${trackableId}/trips`);
+      const trips = await api.get<Trip[]>(`/api/trackables/${website.trackableId}/trips`);
 
-      const tripsWithMarkers = await Promise.all(
+      return Promise.all(
         trips.map(async (trip) => {
           try {
             const markers = await api.get<Marker[]>(
@@ -27,10 +28,8 @@ export function useTrips(trackableId: string | null) {
           }
         })
       );
-
-      return tripsWithMarkers;
     },
-    enabled: !!trackableId,
+    enabled: !!website?.trackableId,
     staleTime: 10 * 60 * 1000,
     retry: (failureCount, error) => {
       if (error instanceof Error && error.message.includes('404')) {
@@ -38,5 +37,12 @@ export function useTrips(trackableId: string | null) {
       }
       return failureCount < 2;
     },
+    placeholderData: [],
   });
+
+  return {
+    ...query,
+    data: query.data ?? [],
+  };
 }
+

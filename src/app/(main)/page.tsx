@@ -7,23 +7,24 @@ import TripSwiper from '@/components/map/mobile/TripSwiper';
 import SnapIterLoader from '@/components/SnapIterLoader';
 import DynamicTitle from '@/components/DynamicTitle';
 import Brand from '@/components/Brand';
-import { useHostname } from '@/hooks/useApiData';
-import { useWebsite } from '@/hooks/useWebsite';
+import { useTrackableByHostname } from '@/hooks/useTrackableByHostname';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useAtomValue } from 'jotai';
 import { mapEventsAtom } from '@/store/atoms';
 import { useTrips } from '@/hooks/useTrips';
 import ErrorComponent from '@/components/ErrorComponent';
 import DesktopSidebar from '@/components/map/desktop/DesktopSidebar';
+import { useSelectedTrip } from '@/hooks/useSelectedTrip';
+import PhotoCarousel from '@/components/map/mobile/PhotoCarousel';
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const hostname = useHostname();
-  const { data: website, isLoading, error } = useWebsite(hostname);
+  const { data: website, isLoading, error } = useTrackableByHostname();
   const { runCommand } = useMapCommands();
   const mapEvents = useAtomValue(mapEventsAtom);
 
+  const { trip: selectedTrip } = useSelectedTrip();
   const mapReady = mapEvents.some(event => event.type === 'MAP_READY');
 
   const { data: trips = [], isLoading: tripsLoading } = useTrips(website?.trackableId ?? null);
@@ -32,15 +33,16 @@ export default function Home() {
     if (website && mapReady && !isLoading && !tripsLoading) {
       setTimeout(() => {
         setIsLoaded(true);
-        if (trips.length > 0) { 
-        runCommand({
-          type: 'SELECT_TRIP',
+        if (trips.length > 0) {
+          runCommand({
+            type: 'SELECT_TRIP',
             tripSlug: trips[0].slug
           });
         }
       }, 1000);
     }
   }, [website, mapReady, trips, isLoading, runCommand]);
+
 
   if (error) {
     return (
@@ -50,32 +52,33 @@ export default function Home() {
 
   return (
     <>
-      <DynamicTitle title={website?.title} />
+      <DynamicTitle />
       <div className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row">
         {/* Single MapView - responsive sizing */}
         <div className={`flex-1 md:w-1/2 lg:w-2/3 relative transition-all duration-300 h-full
           `}>
-          <MapView trips={trips} websiteIcon={website?.icon} />
+          <MapView trips={trips} />
         </div>
 
         {/* Mobile: Sliding Panel */}
         <div className="md:hidden">
           <BottomDrawer>
-            {trips.length === 0 ? (
-              <div className="p-4 text-center">
-                <p className="text-muted">No trips found.</p>
-              </div>
-            ) : (
-              <TripSwiper trips={trips} />
-            )}
+            <div className={`w-full h-full`}>
+              <TripSwiper />
+              {selectedTrip?.markers && selectedTrip?.markers.length > 0 && (
+                <div className="pt-4">
+                  <PhotoCarousel markers={selectedTrip.markers} />
+                </div>
+              )}
+            </div>
           </BottomDrawer>
         </div>
 
-        <DesktopSidebar trips={trips} title={website?.title} />
+        <DesktopSidebar />
 
         {/* Loading Overlay */}
         {(!isLoaded) && (
-            <SnapIterLoader website={website ?? null} />
+          <SnapIterLoader website={website ?? null} />
         )}
 
         {/* Brand - Bottom Left (Desktop Only) */}

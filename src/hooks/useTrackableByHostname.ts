@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { useApiClient } from './useApiClient';
 import { Trackable } from '@/store/atoms';
+import { useHostname } from './useApiData';
 
-export function useWebsite(hostname: string | null) {
+export function useTrackableByHostname() {
   const api = useApiClient()
+  const hostname = useHostname();
 
   return useQuery({
     queryKey: ['website', hostname],

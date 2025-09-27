@@ -2,19 +2,16 @@ import PhotoGrid from '../../PhotoGrid';
 import type { Marker, Trip } from '@/store/atoms';
 import { FaRoute } from 'react-icons/fa6';
 import DayAndPhoto from '../DayAndPhoto';
+import { useSelectedTrip } from '@/hooks/useSelectedTrip';
   
-interface DesktopMarkerMenuProps {
-  trip: Trip;
-  isSelected: boolean;
-  markers: Marker[];
-}
+export default function DesktopMarkerMenu() {
+  const { trip } = useSelectedTrip();
 
-export default function DesktopMarkerMenu({ trip, isSelected, markers }: DesktopMarkerMenuProps) {
   if (trip === undefined || trip === null) {
     return <></>
   }
 
-  if (markers.length === 0) {
+  if (trip.markers.length === 0) {
     return <></>
   }
 
@@ -26,10 +23,10 @@ export default function DesktopMarkerMenu({ trip, isSelected, markers }: Desktop
               <h2 className="text-xl font-bold text-foreground mb-2 mt-2">{trip.title} </h2>
               <FaRoute className="w-4 h-4" color={trip.color} />
             </div>
-            <DayAndPhoto startDate={trip.startDate} endDate={trip.endDate} isSelected={isSelected} markersLength={markers.length} />
+            <DayAndPhoto startDate={trip.startDate} endDate={trip.endDate} markersLength={trip.markers.length} />
           </div>
             <div className="overflow-y-auto">
-              <PhotoGrid markers={markers} />
+              <PhotoGrid markers={trip.markers} />
             </div>
         </div>
       </div>

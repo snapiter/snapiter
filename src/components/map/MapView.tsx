@@ -2,7 +2,7 @@
 
 import { Source, Layer, type MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { type Trip, type TripDetailed, lightboxIndexAtom, mapEventsAtom, bottomPanelExpandedAtom, MapStyle } from '@/store/atoms';
+import { type Trip, type TripDetailed, lightboxIndexAtom, mapEventsAtom, bottomPanelExpandedAtom, MapStyle, TripWithMarkers } from '@/store/atoms';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useRef, useState, useEffect, RefObject } from 'react';
 import type maplibregl from 'maplibre-gl';
@@ -14,14 +14,16 @@ import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import { animateTrip, type AnimationRefs } from '@/utils/tripAnimationHandler';
 import { config } from '@/config';
 import MapWrapper from './MapWrapper';
+import { useTrackableByHostname } from '@/hooks/useTrackableByHostname';
 
 interface MapViewProps {
-  trips?: Trip[];
-  websiteIcon?: string;
+  trips?: TripWithMarkers[];
 }
 
-export default function MapView({ trips = [], websiteIcon }: MapViewProps) {
+export default function MapView({ trips = [] }: MapViewProps) {
   const { trip: selectedTrip } = useSelectedTrip();
+  const { data: website } = useTrackableByHostname();
+  const websiteIcon = website?.icon;
   
   const { runCommand } = useMapCommands();
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);

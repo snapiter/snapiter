@@ -5,22 +5,15 @@ import 'swiper/css/pagination';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import { TripWithMarkers, type Trip } from '@/store/atoms';
 import { useMapCommands } from '@/hooks/useMapCommands';
-import { useSelectedTrip } from '@/hooks/useSelectedTrip';
-import PhotoCarousel from './PhotoCarousel';
 import MobileTripDetails from './MobileTripDetails';
+import { useTripsByHostname } from '@/hooks/useTripsByHostname';
 
-interface TripSwiperProps {
-  trips: Trip[];
-}
 
-export default function TripSwiper({ trips }: TripSwiperProps) {
+export default function TripSwiper() {
   const { runCommand } = useMapCommands();
-  
-  const { trip: selectedTrip } = useSelectedTrip();
 
-  const markers = selectedTrip?.markers ?? [];
+  const { data: trips } = useTripsByHostname();
 
   const handleSlideChange = (swiper: any) => {
     runCommand({
@@ -28,9 +21,14 @@ export default function TripSwiper({ trips }: TripSwiperProps) {
       tripSlug: trips[swiper.activeIndex].slug
     });
   };
+
+  if (trips.length === 0) {
+    <div className="p-4 text-center">
+      <p className="text-muted">No trips found.</p>
+    </div>
+  }
     
   return (
-    <div className={`w-full h-full`}>
       <Swiper
         modules={[Pagination]}
         spaceBetween={16}
@@ -41,22 +39,10 @@ export default function TripSwiper({ trips }: TripSwiperProps) {
         {trips.map((trip) => (
           <SwiperSlide key={`swiper-${trip.slug}`} className="">
             <MobileTripDetails 
-              trip={
-                {
-                  ...trip,
-                markers: markers
-              } as TripWithMarkers
-              } 
-            />
+              trip={trip} 
+            />  
           </SwiperSlide>
         ))}
       </Swiper>
-
-      {markers.length > 0 && (
-          <div className="pt-4">
-            <PhotoCarousel markers={markers} />
-          </div>
-        )}
-    </div>
   );
 }
