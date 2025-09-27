@@ -19,6 +19,8 @@ export default function SnapIterLoader({ website }: SnapIterLoaderProps) {
   }, [website?.title]);
 
   return (
+    <div className="absolute inset-0 z-[200]">
+
     <div className="fixed inset-0 dark:bg-black bg-white flex items-center justify-center p-4 z-50">
       <div className="bg-surface rounded-2xl p-8 shadow-lg border border-border flex flex-col items-center gap-6 w-full max-w-sm relative">
         {/* Animated Container */}
@@ -56,7 +58,8 @@ export default function SnapIterLoader({ website }: SnapIterLoaderProps) {
           <div className="w-full bg-background rounded-full h-2 overflow-hidden mt-4">
             <div className="h-2 bg-primary rounded-full animate-loading" />
           </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
