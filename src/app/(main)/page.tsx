@@ -72,7 +72,7 @@ export default function Home() {
         </div>
 
         {/* Desktop: Side Panel */}
-          <DesktopTripView trips={trips} title={website?.title} />
+        <DesktopTripView trips={trips} title={website?.title} />
 
         {/* Loading Overlay */}
         {(!isLoaded) && (

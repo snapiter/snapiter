@@ -16,6 +16,10 @@ export default function DesktopTripDetails({ trip, isSelected, markers }: TripDe
     return <></>
   }
 
+  if (markers.length === 0) {
+    return <></>
+  }
+
   return (
       <div className="h-full flex flex-col flex-1">
         <div className="hidden md:block">
@@ -26,11 +30,9 @@ export default function DesktopTripDetails({ trip, isSelected, markers }: TripDe
             </div>
             <DayAndPhoto startDate={trip.startDate} endDate={trip.endDate} isSelected={isSelected} markersLength={markers.length} />
           </div>
-          {markers.length > 0 && (
             <div className="overflow-y-auto">
               <PhotoGrid markers={markers} />
             </div>
-          )}
         </div>
       </div>
   );
