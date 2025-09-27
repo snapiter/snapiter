@@ -1,17 +1,15 @@
-'use client';
-
 import PhotoGrid from '../../PhotoGrid';
 import type { Marker, Trip } from '@/store/atoms';
 import { FaRoute } from 'react-icons/fa6';
 import DayAndPhoto from '../DayAndPhoto';
   
-interface TripDetailsProps {
+interface DesktopMarkerMenuProps {
   trip: Trip;
   isSelected: boolean;
   markers: Marker[];
 }
 
-export default function DesktopTripDetails({ trip, isSelected, markers }: TripDetailsProps) {
+export default function DesktopMarkerMenu({ trip, isSelected, markers }: DesktopMarkerMenuProps) {
   if (trip === undefined || trip === null) {
     return <></>
   }

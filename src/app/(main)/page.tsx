@@ -14,7 +14,7 @@ import { useAtomValue } from 'jotai';
 import { mapEventsAtom } from '@/store/atoms';
 import { useTrips } from '@/hooks/useTrips';
 import ErrorComponent from '@/components/ErrorComponent';
-import DesktopTripView from '@/components/map/desktop/DesktopTripView';
+import DesktopSidebar from '@/components/map/desktop/DesktopSidebar';
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -71,8 +71,7 @@ export default function Home() {
           </SlidingPanel>
         </div>
 
-        {/* Desktop: Side Panel */}
-        <DesktopTripView trips={trips} title={website?.title} />
+        <DesktopSidebar trips={trips} title={website?.title} />
 
         {/* Loading Overlay */}
         {(!isLoaded) && (

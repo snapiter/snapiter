@@ -1,16 +1,14 @@
-'use client';
-
-import DesktopTripDetails from './DesktopTripDetails';
+import DesktopMarkerMenu from './DesktopMarkerMenu';
 import { type Trip } from '@/store/atoms';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
-import TripSidebar from './TripSidebar';
+import DesktopTripMenu from './DesktopTripMenu';
 
-interface DesktopTripViewProps {
+interface DesktopSidebarProps {
   trips: Trip[];
   title?: string;
 }
 
-export default function DesktopTripView({ trips, title }: DesktopTripViewProps) {
+export default function DesktopSidebar({ trips, title }: DesktopSidebarProps) {
   const { trip: selectedTrip } = useSelectedTrip();
   const markers = selectedTrip?.markers ?? [];
 
@@ -31,11 +29,11 @@ export default function DesktopTripView({ trips, title }: DesktopTripViewProps) 
   return (
 <div className="h-full hidden md:block md:w-1/2 lg:w-1/3">
   <div className="flex h-full">
-      <TripSidebar 
+      <DesktopTripMenu 
         trips={trips} 
         title={title}
       />
-      <DesktopTripDetails 
+      <DesktopMarkerMenu 
         trip={selectedTrip} 
         isSelected={true} 
         markers={markers} 

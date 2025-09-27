@@ -7,12 +7,12 @@ import Logo from '../../Logo';
 import { formatTripDate } from '@/utils/formatTripDate';
 import { useMapCommands } from '@/hooks/useMapCommands';
 
-interface TripSidebarProps {
+interface DesktopTripMenuProps {
   trips: Trip[];
   title?: string;
 }
 
-export default function TripSidebar({ trips, title }: TripSidebarProps) {
+export default function DesktopTripMenu({ trips, title }: DesktopTripMenuProps) {
   const selectedTrip = useSelectedTrip();
   const { runCommand } = useMapCommands();
 
