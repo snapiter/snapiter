@@ -1,9 +1,9 @@
 'use client';
 
-import TripSidebar from './TripSidebar';
 import DesktopTripDetails from './DesktopTripDetails';
 import { type Trip } from '@/store/atoms';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
+import TripSidebar from './TripSidebar';
 
 interface DesktopTripViewProps {
   trips: Trip[];

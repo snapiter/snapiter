@@ -5,7 +5,7 @@ import { useTripWithPosition } from "@/hooks/useTripWithPosition";
 import Card from "@/components/dashboard/cards/Card";
 import StackCard from "@/components/dashboard/layout/StackCard";
 import { Layer, MapRef, Marker, Source } from "react-map-gl/maplibre";
-import MapWrapper from "@/components/MapWrapper";
+import MapWrapper from "@/components/map/MapWrapper";
 import { createRouteData, fitMapBounds } from "@/utils/mapBounds";
 import { formatTripDate } from "@/utils/formatTripDate";
 import { useMarkers } from "@/hooks/useMarkers";

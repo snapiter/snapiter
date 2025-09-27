@@ -3,7 +3,7 @@
 import { type Trip } from '@/store/atoms';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import { FaRoute } from 'react-icons/fa6';
-import Logo from './Logo';
+import Logo from '../../Logo';
 import { formatTripDate } from '@/utils/formatTripDate';
 import { useMapCommands } from '@/hooks/useMapCommands';
 

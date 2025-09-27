@@ -1,10 +1,9 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import MapView from '@/components/MapView';
+import MapView from '@/components/map/MapView';
 import SlidingPanel from '@/components/SlidingPanel';
-import TripSwiper from '@/components/TripSwiper';
-import DesktopTripView from '@/components/DesktopTripView';
+import TripSwiper from '@/components/map/mobile/TripSwiper';
 import SnapIterLoader from '@/components/SnapIterLoader';
 import DynamicTitle from '@/components/DynamicTitle';
 import Brand from '@/components/Brand';
@@ -15,6 +14,7 @@ import { useAtomValue } from 'jotai';
 import { mapEventsAtom } from '@/store/atoms';
 import { useTrips } from '@/hooks/useTrips';
 import ErrorComponent from '@/components/ErrorComponent';
+import DesktopTripView from '@/components/map/desktop/DesktopTripView';
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
