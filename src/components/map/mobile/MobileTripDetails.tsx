@@ -1,6 +1,6 @@
 'use client';
 
-import type { Marker, TripWithMarkers } from '@/store/atoms';
+import type { TripWithMarkers } from '@/store/atoms';
 import { getMarkerUrlThumbnail } from '@/services/thumbnail';
 import Image from 'next/image';
 import DayAndPhoto from '../DayAndPhoto';
@@ -41,7 +41,7 @@ export default function MobileTripDetails({ trip }: TripDetailsProps) {
               >
                 {trip.title}
               </h2>
-              <DayAndPhoto startDate={trip.startDate} endDate={trip.endDate} isSelected={false} markersLength={trip.markers.length} />
+              <DayAndPhoto startDate={trip.startDate} endDate={trip.endDate} markersLength={trip.markers.length} />
             </div>
           </div>
         </div>
