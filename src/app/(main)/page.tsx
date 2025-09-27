@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import MapView from '@/components/map/MapView';
-import SlidingPanel from '@/components/SlidingPanel';
+import BottomDrawer from '@/components/map/mobile/BottomDrawer';
 import TripSwiper from '@/components/map/mobile/TripSwiper';
 import SnapIterLoader from '@/components/SnapIterLoader';
 import DynamicTitle from '@/components/DynamicTitle';
@@ -60,15 +60,15 @@ export default function Home() {
 
         {/* Mobile: Sliding Panel */}
         <div className="md:hidden">
-          <SlidingPanel>
+          <BottomDrawer>
             {trips.length === 0 ? (
               <div className="p-4 text-center">
-                <p className="text-muted">No Iter's found.</p>
+                <p className="text-muted">No trips found.</p>
               </div>
             ) : (
               <TripSwiper trips={trips} />
             )}
-          </SlidingPanel>
+          </BottomDrawer>
         </div>
 
         <DesktopSidebar trips={trips} title={website?.title} />

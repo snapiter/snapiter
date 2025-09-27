@@ -1,12 +1,11 @@
 'use client';
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper/modules';
-import DesktopTripDetails from './DesktopTripDetails';
-import { TripWithMarkers, type Trip } from '@/store/atoms';
-
 import 'swiper/css';
 import 'swiper/css/pagination';
+
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
+import { TripWithMarkers, type Trip } from '@/store/atoms';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import PhotoCarousel from './PhotoCarousel';

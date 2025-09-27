@@ -31,9 +31,7 @@ export default function MobileTripDetails({ trip }: TripDetailsProps) {
                     height={64}
                   />
                 </div>
-              ) : ( 
-                <div className="h-16 w-16 rounded-lg bg-surface flex-shrink-0 animate-pulse" />
-              )
+              ) : (<></>)
             }
 
             <div className="flex-1">

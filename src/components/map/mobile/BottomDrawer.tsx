@@ -9,11 +9,11 @@ import { bottomPanelExpandedAtom } from '@/store/atoms';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { config } from '@/config';
 
-interface SlidingPanelProps {
+interface BottomDrawerProps {
   children: ReactNode;
 }
 
-export default function SlidingPanel({ children }: SlidingPanelProps) {
+export default function BottomDrawer({ children }: BottomDrawerProps) {
   const isExpanded = useAtomValue(bottomPanelExpandedAtom);
   const [expandedHeight, setExpandedHeight] = useState(0);
   const dragControls = useDragControls();
