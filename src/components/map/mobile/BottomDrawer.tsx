@@ -49,7 +49,7 @@ export default function BottomDrawer({ children }: { children: React.ReactNode }
         }
       }}
       snapPoints={snapIndices}
-      initialSnap={130}
+      initialSnap={config.collapsedHeight}
       
     >
       <Sheet.Container style={{ zIndex: 102, backgroundColor: 'transparent', borderRadius: '100px' }} className="bg-background rounded-t-3xl">
