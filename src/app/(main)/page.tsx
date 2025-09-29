@@ -60,19 +60,16 @@ export default function Home() {
           <MapView trips={trips} />
         </div>
 
-        {/* Mobile: Sliding Panel */}
-        <div className="md:hidden">
-          <BottomDrawer>
-            <div className={`w-full h-full`}>
-              <TripSwiper />
-              {selectedTrip?.markers && selectedTrip?.markers.length > 0 && (
-                <div className="pt-4">
-                  <PhotoCarousel markers={selectedTrip.markers} />
-                </div>
-              )}
-            </div>
-          </BottomDrawer>
-        </div>
+        <BottomDrawer>
+          <div className={`w-full h-full`}>
+            <TripSwiper />
+            {selectedTrip?.markers && selectedTrip?.markers.length > 0 && (
+              <div className="pt-4">
+                <PhotoCarousel markers={selectedTrip.markers} />
+              </div>
+            )}
+          </div>
+        </BottomDrawer>
 
         <DesktopSidebar />
 
