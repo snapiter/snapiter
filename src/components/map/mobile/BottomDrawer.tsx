@@ -48,6 +48,7 @@ export default function BottomDrawer({ children }: { children: React.ReactNode }
           runCommand({ type: 'PANEL_EXPAND' });
         }
       }}
+      className="md:hidden"
       snapPoints={snapIndices}
       initialSnap={config.collapsedHeight}
       
