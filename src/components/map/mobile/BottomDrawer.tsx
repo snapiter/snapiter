@@ -69,7 +69,6 @@ export default function BottomDrawer({ children }: { children: React.ReactNode }
           <div className="p-2">{children}</div>
         </Sheet.Content>
       </Sheet.Container>
-      <Sheet.Backdrop />
     </Sheet>
   );
 }
