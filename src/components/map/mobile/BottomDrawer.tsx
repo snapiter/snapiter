@@ -5,6 +5,7 @@ import { useAtomValue } from 'jotai';
 import { bottomPanelExpandedAtom } from '@/store/atoms';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { Sheet, SheetRef } from 'react-modal-sheet';
+import { config } from '@/config';
 
 export default function BottomDrawer({ children }: { children: React.ReactNode }) {
   const isExpanded = useAtomValue(bottomPanelExpandedAtom);
@@ -12,7 +13,7 @@ export default function BottomDrawer({ children }: { children: React.ReactNode }
   const [mounted, setMounted] = React.useState(false);
   const ref = React.useRef<SheetRef>(null);
 
-  const snapIndices = [0, 130, 0.5, 1];
+  const snapIndices = [0, config.collapsedHeight, config.expandedHeightCalculation, 1];
   
   const expandedSnapIndex = 2;
   const collapsedSnapIndex = 1;
@@ -52,8 +53,8 @@ export default function BottomDrawer({ children }: { children: React.ReactNode }
       
     >
       <Sheet.Container style={{ zIndex: 102, backgroundColor: 'transparent', borderRadius: '100px' }} className="bg-background rounded-t-3xl">
-        <Sheet.Header className="bg-background rounded-t-3xl ">
-          <div className="flex justify-center py-2 cursor-grab">
+        <Sheet.Header className="bg-background rounded-t-3xl py-2 cursor-grab border-b border-border">
+          <div className="flex justify-center py-2">
             <div className="w-10 h-1 rounded-full bg-white" />
           </div>
         </Sheet.Header>
