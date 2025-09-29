@@ -29,17 +29,7 @@ export default function BottomDrawer({ children }: { children: React.ReactNode }
 
   }, [ref.current, isExpanded]);
 
-  // React.useEffect(() => {
-  //   if (!ref.current) return;
-  //   if (isExpanded) {
-  //     ref.current.snapTo(1); // expand
-  //   } else {
-  //     ref.current.snapTo(0); // collapse
-  //   }
-  // }, [isExpanded]);
-
   if (!mounted) return null; // 🚀 prevent SSR mismatch
-
 
   return (
     <Sheet
@@ -52,6 +42,9 @@ export default function BottomDrawer({ children }: { children: React.ReactNode }
         }
         if(index === collapsedSnapIndex && isExpanded) {
           runCommand({ type: 'PANEL_COLLAPSE' });
+        }
+        if(index === fullScreenSnapIndex) {
+          runCommand({ type: 'PANEL_EXPAND' });
         }
       }}
       snapPoints={snapIndices}
