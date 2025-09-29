@@ -56,6 +56,7 @@ export default function BottomDrawer({ children }: { children: React.ReactNode }
       }}
       snapPoints={snapIndices}
       initialSnap={130}
+      
     >
       <Sheet.Container style={{ zIndex: 102, backgroundColor: 'transparent', borderRadius: '100px' }} className="bg-background rounded-t-3xl">
         <Sheet.Header className="bg-background rounded-t-3xl ">
