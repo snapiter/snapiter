@@ -11,6 +11,7 @@ import { slugify } from "@/utils/slugify";
 import { FaRegFloppyDisk } from "react-icons/fa6";
 import { Trip } from "@/store/atoms";
 import { SpeedSlider } from "../../input/SpeedSlider";
+import { useUpdateTrip } from "@/hooks/useUpdateTrip";
 
 interface EditTripCardProps {
     trackableId: string;
@@ -25,6 +26,7 @@ export default function EditTripCard({ trackableId, trip }: EditTripCardProps) {
         animationSpeed: trip.animationSpeed ? trip.animationSpeed / 1000 : 10000,
     });
 
+    const updateTrip = useUpdateTrip();
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -35,29 +37,34 @@ export default function EditTripCard({ trackableId, trip }: EditTripCardProps) {
         );
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!form) return;
+    
+        updateTrip.mutate(
+          {
+            trackableId,
+            originalSlug: trip.slug,
+            trip: {
+              ...form,
+              animationSpeed: form.animationSpeed ? form.animationSpeed * 1000 : 10000,
+              slug: slugify(form.title),
+            },
+          },
+          {
+            onSuccess: () => {
+              router.replace(
+                `/dashboard/trackables/${trackableId}/trips/${slugify(form.title)}`
+              );
+            },
+            onError: (err) => {
+              console.error("Failed to update trip", err);
+            },
+          }
+        );
+      };
 
-        try {
-            await apiClient.put<void>(
-                `/api/trackables/${trackableId}/trips/${trip.slug}`,
-                {
-                    trackableId: trackableId,
-                    title: form.title,
-                    description: form.description,
-                    color: form.color,
-                    animationSpeed: form.animationSpeed ? form.animationSpeed * 1000 : 10000,
-                    slug: slugify(form.title),
-                }
-            );
-            router.replace(`/dashboard/trackables/${trackableId}/trips/${slugify(form.title)}`);
-        } catch (err) {
-            console.error("Failed to update trip", err);
-        }
-    };
-
-    if (!form) return <div>Loading trip...</div>;
+    if (!form) return <></>;
 
     return (
         <Card title="Edit Trip">
