@@ -2,10 +2,10 @@ import { Trip } from "@/store/atoms";
 import Card from "../Card";
 import { PrimaryButton } from "@snapiter/designsystem";
 import { FaX } from "react-icons/fa6";
-import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import { formatTripDate } from "@/utils/formatTripDate";
 import { useState } from "react";
 import ConfirmDialog from "../../layout/ConfirmDialog";
+import { useUpdateTrip } from "@/hooks/trips/useUpdateTrip";
 
 interface ActiveTripCardProps {
     trip: Trip;
@@ -13,15 +13,32 @@ interface ActiveTripCardProps {
 
 export default function ActiveTripCard({ trip }: ActiveTripCardProps) {
     const [isActive, setIsActive] = useState(trip.endDate == null);
-    const apiClient = useDashboardApiClient();
 
+    const updateTrip = useUpdateTrip();
+    
     const [showConfirm, setShowConfirm] = useState(false);
+
     const handleStop = async () => {
-        await apiClient.put(`/api/trackables/${trip.trackableId}/trips/${trip.slug}`, {
-            endDate: new Date().toISOString(),
-        });
-        setIsActive(false);
-    };
+        updateTrip.mutate(
+          {
+            trackableId: trip.trackableId,
+            originalSlug: trip.slug,
+            trip: {
+              ...trip,
+              endDate: new Date().toISOString(),
+            },
+          },
+          {
+            onSuccess: () => {
+              setIsActive(false);
+              setShowConfirm(false);
+            },
+            onError: (err) => {
+              console.error("Failed to stop trip", err);
+            },
+          }
+        );
+      };
 
     if(!isActive) return <></>;
 

@@ -17,8 +17,8 @@ export function useDashboardApiClient() {
         },
       })
       if (!res.ok) {
-        setErrorMessage({ message: res.statusText, status: res.status });
-        throw new Error(`${res.statusText}`)
+        setErrorMessage({ message: res.statusText ?? "Unknown error", status: res.status });
+        throw new Error(`${res.statusText ?? "Unknown error"}`)
       }
       const contentType = res.headers.get("content-type")
       if (contentType?.includes("application/json")) return res.json()

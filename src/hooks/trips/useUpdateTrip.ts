@@ -2,12 +2,21 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
-import type { Trip } from "@/store/atoms";
 
 interface UpdateTripInput {
   trackableId: string;
   originalSlug: string;
-  trip: Trip;
+  trip: UpdateTrip;
+}
+
+export interface UpdateTrip {
+  startDate?: string;
+  endDate?: string;
+  title?: string;
+  description?: string;
+  slug?: string;
+  color?: string;
+  animationSpeed?: number;
 }
 
 export function useUpdateTrip() {
@@ -23,6 +32,10 @@ export function useUpdateTrip() {
     },
     onSuccess: (_data, variables) => {
       // Invalidate cached trips for this trackable
+
+      queryClient.invalidateQueries({
+        queryKey: ['trip-with-positions', variables.trackableId, variables.originalSlug],
+      });
       queryClient.invalidateQueries({
         queryKey: ["trips-with-markers", variables.trackableId],
       });

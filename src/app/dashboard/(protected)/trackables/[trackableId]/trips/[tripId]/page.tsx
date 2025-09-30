@@ -7,7 +7,6 @@ import StackCard from "@/components/dashboard/layout/StackCard";
 import { Layer, MapRef, Marker, Source } from "react-map-gl/maplibre";
 import MapWrapper from "@/components/map/MapWrapper";
 import { createRouteData, fitMapBounds } from "@/utils/mapBounds";
-import { formatTripDate } from "@/utils/formatTripDate";
 import { useMarkers } from "@/hooks/useMarkers";
 import MarkersCard from "@/components/dashboard/cards/markers/MarkersCard";
 import ActiveTripCard from "@/components/dashboard/cards/trips/ActiveTripCard";

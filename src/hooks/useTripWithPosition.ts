@@ -6,7 +6,7 @@ export function useTripWithPosition(trackableId: string, tripId: string) {
   const api = useApiClient();
 
   return useQuery<TripWithPositions>({
-    queryKey: ['tripWithPositions', trackableId, tripId],
+    queryKey: ['trip-with-positions', trackableId, tripId],
     queryFn: async () => {
       const trip = await api.get<Trip>(
         `/api/trackables/${trackableId}/trips/${tripId}`

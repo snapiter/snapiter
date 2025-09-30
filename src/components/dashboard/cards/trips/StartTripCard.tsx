@@ -1,42 +1,41 @@
 "use client";
 
 import { FaVanShuttle } from "react-icons/fa6";
-import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import { useState } from "react";
 import Card from "../Card";
 import { PrimaryButton } from "@snapiter/designsystem";
 import TextInput from "../../input/TextInput";
 import TextArea from "../../input/TextArea";
 import { useRouter } from "next/navigation";
-import { slugify } from "@/utils/slugify";
+import { useCreateTrip } from "@/hooks/trips/useCreateTrip";
 
 interface StartTripCardProps {
     trackableId: string;
 }
 export default function StartTripCard({ trackableId }: StartTripCardProps) {
     const router = useRouter();
+    const createTrip = useCreateTrip();
 
-    const apiClient = useDashboardApiClient();
     const [form, setForm] = useState({
         title: "",
         description: ""
     });
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        try {
-
-            await apiClient.post<void>(`/api/trackables/${trackableId}/trips`, {
-                ...form,
-                slug: slugify(form.title),
-                startDate: new Date().toISOString(),
-            });
-        } catch (err: any) {
-            console.error(err);
-        } finally {
-            router.replace("/dashboard/trackables/" + trackableId + "/trips/" + slugify(form.title));
-        }
+        createTrip.mutate(
+            {
+                trackableId,
+                title: form.title,
+                description: form.description
+            },
+            {
+                onSuccess: (payload) => {
+                    router.replace(`/dashboard/trackables/${trackableId}/trips/${payload.slug}`);
+                },
+            }
+        );
     };
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
