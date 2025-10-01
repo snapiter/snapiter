@@ -5,6 +5,7 @@ import { useAtom } from "jotai";
 import { FaX } from "react-icons/fa6";
 import MenuItem, { MenuItemProps } from "./MenuItem";
 import LogoutButton from "../buttons/LogoutButton";
+import { Logo } from "@snapiter/designsystem";
 
 export default function Menu({ items }: { items: MenuItemProps[] }) {
   const [isOpen, setIsOpen] = useAtom(mobileMenuOpen);
@@ -15,13 +16,14 @@ export default function Menu({ items }: { items: MenuItemProps[] }) {
           ${isOpen ? "translate-x-0" : "-translate-x-full"} 
           md:static md:translate-x-0 z-20`}
       >
-        {/* Close button (mobile only) */}
+      <div className="md:hidden flex items-center justify-between mb-6">
+        <Logo size="sm" showTitle={true} />
         <button
-          className="md:hidden text-2xl mb-6"
           onClick={() => setIsOpen(false)}
         >
           <FaX />
         </button>
+      </div>
 
         <nav className="flex-1">
           {items.map((item, idx) => (

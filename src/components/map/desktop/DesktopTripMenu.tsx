@@ -2,11 +2,11 @@
 
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import { FaRoute } from 'react-icons/fa6';
-import Logo from '../../Logo';
 import { formatTripDate } from '@/utils/formatTripDate';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useTripsByHostname } from '@/hooks/useTripsByHostname';
 import { useTrackableByHostname } from '@/hooks/useTrackableByHostname';
+import { Logo } from '@snapiter/designsystem';
 
 export default function DesktopTripMenu() {
   const { data: trips } = useTripsByHostname();

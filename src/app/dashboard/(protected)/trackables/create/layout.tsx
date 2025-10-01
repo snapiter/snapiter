@@ -6,7 +6,7 @@ import Menu from "@/components/dashboard/layout/Menu";
 import { useTrackables } from "@/hooks/dashboard/trackables/useTrackables";
 import { createTrackableMenuItem } from "../../menu";
 import { MenuItemProps } from "@/components/dashboard/layout/MenuItem";
-import Logo from "@/components/Logo";
+import { Logo } from "@snapiter/designsystem";
 
 export default function TrackableCreateLayout({
   children
