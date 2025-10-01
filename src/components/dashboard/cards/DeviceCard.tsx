@@ -5,27 +5,21 @@ import { FaMobileScreen, FaTrash } from "react-icons/fa6";
 import Card from "./Card";
 import { SecondaryButton } from "@snapiter/designsystem";
 import { useState } from "react";
-import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import ConfirmDialog from "../layout/ConfirmDialog";
+import { useDeleteDevice } from "@/hooks/dashboard/useDeleteDevice";
 
 interface CardProps {
     device: Device;
 }
 
 export default function DeviceCard({ device }: CardProps) {
-    const [isActive, setIsActive] = useState(true);
-    const apiClient = useDashboardApiClient();
+    const deleteDevice = useDeleteDevice();
 
     const [showConfirm, setShowConfirm] = useState(false);
 
     const handleRevoke = async () => {
-        await apiClient.delete(`/api/trackables/${device.trackableId}/devices/${device.deviceId}`);
-        setIsActive(false);
+        deleteDevice.mutate({ trackableId: device.trackableId, device });
     };
-
-    if(!isActive) return <></>;
-
-    
 
     return (
         <>
@@ -53,7 +47,6 @@ export default function DeviceCard({ device }: CardProps) {
                     </div>
                 </div>
 
-                {/* Right side: device ID */}
                 <span className="text-xs text-muted whitespace-nowrap">
                     <SecondaryButton
                     text="Revoke device"

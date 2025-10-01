@@ -1,8 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
-import { Device } from "@/store/atoms";
-import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
+import { use } from "react";
 import StackCard from "@/components/dashboard/layout/StackCard";
 import DeviceCard from "@/components/dashboard/cards/DeviceCard";
 import AddPhoneCard from "@/components/dashboard/cards/AddPhoneCard";
@@ -11,6 +9,7 @@ import { useTrips } from "@/hooks/useTrips";
 import ActiveTripCard from "@/components/dashboard/cards/trips/ActiveTripCard";
 import StartTripCard from "@/components/dashboard/cards/trips/StartTripCard";
 import TrackableCard from "@/components/dashboard/cards/TrackableCard";
+import { useDevices } from "@/hooks/dashboard/useDevices";
 
 
 export default function TrackablePage({
@@ -19,20 +18,8 @@ export default function TrackablePage({
   params: Promise<{ trackableId: string }>;
 }) {
   const { trackableId } = use(params);
-  const apiClient = useDashboardApiClient();
-  const [devices, setDevices] = useState<Device[]>([]);
   const { data: trips } = useTrips(trackableId);
-
-  // Load devices
-  useEffect(() => {
-    async function load() {
-      const res = await apiClient.get<Device[]>(
-        `/api/trackables/${trackableId}/devices`
-      );
-      setDevices(res);
-    }
-    load();
-  }, [trackableId]);
+  const { data: devices } = useDevices(trackableId);
 
   const activeTrip = trips?.filter((t) => t.endDate == null)?.[0];
 
