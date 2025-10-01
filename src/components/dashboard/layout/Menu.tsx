@@ -11,37 +11,39 @@ export default function Menu({ items }: { items: MenuItemProps[] }) {
   const [isOpen, setIsOpen] = useAtom(mobileMenuOpen);
 
   return (
-      <aside
-        className={` bg-background fixed w-full top-0 left-0 h-full border-r border-border md:w-92 text-foreground p-4 flex flex-col transform transition-transform duration-300 ease-in-out
+    <aside
+      className={` bg-background fixed w-full top-0 left-0 h-full border-r border-border md:w-92 text-foreground p-4 flex flex-col transform transition-transform duration-300 ease-in-out
           ${isOpen ? "translate-x-0" : "-translate-x-full"} 
           md:static md:translate-x-0 z-20`}
-      >
-      <div className="md:hidden flex items-center justify-between mb-6">
-        <Logo size="sm" showTitle={true} />
-        <button
-          onClick={() => setIsOpen(false)}
-        >
-          <FaX />
-        </button>
+    >
+      <div className="md:hidden">
+        <div className="flex items-center justify-between mb-6">
+          <Logo size="sm" showTitle={true} />
+          <button
+            onClick={() => setIsOpen(false)}
+          >
+            <FaX />
+          </button>
+        </div>
       </div>
 
-        <nav className="flex-1">
-          {items.map((item, idx) => (
-            <MenuItem
-              key={idx}
-              icon={item.icon}
-              label={item.label}
-              href={item.href}
-              submenu={item.submenu}
-              className={item.className}
-            />
-          ))}
-        </nav>
+      <nav className="flex-1">
+        {items.map((item, idx) => (
+          <MenuItem
+            key={idx}
+            icon={item.icon}
+            label={item.label}
+            href={item.href}
+            submenu={item.submenu}
+            className={item.className}
+          />
+        ))}
+      </nav>
 
-        {/* Footer text */}
-        <div className="mt-auto pt-6 text-sm text-muted text-center">
-          <LogoutButton />
-        </div>
-      </aside>
+      {/* Footer text */}
+      <div className="mt-auto pt-6 text-sm text-muted text-center">
+        <LogoutButton />
+      </div>
+    </aside>
   );
 }

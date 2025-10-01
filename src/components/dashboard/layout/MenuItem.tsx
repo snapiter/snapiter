@@ -64,9 +64,9 @@ export default function MenuItem({ icon, label, href, submenu, className }: Menu
             <li key={item.href} className="flex items-center gap-3" onClick={() => setMobileMenuOpen(false)}>
               <Link
                 href={item.href}
-                className={`flex items-center gap-3 w-full px-4 py-3 rounded-md hover:bg-surface pl-10 ${item.className}`}
+                className={`flex items-center gap-3 w-full px-4 py-3 rounded-md hover:bg-surface ${item.className}`}
               >
-                <span className="text-xl">{item.icon}</span>
+                <span className="text-xl pl-10">{item.icon}</span>
                 <span className="flex font-medium">{item.label}
                   {item.active && (
                     <span className="px-2 text-sm flex items-center gap-1 text-muted"><FaCheck size={10} className="text-primary-light" />active</span>

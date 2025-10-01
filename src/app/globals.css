@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "@snapiter/designsystem/dist/design-system.css";
+
 
 :root {
   /* Core Colors */

@@ -1,6 +1,7 @@
 @reference "../globals.css";
 @reference "tailwindcss";
 
+
 .loading-bar {
   width: 50%;
   /* chunk size */
@@ -29,36 +30,6 @@
 
 .animate-border-pulse {
   animation: border-pulse 2s ease-in-out infinite;
-}
-
-
-
-/* globals.css or any Tailwind CSS file */
-.button-primary {
-  @apply bg-primary text-foreground font-semibold rounded-md px-4 py-2 transition-colors duration-200 cursor-pointer;
-}
-
-.button-primary:hover {
-  @apply bg-[var(--primary-hover)];
-}
-
-
-.button-primary:disabled {
-  @apply opacity-70 cursor-not-allowed;
-}
-
-
-
-.button-secondary {
-  @apply bg-surface text-foreground border border-transparent font-semibold rounded-md p-2  cursor-pointer;
-}
-
-.button-secondary:hover {
-  @apply bg-surface/80 border border-border;
-}
-
-.button-secondary:disabled {
-  @apply opacity-70 cursor-not-allowed;
 }
 
 

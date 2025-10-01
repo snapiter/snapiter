@@ -13,7 +13,7 @@ export default function LogoutButton() {
   return (
     <button
       onClick={handleLogout}
-      className="flex items-center w-full  cursor-pointer gap-2 px-4 py-2 rounded-md bg-background text-foreground font-medium shadow-md hover:bg-surface transition"
+      className="flex items-center w-full  cursor-pointer gap-2 px-4 py-2 rounded-md bg-background text-foreground font-medium hover:bg-surface transition"
     >
       <FaRightFromBracket className="w-4 h-4" />
       <span className="hidden md:block">Logout</span>
