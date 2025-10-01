@@ -11,6 +11,7 @@ export interface SubItem {
   href: string;
   active?: boolean;
   icon?: ReactNode;
+  className?: string;
 }
 
 export interface MenuItemProps {
@@ -18,9 +19,10 @@ export interface MenuItemProps {
   label: string;
   href?: string;
   submenu?: SubItem[];
+  className?: string;
 }
 
-export default function MenuItem({ icon, label, href, submenu }: MenuItemProps) {
+export default function MenuItem({ icon, label, href, submenu, className }: MenuItemProps) {
   const setMobileMenuOpen = useSetAtom(mobileMenuOpen);
 
   const [open, setOpen] = useState(true);
@@ -32,8 +34,8 @@ export default function MenuItem({ icon, label, href, submenu }: MenuItemProps) 
       {hasSubmenu ? (
         <button
           onClick={() => setOpen(!open)}
-          className="flex items-center cursor-pointer justify-between w-full px-4 py-3 rounded-md text-left
-                     hover:bg-surface transition-colors"
+          className={`flex items-center cursor-pointer justify-between w-full px-4 py-3 rounded-md text-left
+                     hover:bg-surface transition-colors ${className}`}
         >
           <span className="flex items-center gap-3">
             <span className="text-xl">{icon}</span>
@@ -48,7 +50,7 @@ export default function MenuItem({ icon, label, href, submenu }: MenuItemProps) 
         <Link
           href={href || "#"}
           onClick={() => setMobileMenuOpen(false)}
-          className="flex items-center gap-3 w-full px-4 py-3 rounded-md hover:bg-surface"
+          className={`flex items-center gap-3 w-full px-4 py-3 rounded-md hover:bg-surface ${className}`}
         >
           <span className="text-xl">{icon}</span>
           <span className="font-medium">{label}</span>
@@ -62,7 +64,7 @@ export default function MenuItem({ icon, label, href, submenu }: MenuItemProps) 
             <li key={item.href} className="flex items-center gap-3" onClick={() => setMobileMenuOpen(false)}>
               <Link
                 href={item.href}
-                className="flex items-center gap-3 w-full px-4 py-3 rounded-md hover:bg-surface pl-10"
+                className={`flex items-center gap-3 w-full px-4 py-3 rounded-md hover:bg-surface pl-10 ${item.className}`}
               >
                 <span className="text-xl">{item.icon}</span>
                 <span className="flex font-medium">{item.label}

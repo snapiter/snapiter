@@ -6,4 +6,5 @@ export const createTrackableMenuItem: MenuItemProps =
     icon: <FaLocationCrosshairs className="text-primary" />, 
     label: "Create Trackable",
     href: "/dashboard/trackables/create",
+    className: "border-b border-border",
   }
