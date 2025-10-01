@@ -3,27 +3,22 @@ import { FaQrcode } from "react-icons/fa6";
 import Modal from "../layout/Modal";
 import { QuickCreateRes } from "@/store/atoms";
 import { useState } from "react";
-import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
+import { useCreateDevice } from "@/hooks/dashboard/useCreateDevice";
 
 interface AddPhoneCardProps {
     trackableId: string;
 }
 
 export default function AddPhoneCard({ trackableId }: AddPhoneCardProps) {
-
     const [modalOpen, setModalOpen] = useState(false);
     const [modalContent, setModalContent] = useState<QuickCreateRes | null>(null);
-    const apiClient = useDashboardApiClient();
+    const createDevice = useCreateDevice();
 
     async function addPhone() {
-        const res = await apiClient.post<QuickCreateRes>(
-            `/api/trackables/${trackableId}/devices/token`,
-            {}
-        );
+        const res = await createDevice.mutateAsync({ trackableId });
         setModalContent(res);
         setModalOpen(true);
     }
-
 
     return (
         <>
