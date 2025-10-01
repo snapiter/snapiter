@@ -7,7 +7,7 @@ import TextInput from "@/components/dashboard/input/TextInput";
 import Card from "@/components/dashboard/cards/Card";
 import StackCard from "@/components/dashboard/layout/StackCard";
 import { useCreateTrackable } from "@/hooks/dashboard/trackables/useCreateTrackable";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 type TrackableRequest = {
   name: string;
@@ -16,6 +16,7 @@ type TrackableRequest = {
 };
 
 export default function CreateTrackablePage() {
+  const router = useRouter();
   const createTrackable = useCreateTrackable();
   const [form, setForm] = useState<TrackableRequest>({
     name: "",
@@ -38,7 +39,7 @@ export default function CreateTrackablePage() {
             e.preventDefault();
             if (e.currentTarget.checkValidity()) {
               createTrackable.mutate(form, {
-                onSuccess: () => router.push("/dashboard/trackables"),
+                onSuccess: () => router.push("/dashboard"),
               });
             }
           }}

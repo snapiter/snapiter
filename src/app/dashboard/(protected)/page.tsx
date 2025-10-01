@@ -44,7 +44,7 @@ export default function Dashboard() {
         {
           icon: <FaLocationCrosshairs className="text-primary" />,
           label: "Create Trackable",
-          href: "/trackables/create",
+          href: "/dashboard/trackables/create",
         },
       ]} />
       <Main>

@@ -7,13 +7,14 @@ type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   id: string;
 };
 
-export default function TextArea({ label, id, ...props }: TextAreaProps) {
+export default function TextArea({ label, id, required, ...props }: TextAreaProps) {
   return (
     <div className="text-area-wrapper">
       {label && <label htmlFor={id} className="text-area-label">
-        {label}
+        {label}{" "}
+        {required && <span className="text-red-600">*</span>}
       </label>}
-      <textarea id={id} name={id} className="text-area" {...props} />
+      <textarea id={id} name={id} required={required} className={`text-area ${required ? "required" : ""}`} {...props} />
     </div>
   );
 }
