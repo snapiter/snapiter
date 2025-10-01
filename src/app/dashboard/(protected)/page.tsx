@@ -1,50 +1,45 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Trackable } from "@/store/atoms";
 import TrackableCard from "@/components/dashboard/cards/trackable/TrackableCard";
-import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import Menu from "@/components/dashboard/layout/Menu";
 import Main from "@/components/dashboard/layout/Main";
 import { FaLocationCrosshairs } from "react-icons/fa6";
+import { useTrackables } from "@/hooks/dashboard/trackables/useTrackables";
 
 
 export default function Dashboard() {
-  const apiClient = useDashboardApiClient()
+  const { data: trackables, isLoading, isFetched } = useTrackables()
 
   const router = useRouter();
-  const [trackables, setTrackables] = useState<Trackable[] | null>(null);
 
   useEffect(() => {
+
+    if (!isFetched) return
+
     async function load() {
       try {
-        const res = await apiClient.get<Trackable[]>("/api/trackables")
 
-        if (res.length === 0) {
+        if (trackables.length === 0) {
           router.replace("/dashboard/trackables/create")
           return
         }
 
-        if (res.length === 1) {
-          router.replace("/dashboard/trackables/" + res[0].trackableId)
+        if (trackables.length === 1) {
+          router.replace("/dashboard/trackables/" + trackables[0].trackableId)
           return
         }
 
-        setTrackables(res)
       } catch (err) {
         console.error("Failed to load trackables:", err)
       }
     }
     load()
-  }, [router])
-
-  if (trackables === null) {
-    return <></>;
-  }
+  }, [trackables, isFetched])
 
   return (
-    <div>
+    <div className="flex flex-1 relative">
       <Menu items={[
         {
           icon: <FaLocationCrosshairs className="text-primary" />,

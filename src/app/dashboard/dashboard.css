@@ -79,6 +79,10 @@
            transition;
   }
 
+  .text-input.required {
+    @apply border-red-500;
+  }
+
   .text-input:disabled {
     @apply bg-[var(--surface)] opacity-70 cursor-not-allowed;
   }
