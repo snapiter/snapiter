@@ -1,4 +1,5 @@
 "use client";
+import { OutlineButton } from "@snapiter/designsystem";
 import { useRouter } from "next/navigation";
 import { FaRightFromBracket } from "react-icons/fa6";
 
@@ -11,12 +12,6 @@ export default function LogoutButton() {
   };
 
   return (
-    <button
-      onClick={handleLogout}
-      className="flex items-center w-full  cursor-pointer gap-2 px-4 py-2 rounded-md bg-background text-foreground font-medium hover:bg-surface transition"
-    >
-      <FaRightFromBracket className="w-4 h-4" />
-      <span className="hidden md:block">Logout</span>
-    </button>
+    <OutlineButton icon={<FaRightFromBracket className="w-4 h-4" />} text="Logout" onClick={handleLogout} />
   );
 }
