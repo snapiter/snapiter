@@ -26,29 +26,28 @@ export default function TrackableLayout({
   const { data: trips, isLoading: isTripsLoading, isError: isTripsError } = useTrips(trackableId);
 
   const menuItems: MenuItemProps[] = trackable
-    ? [
+  ? [
       createTrackableMenuItem,
       {
         icon: <Logo />,
         label: trackable.hostName,
         href: `/dashboard/trackables/${trackable.trackableId}`,
       },
-      trips && trips.length > 0 &&
-      {
-        icon: <FaRoute className="text-primary" />,
-        label: "Trips",
-        submenu: [
-          ...(trips?.map((trip) => ({
-            icon: <FaVanShuttle className="text-primary" />,
-            label: trip.title,
-            href: `/dashboard/trackables/${trackable.trackableId}/trips/${trip.slug}`,
-            active: trip.endDate == null,
-          })) ?? []),
-        ]
-        
-      },
-    ]
-    : [];
+      trips && trips.length > 0
+        ? {
+            icon: <FaRoute className="text-primary" />,
+            label: "Trips",
+            submenu: trips.map((trip) => ({
+              icon: <FaVanShuttle className="text-primary" />,
+              label: trip.title,
+              href: `/dashboard/trackables/${trackable.trackableId}/trips/${trip.slug}`,
+              active: trip.endDate == null,
+            })),
+          }
+        : undefined,
+    ].filter(Boolean) as MenuItemProps[] 
+  : [];
+
 
   const showOverlay = loading || isLoading || isTripsLoading;
 
