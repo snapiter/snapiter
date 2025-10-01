@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, useState } from "react";
-import { FaCheck, FaChevronDown, FaCircleCheck, FaRegCircleCheck } from "react-icons/fa6";
+import { FaCheck, FaChevronDown } from "react-icons/fa6";
 import Link from "next/link";
 import { useSetAtom } from "jotai";
 import { mobileMenuOpen } from "@/store/atoms";

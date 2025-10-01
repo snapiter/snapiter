@@ -7,6 +7,7 @@ import Menu from "@/components/dashboard/layout/Menu";
 import Main from "@/components/dashboard/layout/Main";
 import { FaLocationCrosshairs } from "react-icons/fa6";
 import { useTrackables } from "@/hooks/dashboard/trackables/useTrackables";
+import { createTrackableMenuItem } from "./menu";
 
 
 export default function Dashboard() {
@@ -40,13 +41,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-1 relative">
-      <Menu items={[
-        {
-          icon: <FaLocationCrosshairs className="text-primary" />,
-          label: "Create Trackable",
-          href: "/dashboard/trackables/create",
-        },
-      ]} />
+      <Menu items={[createTrackableMenuItem]} />
       <Main>
       <h1 className="text-2xl font-bold  mb-6">Trackables</h1>
       <ul className="space-y-4">
