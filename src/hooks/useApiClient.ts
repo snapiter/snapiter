@@ -1,3 +1,5 @@
+"use client";
+
 import { useSetAtom } from "jotai"
 import { dashboardLoading, errorMessage } from "@/store/atoms"
 import { config } from "@/config"

@@ -1,9 +1,11 @@
+"use client";
+
 import ActionCard from "./ActionCard";
 import { FaKey } from "react-icons/fa6";
 import Modal from "../layout/Modal";
 import { QuickCreateRes } from "@/store/atoms";
 import { useState } from "react";
-import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
+import { useCreateDevice } from "@/hooks/dashboard/useCreateDevice";
 
 interface AddTokenCardProps {
     trackableId: string;
@@ -12,17 +14,14 @@ interface AddTokenCardProps {
 export default function AddTokenCard({ trackableId }: AddTokenCardProps) {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalContent, setModalContent] = useState<QuickCreateRes | null>(null);
-    const apiClient = useDashboardApiClient();
+        
+    const createDevice = useCreateDevice();
 
     async function addToken() {
-        const res = await apiClient.post<QuickCreateRes>(
-            `/api/trackables/${trackableId}/devices/token`,
-            {}
-        );
+        const res = await createDevice.mutateAsync({ trackableId });
         setModalContent(res);
         setModalOpen(true);
     }
-
 
     return (
         <>

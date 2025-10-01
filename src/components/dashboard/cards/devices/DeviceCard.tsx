@@ -2,10 +2,10 @@
 import { Device } from "@/store/atoms";
 import { formatDate } from "@/utils/formatTripDate";
 import { FaMobileScreen, FaTrash } from "react-icons/fa6";
-import Card from "./Card";
+import Card from "../Card";
 import { SecondaryButton } from "@snapiter/designsystem";
 import { useState } from "react";
-import ConfirmDialog from "../layout/ConfirmDialog";
+import ConfirmDialog from "../../layout/ConfirmDialog";
 import { useDeleteDevice } from "@/hooks/dashboard/useDeleteDevice";
 
 interface CardProps {

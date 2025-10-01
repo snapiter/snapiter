@@ -1,3 +1,5 @@
+"use client";
+
 import { useQuery } from '@tanstack/react-query';
 import type { Marker, Trip } from '@/store/atoms';
 import { useApiClient } from './useApiClient';

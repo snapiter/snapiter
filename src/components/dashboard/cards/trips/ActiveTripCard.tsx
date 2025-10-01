@@ -1,3 +1,4 @@
+"use client";
 import { Trip } from "@/store/atoms";
 import Card from "../Card";
 import { PrimaryButton } from "@snapiter/designsystem";
