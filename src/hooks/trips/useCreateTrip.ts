@@ -23,7 +23,7 @@ export function useCreateTrip() {
         startDate: new Date().toISOString(),
         color: "#648192",
         animationSpeed: 10000,
-        positionType: "HOURLY",
+        positionType: "ALL",
       };
 
       await apiClient.post<void>(`/api/trackables/${trackableId}/trips`, payload);

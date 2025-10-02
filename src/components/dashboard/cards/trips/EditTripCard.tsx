@@ -1,6 +1,5 @@
 "use client";
 
-import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import { useState, useEffect } from "react";
 import Card from "../Card";
 import { PrimaryButton } from "@snapiter/designsystem";
@@ -20,7 +19,6 @@ interface EditTripCardProps {
 
 export default function EditTripCard({ trackableId, trip }: EditTripCardProps) {
     const router = useRouter();
-    const apiClient = useDashboardApiClient();
     const [form, setForm] = useState<Trip | null>({
         ...trip,
         animationSpeed: trip.animationSpeed ? trip.animationSpeed / 1000 : 10000,
