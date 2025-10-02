@@ -17,7 +17,7 @@ export function animateTrip(
   tripDetailed: TripDetailed,
   mapRef: React.RefObject<MapRef | null>,
   refs: AnimationRefs,
-  websiteIcon?: string,
+  trackableId: string,
   onPhotoClick?: (photoIndex: number) => void,
   onComplete?: () => void
 ) {
@@ -54,7 +54,7 @@ export function animateTrip(
     onPhotoClick?.(photoIndex);
   });
   
-  createVehicleMarker(activePositions[0], refs.vehicleMarkerRef, map, websiteIcon);
+  createVehicleMarker(activePositions[0], refs.vehicleMarkerRef, map, trackableId);
   fitMapBounds(mapRef, activePositions);
 
   startAnimation(

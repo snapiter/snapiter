@@ -12,3 +12,7 @@ export function getMarkerUrlThumbnail(marker: Marker, size: string = '100x100'):
 export function getMarkerImage(marker: Marker): string {
   return `${config.markerUrl}/api/trackables/${marker.trackableId}/markers/${marker.markerId}/image`;
 }
+
+export function getTrackableIcon(trackableId: string): string {
+  return `${config.markerUrl}/api/trackables/${trackableId}/icon`;
+}

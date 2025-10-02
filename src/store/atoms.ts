@@ -23,7 +23,6 @@ export type Trackable = {
   name: string;
   title: string;
   hostName: string;
-  icon: string; //@TODO
 };
 
 //   createdAt: new Date(raw.createdAt),

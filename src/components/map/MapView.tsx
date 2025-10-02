@@ -23,7 +23,6 @@ interface MapViewProps {
 export default function MapView({ trips = [] }: MapViewProps) {
   const { trip: selectedTrip } = useSelectedTrip();
   const { data: website } = useTrackableByHostname();
-  const websiteIcon = website?.icon;
   
   const { runCommand } = useMapCommands();
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
@@ -55,7 +54,7 @@ export default function MapView({ trips = [] }: MapViewProps) {
       trip,
       mapRef,
       refs,
-      websiteIcon,
+      website!!.trackableId,
       (photoIndex: number) => setLightboxIndex(photoIndex),
       () => {
         setMapEvents(prev => [...prev, { 
