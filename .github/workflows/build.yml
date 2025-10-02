@@ -61,24 +61,24 @@ jobs:
           docker push registry.bestanden.online/snapiter-frontend:latest
           docker push registry.bestanden.online/snapiter-frontend:$VERSION
 
-  dockerbuild_cache:
-    needs: npm
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Build cache Docker image
-        run: |
-          docker build \
-            -f cache/Dockerfile \
-            -t registry.bestanden.online/snapiter-cache:latest \
-            cache/
-      - name: Docker login to registry
-        env:
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: docker login -u registry -p="$DOCKER_PASSWORD" https://registry.bestanden.online
-      - name: Publish cache docker image
-        run: docker push registry.bestanden.online/snapiter-cache:latest
+  # dockerbuild_cache:
+  #   needs: npm
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #     - name: Build cache Docker image
+  #       run: |
+  #         docker build \
+  #           -f cache/Dockerfile \
+  #           -t registry.bestanden.online/snapiter-cache:latest \
+  #           cache/
+  #     - name: Docker login to registry
+  #       env:
+  #         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  #       run: docker login -u registry -p="$DOCKER_PASSWORD" https://registry.bestanden.online
+  #     - name: Publish cache docker image
+  #       run: docker push registry.bestanden.online/snapiter-cache:latest
 
   # deploy-scw:
   #   needs: dockerbuild
