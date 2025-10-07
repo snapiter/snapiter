@@ -56,7 +56,7 @@ export default function ConsumePage({
   return (
     <main className="flex justify-center bg-surface min-h-screen">
       <div className="px-4 pt-16 pb-12">
-        <div className="w-full max-w-sm bg-background rounded-lg shadow-md p-6">
+        <div className="w-full max-w-sm bg-background rounded-lg p-6">
           <h1 className="text-2xl font-bold text-foreground mb-2 text-center">Signing you in…</h1>
 
           {state === "loading" && (

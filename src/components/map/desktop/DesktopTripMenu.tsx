@@ -45,9 +45,9 @@ export default function DesktopTripMenu() {
             onClick={() => handleTripSelect(index)}
             style={{ '--trip-color': trip.color ?? 'transparent' } as React.CSSProperties}
             className={`w-full p-3 mb-2 cursor-pointer rounded-lg text-left transition-colors
-              hover:bg-background hover:shadow-sm border-l-4
+              hover:bg-background border-l-4
               ${index === displayActiveIndex
-                ? 'bg-background shadow-sm border-[var(--trip-color)]'
+                ? 'bg-background border-[var(--trip-color)]'
                 : 'bg-transparent border-transparent hover:border-[var(--trip-color)]'
               }`}
           >

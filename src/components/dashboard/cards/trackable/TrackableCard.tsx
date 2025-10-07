@@ -7,8 +7,8 @@ export default function TrackableCard({ t }: { t: Trackable }) {
     <li key={t.name}>
       <Link
         href={`/dashboard/trackables/${t.trackableId}`}
-        className="flex items-center justify-between p-4 border border-border rounded-lg shadow-sm bg-background 
-                   transition hover:shadow-md hover:border-primary"
+        className="flex items-center justify-between p-4 border border-border rounded-lg bg-background 
+                   transition hover:border-primary"
       >
         <div>
           <h2 className="text-lg font-semibold">{t.title}</h2>

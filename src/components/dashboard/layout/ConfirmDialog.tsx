@@ -24,7 +24,7 @@ export default function ConfirmDialog({
 }: ConfirmDialogProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-      <div className="rounded bg-surface p-6 shadow-md w-full max-w-sm">
+      <div className="rounded bg-surface p-6 w-full max-w-sm">
         {title && <h2 className="text-lg font-semibold mb-2">{title}</h2>}
         <p className="text-sm text-muted mb-4">{message}</p>
 

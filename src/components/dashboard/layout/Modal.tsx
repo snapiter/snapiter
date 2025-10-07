@@ -17,7 +17,7 @@ export default function Modal({ open, onClose, children }: ModalProps) {
         onClick={onClose}
       />
 
-      <div className="relative z-10 w-full max-w-md rounded-lg bg-surface p-6 shadow-lg">
+      <div className="relative z-10 w-full max-w-md rounded-lg bg-surface p-6">
         {children}
       </div>
     </div>
