@@ -40,8 +40,7 @@ export default function Menu({ items }: { items: MenuItemProps[] }) {
         ))}
       </nav>
 
-      {/* Footer text */}
-      <div className="mt-auto pt-6 text-sm text-muted text-center">
+      <div className="mt-auto pt-6 text-sm text-muted">
         <LogoutButton />
       </div>
     </aside>

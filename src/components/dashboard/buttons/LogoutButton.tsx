@@ -12,6 +12,10 @@ export default function LogoutButton() {
   };
 
   return (
-    <OutlineButton icon={<FaRightFromBracket className="w-4 h-4" />} text="Logout" onClick={handleLogout} />
+    <OutlineButton
+      icon={<FaRightFromBracket className="w-4 h-4" />}
+      text="Logout"
+      onClick={handleLogout}
+    />
   );
 }
