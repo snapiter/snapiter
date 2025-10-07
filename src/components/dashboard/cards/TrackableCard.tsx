@@ -24,7 +24,8 @@ export default function TrackableCard({ trackableId }: TrackableCardProps) {
                 <SecondaryButton
                     text="Visit Website"
                     icon={<FaGlobe />}
-                    onClick={() => window.open(`https://${trackable.hostName}`, "_blank")}
+                    href={`https://${trackable.hostName}`}
+                    target="_blank"
                 />
             </div>
         </Card>
