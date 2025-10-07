@@ -41,6 +41,7 @@ export default function MapView({ trips = [] }: MapViewProps) {
 
   const { data: tripsWithPositions } = useTripsWithPositions(trips);
 
+
   const animateTripDirect = (trip: TripDetailed) => {
     const refs: AnimationRefs = {
       animationRef,
@@ -68,7 +69,7 @@ export default function MapView({ trips = [] }: MapViewProps) {
 
 
   useEffect(() => {
-    if (selectedTrip && tripsWithPositions.length > 0) {
+    if (selectedTrip && tripsWithPositions && tripsWithPositions.length > 0) {
       const tripWithPositions = tripsWithPositions.find(t => t.slug === selectedTrip.slug);
 
       if (tripWithPositions && tripWithPositions.positions.length > 0) {
