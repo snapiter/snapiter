@@ -22,7 +22,7 @@ function useHostname() {
     }
 
     if (finalHostname === 'localhost' || finalHostname === '127.0.0.1' || finalHostname === "snapiter.com") {
-      finalHostname = 'maps.arnovanrossum.nl';
+      finalHostname = 'partypieps.nl';
       // finalHostname = 'maps.lunaverde.nl';
     }
 

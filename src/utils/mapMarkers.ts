@@ -22,10 +22,7 @@ export function createTripMarkers(
       `;
 
       el.addEventListener('click', () => {
-        // Find the index of the clicked marker in the filtered markers array
-        const photosFromMarkers = markers.filter(m => m.hasThumbnail);
-        const photoIndex = photosFromMarkers.findIndex(m => m.markerId === marker.markerId);
-        
+        const photoIndex = markers.findIndex(m => m.markerId === marker.markerId);
         if (photoIndex !== -1) {
           onMarkerClick(photoIndex);
         }
