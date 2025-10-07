@@ -37,7 +37,6 @@ jobs:
           VERSION=${{ steps.commitcount.outputs.count }}
           echo "Building version $VERSION"
           docker build \
-            --build-arg NEXT_PUBLIC_MAPTILER_KEY=${{ secrets.NEXT_PUBLIC_MAPTILER_KEY }} \
             -t registry.bestanden.online/snapiter-frontend:latest \
             -t registry.bestanden.online/snapiter-frontend:$VERSION \
             -t rg.nl-ams.scw.cloud/snapiter/frontend:latest \

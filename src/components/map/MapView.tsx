@@ -23,7 +23,7 @@ interface MapViewProps {
 export default function MapView({ trips = [] }: MapViewProps) {
   const { trip: selectedTrip } = useSelectedTrip();
   const { data: website } = useTrackableByHostname();
-  
+
   const { runCommand } = useMapCommands();
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
   const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);

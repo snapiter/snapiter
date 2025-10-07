@@ -1,0 +1,1 @@
+export const ENV_PREFIX = 'SNAPITER_RUNTIME' as any;

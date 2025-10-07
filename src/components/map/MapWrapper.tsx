@@ -4,8 +4,9 @@ import Map from 'react-map-gl/maplibre';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-import type { CSSProperties, ReactNode, RefObject } from "react";
+import { useContext, type CSSProperties, type ReactNode, type RefObject } from "react";
 import type { MapRef, MapLayerMouseEvent } from "react-map-gl/maplibre";
+import { EnvContext } from '@/utils/env/EnvProvider';
 
 export type MapViewProps = {
   mapRef?: RefObject<MapRef>;
@@ -26,6 +27,9 @@ export default function MapWrapper({
   children,
   mapStyle,
 }: MapViewProps) {
+
+  const env = useContext(EnvContext);
+  
   return (
     <Map
       ref={mapRef}
@@ -34,7 +38,7 @@ export default function MapWrapper({
         latitude: 52.0907374,
         zoom: 12,
       }}
-      mapStyle={`https://api.maptiler.com/maps/landscape/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
+      mapStyle={`https://api.maptiler.com/maps/landscape/style.json?key=${env.SNAPITER_RUNTIME_MAPTILER_KEY}`}
       attributionControl={{
         compact: true,
       }}
