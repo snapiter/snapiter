@@ -9,8 +9,9 @@ import { useTrackableById } from "@/hooks/useTrackableById";
 import { dashboardLoading } from "@/store/atoms";
 import { useAtomValue } from "jotai";
 import { useTrips } from "@/hooks/useTrips";
-import { createTrackableMenuItem } from "../../menu";
+import { createTrackableMenuItem, dashboardMenuItem } from "../../menu";
 import { Logo } from "@snapiter/designsystem";
+import { useTrackables } from "@/hooks/dashboard/trackables/useTrackables";
 
 export default function TrackableLayout({
   children,
@@ -22,12 +23,13 @@ export default function TrackableLayout({
   const { trackableId } = use(params);
 
   const loading = useAtomValue(dashboardLoading);
-  const { data: trackable, isLoading, isError } = useTrackableById(trackableId);
-  const { data: trips, isLoading: isTripsLoading, isError: isTripsError } = useTrips(trackableId);
+  const { data: trackables } = useTrackables();
+  const { data: trackable, isLoading } = useTrackableById(trackableId);
+  const { data: trips, isLoading: isTripsLoading } = useTrips(trackableId);
 
   const menuItems: MenuItemProps[] = trackable
   ? [
-      createTrackableMenuItem,
+      trackables?.length > 1 ? dashboardMenuItem : createTrackableMenuItem,
       {
         icon: <Logo />,
         label: trackable.hostName,

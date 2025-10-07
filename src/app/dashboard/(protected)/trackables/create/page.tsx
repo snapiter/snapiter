@@ -43,7 +43,7 @@ export default function CreateTrackablePage() {
               });
             }
           }}
-          className="space-y-3 w-96"
+          className="space-y-3"
         >
             <TextInput
               required

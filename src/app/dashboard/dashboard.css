@@ -20,9 +20,12 @@
 
 
 @keyframes border-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     border-color: var(--primary);
   }
+
   50% {
     border-color: var(--surface);
   }
@@ -33,61 +36,53 @@
 }
 
 
+.text-input-wrapper {
+  @apply w-full;
+}
 
-  .text-input-wrapper {
-    @apply w-full max-w-sm;
-  }
+.text-input-label {
+  @apply block text-sm font-medium text-[var(--foreground)] mb-1;
+}
 
-  .text-input-label {
-    @apply block text-sm font-medium text-[var(--foreground)] mb-1;
-  }
+.text-input {
+  @apply w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-[var(--foreground)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition;
+}
 
-  .text-input {
-    @apply w-full rounded-md border border-[var(--border)]
-           bg-[var(--surface)] px-3 py-2 text-[var(--foreground)]
-           placeholder-[var(--muted)]
-           focus:outline-none focus:ring-2 focus:ring-[var(--primary)]
-           transition;
-  }
 
-  .text-input.required {
-    @apply border-red-500;
-  }
+.text-input.required {
+  @apply border-red-500;
+}
 
-  .text-input:disabled {
-    @apply bg-[var(--surface)] opacity-70 cursor-not-allowed;
-  }
+.text-input:disabled {
+  @apply bg-[var(--surface)] opacity-70 cursor-not-allowed;
+}
 
 
 
 
-  .text-area-wrapper {
-    @apply w-full max-w-sm;
-  }
+.text-area-wrapper {
+  @apply w-full max-w-sm;
+}
 
-  .text-area-label {
-    @apply block text-sm font-medium text-[var(--foreground)] mb-1;
-  }
+.text-area-label {
+  @apply block text-sm font-medium text-[var(--foreground)] mb-1;
+}
 
-  .text-area.required {
-    @apply border-red-500;
-  }
+.text-area.required {
+  @apply border-red-500;
+}
 
-  .text-area {
-    @apply w-full rounded-md border border-[var(--border)]
-           bg-[var(--surface)] px-3 py-2 text-[var(--foreground)]
-           placeholder-[var(--muted)] resize-y min-h-[100px]
-           focus:outline-none focus:ring-2 focus:ring-[var(--primary)]
-           transition;
-  }
+.text-area {
+  @apply w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-[var(--foreground)] placeholder-[var(--muted)] resize-y min-h-[100px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition;
+}
 
-  .text-area:disabled {
-    @apply bg-[var(--surface)] opacity-70 cursor-not-allowed;
-  }
+.text-area:disabled {
+  @apply bg-[var(--surface)] opacity-70 cursor-not-allowed;
+}
 
 
 
 
-  h3 {
-    @apply text-lg font-semibold;
-  }
+h3 {
+  @apply text-lg font-semibold;
+}

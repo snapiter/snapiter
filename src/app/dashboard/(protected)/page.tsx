@@ -5,13 +5,12 @@ import { useRouter } from "next/navigation";
 import TrackableCard from "@/components/dashboard/cards/trackable/TrackableCard";
 import Menu from "@/components/dashboard/layout/Menu";
 import Main from "@/components/dashboard/layout/Main";
-import { FaLocationCrosshairs } from "react-icons/fa6";
 import { useTrackables } from "@/hooks/dashboard/trackables/useTrackables";
 import { createTrackableMenuItem } from "./menu";
 
 
 export default function Dashboard() {
-  const { data: trackables, isLoading, isFetched } = useTrackables()
+  const { data: trackables, isFetched } = useTrackables()
 
   const router = useRouter();
 
@@ -21,7 +20,6 @@ export default function Dashboard() {
 
     async function load() {
       try {
-
         if (trackables.length === 0) {
           router.replace("/dashboard/trackables/create")
           return
