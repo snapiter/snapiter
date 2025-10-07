@@ -68,7 +68,7 @@ export default function MapView({ trips = [] }: MapViewProps) {
 
 
   useEffect(() => {
-    if (selectedTrip) {
+    if (selectedTrip && tripsWithPositions.length > 0) {
       const tripWithPositions = tripsWithPositions.find(t => t.slug === selectedTrip.slug);
 
       if (tripWithPositions && tripWithPositions.positions.length > 0) {
@@ -78,7 +78,7 @@ export default function MapView({ trips = [] }: MapViewProps) {
         });
       }
     }
-  }, [selectedTrip]);
+  }, [selectedTrip, tripsWithPositions]);
 
 
   useMapCommandHandler(mapRef, trips);
