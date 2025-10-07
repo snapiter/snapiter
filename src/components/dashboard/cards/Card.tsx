@@ -10,7 +10,7 @@ interface CardProps {
 
 export default function Card({ title, description, icon, className, children }: CardProps) {
   return (
-    <div className={`bg-surface rounded-lg p-6 border border-border ${className}`}>
+    <div className={`bg-surface rounded md:rounded-lg p-2 md:p-6 border border-border ${className}`}>
       {(title || description) && (
         <div className="flex items-start gap-3">
           {icon && (

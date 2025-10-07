@@ -20,7 +20,7 @@ export default function StackCard({ children, columns = 2, className = "" }: Sta
     <div
       className={`grid grid-cols-1 gap-4 pb-4 
                   ${gridCols} 
-                  w-full max-w-7xl mx-auto px-4 ${className}`}
+                  w-full max-w-7xl mx-auto ${className}`}
     >
       {children}
     </div>
