@@ -22,7 +22,7 @@ export default function Header() {
       {/* Hamburger (mobile only, hidden when menu open) */}
       {!isOpen && (
         <button
-          className="md:hidden text-2xl z-30"
+          className="md:hidden text-foreground text-2xl z-30"
           onClick={() => setIsOpen(true)}
         >
           <FaBars />
