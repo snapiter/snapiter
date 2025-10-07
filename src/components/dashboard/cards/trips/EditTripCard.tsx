@@ -82,7 +82,7 @@ export default function EditTripCard({ trackableId, trip }: EditTripCardProps) {
                     name="description"
                     label="Description"
                     placeholder="Description"
-                    value={form.description}
+                    value={form.description ?? ""}
                     onChange={handleChange}
                 />
 

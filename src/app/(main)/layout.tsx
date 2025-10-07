@@ -38,8 +38,10 @@ export default function RootLayout({
       <Script
           id="runtimeEnv"
           strategy="beforeInteractive"
-        >{`window.${ENV_PREFIX} = ${JSON.stringify(env, null, 2)}`}
-        </Script>
+          dangerouslySetInnerHTML={{
+            __html: `window.${ENV_PREFIX}=${JSON.stringify(env)};`
+          }}
+        />
       </head>
 
       <body
