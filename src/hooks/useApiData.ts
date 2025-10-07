@@ -23,8 +23,8 @@ function useHostname() {
 
     // If localhost, automatically use partypieps.nl for development
     if (finalHostname === 'localhost' || finalHostname === '127.0.0.1' || finalHostname === "snapiter.com") {
-      finalHostname = 'arnovanrossum.nl';
-      // finalHostname = 'maps.lunaverde.nl';
+      // finalHostname = 'maps.arnovanrossum.nl';
+      finalHostname = 'maps.lunaverde.nl';
     }
 
     setHostname(finalHostname);

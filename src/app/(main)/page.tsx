@@ -74,9 +74,9 @@ export default function Home() {
         <DesktopSidebar />
 
         {/* Loading Overlay */}
-        {(!isLoaded) && (
+        {/* {(!isLoaded) && ( */}
           <SnapIterLoader website={website ?? null} />
-        )}
+        {/* )} */}
 
         {/* Brand - Bottom Left (Desktop Only) */}
         <div className="hidden md:block absolute bottom-4 left-4 z-10">
