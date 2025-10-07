@@ -39,7 +39,7 @@ export default function MapView({ trips = [] }: MapViewProps) {
   const currentPositionIndexRef = useRef<number>(0);
   const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
 
-  const { data: tripsWithPositions } = useTripsWithPositions(trips);
+  const { data: tripsWithPositions = [] } = useTripsWithPositions(trips);
 
 
   const animateTripDirect = (trip: TripDetailed) => {
@@ -69,7 +69,8 @@ export default function MapView({ trips = [] }: MapViewProps) {
 
 
   useEffect(() => {
-    if (selectedTrip && tripsWithPositions && tripsWithPositions.length > 0) {
+    console.log("RENDER" + tripsWithPositions.length);
+    if (selectedTrip && tripsWithPositions.length > 0) {
       const tripWithPositions = tripsWithPositions.find(t => t.slug === selectedTrip.slug);
 
       if (tripWithPositions && tripWithPositions.positions.length > 0) {
