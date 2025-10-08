@@ -64,7 +64,7 @@ export default function TripsPage({
 
               if (coordinates.length < 2) return null;
 
-              const routeData = createRouteData(trip.positions, false);
+              const routeData = createRouteData(trip.positions);
 
               return (
                 <Source
