@@ -20,11 +20,7 @@ export default function TripSwiper() {
     });
   };
 
-  if (trips.length === 0) {
-    <div className="p-4 text-center">
-      <p className="text-muted">No trips found.</p>
-    </div>
-  }
+  if (trips.length === 0) return <></>;
     
   return (
       <Swiper

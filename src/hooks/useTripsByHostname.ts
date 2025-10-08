@@ -12,7 +12,7 @@ export function useTripsByHostname() {
     queryKey: ['trips-with-markers', website?.trackableId],
     queryFn: async (): Promise<TripWithMarkers[]> => {
       if (!website?.trackableId) return []; // no id yet → just empty trips
-
+      
       const trips = await api.get<Trip[]>(`/api/trackables/${website.trackableId}/trips`);
 
       return Promise.all(
