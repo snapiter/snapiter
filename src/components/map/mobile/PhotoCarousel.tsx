@@ -41,9 +41,6 @@ export default function PhotoCarousel({ markers, className = '' }: PhotoCarousel
         spaceBetween={10}
         slidesPerView={markers.length > 1 ? 1.2 : 1}
         navigation={false}
-        pagination={{
-          dynamicBullets: true,
-        }}
         onSlideChange={handleSlideChange}
         className="h-full rounded-lg"
       >
