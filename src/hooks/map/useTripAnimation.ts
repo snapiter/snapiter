@@ -3,7 +3,6 @@ import { useTripsWithPositions } from "@/hooks/useTripsWithPositions";
 import type { TripDetailed } from "@/store/atoms";
 import type maplibregl from "maplibre-gl";
 import { useSelectedTrip } from "../useSelectedTrip";
-import { useTrackableByHostname } from "../useTrackableByHostname";
 import { lightboxIndexAtom, mapEventsAtom, Trip } from "@/store/atoms";
 import { useSetAtom } from "jotai";
 import { animateTrip, } from '@/utils/tripAnimationHandler';
@@ -27,7 +26,6 @@ export function useTripAnimation(
   const startTimeRef = useRef<number | null>(null);
   const currentPositionIndexRef = useRef<number>(0);
   const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
-  const { data: website } = useTrackableByHostname();
   const setMapEvents = useSetAtom(mapEventsAtom);
 
   const { trip: selectedTrip } = useSelectedTrip();
@@ -51,7 +49,7 @@ export function useTripAnimation(
         trip,
         mapRef,
         refs,
-        website!!.trackableId,
+        trip.trackableId,
         (photoIndex) => setLightboxIndex(photoIndex),
         () => {
           setMapEvents((prev) => [
@@ -65,10 +63,9 @@ export function useTripAnimation(
         }
       );
     },
-    [animateTrip, mapRef, setLightboxIndex, setMapEvents, website?.trackableId]
+    [animateTrip, mapRef, setLightboxIndex, setMapEvents]
   );
 
-  // Effect: automatically trigger when selectedTrip changes
   useEffect(() => {
     if (!selectedTrip || tripsWithPositions.length === 0) return;
 
