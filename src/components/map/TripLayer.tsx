@@ -1,5 +1,7 @@
 import { TripWithPositions } from "@/store/atoms";
+import { EnvContext } from "@/utils/env/EnvProvider";
 import { createRouteData } from "@/utils/mapBounds";
+import { useContext } from "react";
 import { Source, Layer } from "react-map-gl/maplibre";
 
 interface TripLayerProps {
@@ -11,6 +13,9 @@ interface TripLayerProps {
 export default function TripLayer({ trip, selectedTripSlug, hoveredTripSlug }: TripLayerProps) {
     if (trip.positions.length < 2) return null;
   
+    const env = useContext(EnvContext);
+
+    
     const isSelected = trip.slug === selectedTripSlug;
     const isHovered = trip.slug === hoveredTripSlug;
     const color = trip.color || '#3b82f6';
@@ -18,12 +23,20 @@ export default function TripLayer({ trip, selectedTripSlug, hoveredTripSlug }: T
     const coordinates = trip.positions.toReversed().map(p => [p.longitude, p.latitude]);
     if (coordinates.length < 2) return null;
 
-    let routeData: GeoJSON.FeatureCollection<GeoJSON.LineString, GeoJSON.GeoJsonProperties> = {
-      type: 'FeatureCollection',
-      features: [],
-    };
+    let routeData: GeoJSON.FeatureCollection<GeoJSON.LineString, GeoJSON.GeoJsonProperties>;
+
+    const shouldShowBaseLine =
+      !isSelected || env.SNAPITER_SHOW_BASE_LINE_UNDER_ANIMATION;
     
-    if(!isSelected) routeData = createRouteData(trip.positions);
+    if (shouldShowBaseLine) {
+      routeData = createRouteData(trip.positions);
+    } else {
+      routeData = {
+        type: 'FeatureCollection',
+        features: [],
+      };
+    }
+    
 
   
     return (

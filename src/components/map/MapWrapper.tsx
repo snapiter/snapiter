@@ -38,7 +38,7 @@ export default function MapWrapper({
         latitude: 52.0907374,
         zoom: 12,
       }}
-      mapStyle={`https://api.maptiler.com/maps/landscape/style.json?key=${env.SNAPITER_RUNTIME_MAPTILER_KEY}`}
+      mapStyle={`https://api.maptiler.com/maps/landscape/style.json?key=${env.SNAPITER_MAPTILER_KEY}`}
       attributionControl={{
         compact: true,
       }}
