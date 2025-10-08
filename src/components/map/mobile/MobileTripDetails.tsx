@@ -1,5 +1,3 @@
-'use client';
-
 import type { TripWithMarkers } from '@/store/atoms';
 import { getMarkerUrlThumbnail } from '@/services/thumbnail';
 import Image from 'next/image';

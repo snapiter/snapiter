@@ -1,6 +1,3 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import { Trackable } from '@/store/atoms';
 import Logo from '@snapiter/designsystem/dist/layout/logo/Logo';
 

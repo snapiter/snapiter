@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import MapView from '@/components/map/MapView';
 import BottomDrawer from '@/components/map/mobile/BottomDrawer';
 import TripSwiper from '@/components/map/mobile/TripSwiper';

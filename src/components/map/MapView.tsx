@@ -1,5 +1,3 @@
-'use client';
-
 import { type MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { TripWithMarkers } from '@/store/atoms';
