@@ -29,12 +29,10 @@ export function useTripAnimation(
   const setMapEvents = useSetAtom(mapEventsAtom);
 
   const { trip: selectedTrip } = useSelectedTrip();
-  // Data
   const { data: tripsWithPositions = [] } = useTripsWithPositions(trips);
 
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
 
-  // Core animation function
   const animateTripDirect = useCallback(
     (trip: TripDetailed) => {
       const refs: AnimationRefs = {
@@ -80,16 +78,4 @@ export function useTripAnimation(
       });
     }
   }, [selectedTrip, tripsWithPositions, animateTripDirect]);
-
-  return {
-    tripsWithPositions,
-    animateTripDirect,
-    refs: {
-      animationRef,
-      vehicleMarkerRef,
-      startTimeRef,
-      currentPositionIndexRef,
-      visibleMarkersRef,
-    },
-  };
 }

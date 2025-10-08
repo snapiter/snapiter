@@ -16,9 +16,11 @@ import ErrorComponent from '@/components/ErrorComponent';
 import DesktopSidebar from '@/components/map/desktop/DesktopSidebar';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import PhotoCarousel from '@/components/map/mobile/PhotoCarousel';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const isMobile = useIsMobile();
 
   const { data: website, isLoading, error } = useTrackableByHostname();
   const { runCommand } = useMapCommands();
@@ -55,28 +57,30 @@ export default function Home() {
       <DynamicTitle />
       <div className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row">
         {/* Single MapView - responsive sizing */}
-        <div className={`flex-1 md:w-1/2 lg:w-2/3 relative transition-all duration-300 h-full
-          `}>
+        <div className="flex-1 md:w-1/2 lg:w-2/3 relative transition-all duration-300 h-full">
           <MapView trips={trips} />
         </div>
 
-        <BottomDrawer>
-          <div className={`w-full h-full`}>
-            <TripSwiper />
-            {selectedTrip?.markers && selectedTrip?.markers.length > 0 && (
-              <div className="pt-4">
-                <PhotoCarousel markers={selectedTrip.markers} />
-              </div>
-            )}
-          </div>
-        </BottomDrawer>
-
-        <DesktopSidebar />
+        {isMobile && (
+          <BottomDrawer>
+            <div className="w-full h-full">
+              <TripSwiper />
+              {selectedTrip?.markers && selectedTrip?.markers.length > 0 && (
+                <div className="pt-4">
+                  <PhotoCarousel markers={selectedTrip.markers} />
+                </div>
+              )}
+            </div>
+          </BottomDrawer>)
+          }
+        {!isMobile && (
+          <DesktopSidebar />
+        )}
 
         {/* Loading Overlay */}
         {(!isLoaded) && (
           <SnapIterLoader website={website ?? null} />
-         )}
+        )}
 
         {/* Brand - Bottom Left (Desktop Only) */}
         <div className="hidden md:block absolute bottom-4 left-4 z-10">
