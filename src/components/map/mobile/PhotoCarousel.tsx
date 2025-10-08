@@ -55,7 +55,8 @@ export default function PhotoCarousel({ markers, className = '' }: PhotoCarousel
                 alt={marker.title  || 'Marker photo'}
                 fill
                 className="object-cover rounded-lg"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                sizes="(max-width: 640px) 100vw, 500px"
+
               />
             </div>
             {marker.description && (
