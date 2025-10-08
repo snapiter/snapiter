@@ -1,13 +1,11 @@
-import { TripWithPositions } from "@/store/atoms";
+import { Trip } from "@/store/atoms";
 import { Source, Layer } from "react-map-gl/maplibre";
 
 interface AnimatedTripLayerProps {
-    trip: TripWithPositions;
+    trip: Trip;
 }
 
 export default function AnimatedTripLayer({ trip }: AnimatedTripLayerProps) {
-    if (trip.positions.length < 2) return <></>;
-
     const color = trip.color || '#3b82f6';
 
     return (

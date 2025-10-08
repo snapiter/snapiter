@@ -1,10 +1,9 @@
 import { type MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { TripWithMarkers } from '@/store/atoms';
+import { Trip } from '@/store/atoms';
 import { useRef, useState, RefObject, Fragment } from 'react';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
-import { useTripsWithPositions } from '@/hooks/useTripsWithPositions';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import MapWrapper from './MapWrapper';
 import { useResponsiveMapHeight } from '@/hooks/map/useResponsiveMapHeight';
@@ -14,7 +13,7 @@ import TripLayer from './TripLayer';
 import AnimatedTripLayer from './AnimatedTripLayer';
 
 interface MapViewProps {
-  trips?: TripWithMarkers[];
+  trips?: Trip[];
 }
 
 export default function MapView({ trips = [] }: MapViewProps) {
@@ -24,8 +23,6 @@ export default function MapView({ trips = [] }: MapViewProps) {
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
 
   const mapRef = useRef<MapRef | null>(null);
-
-  const { data: tripsWithPositions = [] } = useTripsWithPositions(trips);
 
   useTripAnimation(mapRef, trips);
 
@@ -85,12 +82,12 @@ export default function MapView({ trips = [] }: MapViewProps) {
       }}
       onMouseMove={handleMouseMove}
       onClick={handleClick}
-      interactiveLayerIds={tripsWithPositions.map(trip => `route-line-${trip.slug}`)}
+      interactiveLayerIds={trips.map(trip => `route-line-${trip.slug}`)}
       mapStyle={{
         height: "100%",
       }}
     >
-      {tripsWithPositions.map(trip => (
+      {trips.map(trip => (
         <Fragment key={trip.slug}>
           <TripLayer
             key={trip.slug}
