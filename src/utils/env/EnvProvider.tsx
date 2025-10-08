@@ -1,14 +1,10 @@
 "use client";
 
 import React, { createContext } from "react";
+import { EnvConfig, DEFAULT_ENV } from "./envprefix";
 
-type EnvConfig = {
-    SNAPITER_RUNTIME_MAPTILER_KEY: string;
-}
 
-export const EnvContext = createContext<EnvConfig>({
-    SNAPITER_RUNTIME_MAPTILER_KEY: ""
-});
+export const EnvContext = createContext<EnvConfig>(DEFAULT_ENV);
 
 export default function EnvProvider({ children, value }: { children: React.ReactNode, value: EnvConfig }) {
     return (

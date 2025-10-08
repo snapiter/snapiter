@@ -1,12 +1,19 @@
-import { unstable_noStore as noStore } from 'next/cache'
-import { ENV_PREFIX } from './envprefix';
+import { unstable_noStore as noStore } from "next/cache";
+import { DEFAULT_ENV, ENV_PREFIX, EnvConfig } from "./envprefix";
 
-export default function getEnv() {
+export default function getEnv(): EnvConfig {
   noStore();
-  return Object.entries(process.env).reduce((acc: Record<string, string | undefined>, [key, value]) => {
-    if (key.startsWith(ENV_PREFIX)) {
-      acc[key] = value;
-    }
-    return acc;
-  }, {});
+
+  const raw = Object.entries(process.env).reduce(
+    (acc: Record<string, string | undefined>, [key, value]) => {
+      if (key.startsWith(ENV_PREFIX)) acc[key] = value;
+      return acc;
+    },
+    {}
+  );
+
+  return {
+    ...DEFAULT_ENV,
+    ...raw
+  };
 }
