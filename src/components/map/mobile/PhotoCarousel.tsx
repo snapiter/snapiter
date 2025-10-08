@@ -4,8 +4,6 @@ import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
 import { useMapCommands } from '@/hooks/useMapCommands';
 
-import 'swiper/css';
-import 'swiper/css/pagination';
 import { Marker } from '@/store/atoms';
 import { getMarkerUrlThumbnail } from '@/services/thumbnail';
 
