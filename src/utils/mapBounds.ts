@@ -21,9 +21,8 @@ export function fitMapBounds(
 }
 
 export function createRouteData(
-  positions: Position[],
-  isSelected: boolean
-) {
+  positions: Position[]
+): GeoJSON.FeatureCollection<GeoJSON.LineString, GeoJSON.GeoJsonProperties> {
   const coordinates = positions.toReversed().map(p => [p.longitude, p.latitude]);
   
   return {
@@ -33,7 +32,7 @@ export function createRouteData(
       properties: {},
       geometry: {
         type: 'LineString' as const,
-        coordinates: isSelected ? [] : coordinates,
+        coordinates: coordinates,
       },
     }],
   };

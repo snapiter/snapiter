@@ -17,8 +17,14 @@ export default function TripLayer({ trip, selectedTripSlug, hoveredTripSlug }: T
   
     const coordinates = trip.positions.toReversed().map(p => [p.longitude, p.latitude]);
     if (coordinates.length < 2) return null;
-  
-    const routeData = createRouteData(trip.positions, isSelected);
+
+    let routeData: GeoJSON.FeatureCollection<GeoJSON.LineString, GeoJSON.GeoJsonProperties> = {
+      type: 'FeatureCollection',
+      features: [],
+    };
+    
+    if(!isSelected) routeData = createRouteData(trip.positions);
+
   
     return (
       <>
@@ -30,7 +36,7 @@ export default function TripLayer({ trip, selectedTripSlug, hoveredTripSlug }: T
             paint={{
               'line-width': isHovered ? 6 : 4,
               'line-color': color,
-              'line-opacity': isSelected ? 0 : isHovered ? 1 : 0.3,
+              'line-opacity': isHovered ? 1 : 0.3,
             }}
           />
         </Source>

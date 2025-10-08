@@ -102,7 +102,6 @@ export default function MapView({ trips = [] }: MapViewProps) {
           />
           <AnimatedTripLayer
             trip={trip}
-            selectedTripSlug={selectedTrip?.slug}
           />
         </Fragment>
       ))}

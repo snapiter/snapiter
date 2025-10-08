@@ -3,12 +3,10 @@ import { Source, Layer } from "react-map-gl/maplibre";
 
 interface AnimatedTripLayerProps {
     trip: TripWithPositions;
-    selectedTripSlug?: string;
 }
 
-export default function AnimatedTripLayer({ trip, selectedTripSlug }: AnimatedTripLayerProps) {
+export default function AnimatedTripLayer({ trip }: AnimatedTripLayerProps) {
     if (trip.positions.length < 2) return <></>;
-    if (trip.slug !== selectedTripSlug) return <></>;
 
     const color = trip.color || '#3b82f6';
 
