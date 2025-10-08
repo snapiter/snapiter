@@ -1,9 +1,10 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useTripsWithPositions } from "@/hooks/useTripsWithPositions";
+import type { TripDetailed } from "@/store/atoms";
 import type maplibregl from "maplibre-gl";
 import { useSelectedTrip } from "../useSelectedTrip";
 import { useTrackableByHostname } from "../useTrackableByHostname";
-import { lightboxIndexAtom, mapEventsAtom, Trip, TripDetailed } from "@/store/atoms";
+import { lightboxIndexAtom, mapEventsAtom, Trip } from "@/store/atoms";
 import { useSetAtom } from "jotai";
 import { animateTrip, } from '@/utils/tripAnimationHandler';
 import { MapRef } from "react-map-gl/maplibre";

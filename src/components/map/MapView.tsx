@@ -2,17 +2,14 @@
 
 import { Source, Layer, type MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { type Trip, type TripDetailed, lightboxIndexAtom, mapEventsAtom, bottomPanelExpandedAtom, MapStyle, TripWithMarkers } from '@/store/atoms';
-import { useAtom, useSetAtom } from 'jotai';
-import { useRef, useState, useEffect, RefObject } from 'react';
-import type maplibregl from 'maplibre-gl';
+import { TripWithMarkers } from '@/store/atoms';
+import { useRef, useState, RefObject } from 'react';
 import { createRouteData } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useTripsWithPositions } from '@/hooks/useTripsWithPositions';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import MapWrapper from './MapWrapper';
-import { useTrackableByHostname } from '@/hooks/useTrackableByHostname';
 import { useResponsiveMapHeight } from '@/hooks/map/useResponsiveMapHeight';
 import { useAutoFlyToMarker } from '@/hooks/map/useAutoFlyToMarker';
 import { useTripAnimation } from '@/hooks/map/useTripAnimation';
