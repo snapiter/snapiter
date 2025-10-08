@@ -13,6 +13,10 @@ export default function GlobalLightbox() {
   const { runCommand } = useMapCommands();
   const { trip } = useSelectedTrip();
 
+  if(trip === null) {
+    return <></>;
+  }
+
   // Derive photos from selectedTrip markers
   const photos = trip?.markers
       .map(marker => ({

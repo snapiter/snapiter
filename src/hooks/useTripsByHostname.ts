@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import type { Marker, Trip } from '@/store/atoms';
 import { useApiClient } from './useApiClient';
-import { TripWithMarkers } from '@/store/atoms';
 import { useTrackableByHostname } from './useTrackableByHostname';
 
 export function useTripsByHostname() {
@@ -10,24 +9,24 @@ export function useTripsByHostname() {
 
   const query = useQuery({
     queryKey: ['trips-with-markers', website?.trackableId],
-    queryFn: async (): Promise<TripWithMarkers[]> => {
+    queryFn: async (): Promise<Trip[]> => {
       if (!website?.trackableId) return []; // no id yet → just empty trips
       
       const trips = await api.get<Trip[]>(`/api/trackables/${website.trackableId}/trips`);
-
-      return Promise.all(
-        trips.map(async (trip) => {
-          try {
-            const markers = await api.get<Marker[]>(
-              `/api/trackables/${trip.trackableId}/trips/${trip.slug}/markers`
-            );
-            return { ...trip, markers };
-          } catch (err) {
-            console.error(`Failed to load markers for trip ${trip.slug}`, err);
-            return { ...trip, markers: [] };
-          }
-        })
-      );
+      return trips;
+      // return Promise.all(
+      //   trips.map(async (trip) => {
+      //     try {
+      //       const markers = await api.get<Marker[]>(
+      //         `/api/trackables/${trip.trackableId}/trips/${trip.slug}/markers`
+      //       );
+      //       return { ...trip, markers };
+      //     } catch (err) {
+      //       console.error(`Failed to load markers for trip ${trip.slug}`, err);
+      //       return { ...trip, markers: [] };
+      //     }
+      //   })
+      // );
     },
     enabled: !!website?.trackableId,
     staleTime: 10 * 60 * 1000,

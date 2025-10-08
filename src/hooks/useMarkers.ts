@@ -12,7 +12,7 @@ export function useMarkers(trip: Trip | null) {
       return api.get<Marker[]>(`/api/trackables/${trip.trackableId}/trips/${trip.slug}/markers`)
     },
     enabled: !!trip?.trackableId && !!trip,
-    staleTime: 10 * 60 * 1000, // 10 minutes - markers change less frequently
+    staleTime: 10 * 60 * 1000, 
     retry: (failureCount, error) => {
       if (error instanceof Error && error.message.includes('404')) {
         return false;
@@ -33,7 +33,7 @@ export function useTripWithMarkers(trip: Trip | null) {
       return { ...trip, markers: await api.get<Marker[]>(`/api/trackables/${trip.trackableId}/trips/${trip.slug}/markers`) }
     },
     enabled: !!trip?.trackableId && !!trip,
-    staleTime: 10 * 60 * 1000, // 10 minutes - markers change less frequently
+    staleTime: 10 * 60 * 1000, 
     retry: (failureCount, error) => {
       if (error instanceof Error && error.message.includes('404')) {
         return false;

@@ -7,7 +7,7 @@ export default function DesktopSidebar() {
   const { data: trips } = useTripsByHostname();
   const { trip: selectedTrip } = useSelectedTrip();
 
-  if(selectedTrip === undefined) {
+  if (selectedTrip === undefined) {
     return <></>;
   }
 
@@ -22,12 +22,12 @@ export default function DesktopSidebar() {
   }
 
   return (
-<div className="h-full hidden md:block md:w-1/2 lg:w-1/3">
-  <div className="flex h-full">
-      <DesktopTripMenu />
-      <DesktopMarkerMenu />
-  </div>
-</div>
+    <div className="h-full hidden md:block md:w-1/2 lg:w-1/3">
+      <div className="flex h-full">
+        <DesktopTripMenu />
+        <DesktopMarkerMenu />
+      </div>
+    </div>
 
   );
 }
