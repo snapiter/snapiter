@@ -54,7 +54,7 @@ export default function BottomDrawer({ children }: { children: React.ReactNode }
       <Sheet.Container style={{ zIndex: 102, backgroundColor: 'transparent', borderRadius: '100px' }} className="bg-background rounded-t-3xl">
         <Sheet.Header className="bg-background rounded-t-3xl py-2 cursor-grab border-b border-border">
           <div className="flex justify-center py-2">
-            <div className="w-10 h-1 rounded-full bg-white" />
+            <div className="w-10 h-1 rounded-full bg-foreground" />
           </div>
         </Sheet.Header>
         <Sheet.Content className="bg-background"
