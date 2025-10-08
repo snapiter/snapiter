@@ -15,6 +15,7 @@ import { animateTrip, type AnimationRefs } from '@/utils/tripAnimationHandler';
 import { config } from '@/config';
 import MapWrapper from './MapWrapper';
 import { useTrackableByHostname } from '@/hooks/useTrackableByHostname';
+import { useResponsiveMapHeight } from '@/hooks/map/useResponsiveMapHeight';
 
 interface MapViewProps {
   trips?: TripWithMarkers[];
@@ -26,7 +27,6 @@ export default function MapView({ trips = [] }: MapViewProps) {
 
   const { runCommand } = useMapCommands();
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
-  const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
   const [mapEvents, setMapEvents] = useAtom(mapEventsAtom);
 
@@ -69,7 +69,6 @@ export default function MapView({ trips = [] }: MapViewProps) {
 
 
   useEffect(() => {
-    console.log("RENDER" + tripsWithPositions.length);
     if (selectedTrip && tripsWithPositions.length > 0) {
       const tripWithPositions = tripsWithPositions.find(t => t.slug === selectedTrip.slug);
 
@@ -112,28 +111,8 @@ export default function MapView({ trips = [] }: MapViewProps) {
     }
   }, [mapEvents]);
 
-  // Dynamic height for mobile, full height for desktop
-  useEffect(() => {
-    if (isPanelExpanded !== null && mapRef.current) {
-      const map = mapRef.current?.getMap();
-      if (!map) return;
-  
-      const isMobile = window.innerWidth < 768; // adjust breakpoint if needed
-  
-      if (isMobile) {
-        map.getContainer().style.height = isPanelExpanded
-          ? window.innerHeight * config.expandedHeightCalculation + "px"
-          : "calc(100vh - " + (config.collapsedHeight - config.panelDragBarHeight) + "px)";
-        
-        map.resize();
-      } else {
-        // Desktop: full height
-        map.getContainer().style.height = "100vh";
-        map.resize();
-      }
-    }
-  }, [isPanelExpanded, mapRef.current]);
-  
+  useResponsiveMapHeight(mapRef)
+
 
   const handleMouseMove = (e: MapLayerMouseEvent) => {
     const feature = e.features?.[0];
