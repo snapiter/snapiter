@@ -3,19 +3,19 @@
 import { Source, Layer, type MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { type Trip, type TripDetailed, lightboxIndexAtom, mapEventsAtom, bottomPanelExpandedAtom, MapStyle, TripWithMarkers } from '@/store/atoms';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { useRef, useState, useEffect, RefObject } from 'react';
 import type maplibregl from 'maplibre-gl';
-import { createRouteData, fitMapBounds } from '@/utils/mapBounds';
+import { createRouteData } from '@/utils/mapBounds';
 import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useTripsWithPositions } from '@/hooks/useTripsWithPositions';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
 import { animateTrip, type AnimationRefs } from '@/utils/tripAnimationHandler';
-import { config } from '@/config';
 import MapWrapper from './MapWrapper';
 import { useTrackableByHostname } from '@/hooks/useTrackableByHostname';
 import { useResponsiveMapHeight } from '@/hooks/map/useResponsiveMapHeight';
+import { useAutoFlyToMarker } from '@/hooks/map/useAutoFlyToMarker';
 
 interface MapViewProps {
   trips?: TripWithMarkers[];
@@ -28,7 +28,7 @@ export default function MapView({ trips = [] }: MapViewProps) {
   const { runCommand } = useMapCommands();
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
-  const [mapEvents, setMapEvents] = useAtom(mapEventsAtom);
+  const [mapEvents,setMapEvents] = useAtom(mapEventsAtom);
 
   const mapRef = useRef<MapRef | null>(null);
   
@@ -84,32 +84,7 @@ export default function MapView({ trips = [] }: MapViewProps) {
 
   useMapCommandHandler(mapRef, trips);
 
-  useEffect(() => {
-    const lastEvent = mapEvents[mapEvents.length - 1];
-    if (!lastEvent) return;
-
-    // If the marker is highlighted, fly to the marker
-    if(lastEvent.type === 'MARKER_HIGHLIGHTED') {
-      const marker = selectedTrip?.markers?.filter(i => i.markerId == lastEvent.markerId).pop()
-      if(marker) {
-        runCommand({
-          type: 'FLY_TO',
-          coordinates: [marker.longitude, marker.latitude],
-          zoom: 8,
-          duration: 1500
-        });
-      }
-    }
-
-    // If the marker is left, fit the map bounds to the trip
-    if(lastEvent.type === 'MARKER_HIGHLIGHTED_LEAVE') {
-      const trip = tripsWithPositions.find(t => t.slug == selectedTrip?.slug);
-      
-      if(trip) {
-        fitMapBounds(mapRef, trip?.positions);
-      }
-    }
-  }, [mapEvents]);
+  useAutoFlyToMarker(mapRef, trips);
 
   useResponsiveMapHeight(mapRef)
 
