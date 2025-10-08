@@ -6,6 +6,8 @@ import { useMapCommands } from '@/hooks/useMapCommands';
 
 import { Marker } from '@/store/atoms';
 import { getMarkerUrlThumbnail } from '@/services/thumbnail';
+import { useAtomValue } from 'jotai';
+import { bottomPanelExpandedAtom } from '@/store/atoms';
 
 export interface Photo {
   id: string;
@@ -20,6 +22,7 @@ interface PhotoCarouselProps {
   className?: string;
 }
 export default function PhotoCarousel({ markers, className = '' }: PhotoCarouselProps) {
+  const isExpanded = useAtomValue(bottomPanelExpandedAtom);
   const { runCommand } = useMapCommands();
 
   const handlePhotoClick = (index: number) => {
@@ -33,40 +36,49 @@ export default function PhotoCarousel({ markers, className = '' }: PhotoCarousel
       runCommand({ type: 'HIGHLIGHT_MARKER', markerId: activePhoto.markerId });
     }
   };
+  if (!isExpanded) {
+    return (
+      <div className="relative w-full">
+        <div className="bg-muted rounded-lg animate-pulse flex items-center justify-center h-64">
+          <div className="w-8 h-8 border-2 border-border border-t-primary rounded-full animate-spin"></div>
+        </div>
+      </div>
+    );
+  }
 
-  return (
-    <div className={`w-full ${className}`}>
-      <Swiper
-        modules={[Pagination]}
-        spaceBetween={10}
-        slidesPerView={markers.length > 1 ? 1.2 : 1}
-        navigation={false}
-        onSlideChange={handleSlideChange}
-        className="h-full rounded-lg"
-      >
-        {markers.map((marker: Marker, index: number) => (
-          <SwiperSlide key={marker.markerId} className="relative">
-            <div 
-              className="relative w-full h-64 cursor-pointer hover:opacity-90 transition-opacity"
-              onClick={() => handlePhotoClick(index)}
-            >
-              <Image
-                src={getMarkerUrlThumbnail(marker, "500x500")}
-                alt={marker.title  || 'Marker photo'}
-                fill
-                className="object-cover rounded-lg"
-                sizes="(max-width: 640px) 100vw, 500px"
+    return (
+      <div className={`w-full ${className}`}>
+        <Swiper
+          modules={[Pagination]}
+          spaceBetween={10}
+          slidesPerView={markers.length > 1 ? 1.2 : 1}
+          navigation={false}
+          onSlideChange={handleSlideChange}
+          className="h-full rounded-lg"
+        >
+          {markers.map((marker: Marker, index: number) => (
+            <SwiperSlide key={marker.markerId} className="relative">
+              <div
+                className="relative w-full h-64 cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => handlePhotoClick(index)}
+              >
+                <Image
+                  src={getMarkerUrlThumbnail(marker, "500x500")}
+                  alt={marker.title || 'Marker photo'}
+                  fill
+                  className="object-cover rounded-lg"
+                  sizes="(max-width: 640px) 100vw, 500px"
 
-              />
-            </div>
-            {marker.description && (
-              <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-3 rounded-b-lg">
-                <p className="text-sm">{marker.description}</p>
+                />
               </div>
-            )}
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </div>
-  );
-}
+              {marker.description && (
+                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-3 rounded-b-lg">
+                  <p className="text-sm">{marker.description}</p>
+                </div>
+              )}
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+    );
+  }
