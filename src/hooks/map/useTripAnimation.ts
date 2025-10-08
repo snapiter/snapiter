@@ -1,0 +1,97 @@
+import { useEffect, useRef, useCallback } from "react";
+import { useTripsWithPositions } from "@/hooks/useTripsWithPositions";
+import type maplibregl from "maplibre-gl";
+import { useSelectedTrip } from "../useSelectedTrip";
+import { useTrackableByHostname } from "../useTrackableByHostname";
+import { lightboxIndexAtom, mapEventsAtom, Trip, TripDetailed } from "@/store/atoms";
+import { useSetAtom } from "jotai";
+import { animateTrip, } from '@/utils/tripAnimationHandler';
+import { MapRef } from "react-map-gl/maplibre";
+
+interface AnimationRefs {
+  animationRef: React.MutableRefObject<number | null>;
+  vehicleMarkerRef: React.MutableRefObject<maplibregl.Marker | null>;
+  startTimeRef: React.MutableRefObject<number | null>;
+  currentPositionIndexRef: React.MutableRefObject<number>;
+  visibleMarkersRef: React.MutableRefObject<Record<string, maplibregl.Marker>>;
+}
+
+
+export function useTripAnimation(
+  mapRef: React.RefObject<MapRef | null>,
+  trips: Trip[]
+) {
+  const animationRef = useRef<number | null>(null);
+  const vehicleMarkerRef = useRef<maplibregl.Marker | null>(null);
+  const startTimeRef = useRef<number | null>(null);
+  const currentPositionIndexRef = useRef<number>(0);
+  const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
+  const { data: website } = useTrackableByHostname();
+  const setMapEvents = useSetAtom(mapEventsAtom);
+
+  const { trip: selectedTrip } = useSelectedTrip();
+  // Data
+  const { data: tripsWithPositions = [] } = useTripsWithPositions(trips);
+
+  const setLightboxIndex = useSetAtom(lightboxIndexAtom);
+
+  // Core animation function
+  const animateTripDirect = useCallback(
+    (trip: TripDetailed) => {
+      const refs: AnimationRefs = {
+        animationRef,
+        vehicleMarkerRef,
+        startTimeRef,
+        currentPositionIndexRef,
+        visibleMarkersRef,
+      };
+
+      animateTrip(
+        trip,
+        mapRef,
+        refs,
+        website!!.trackableId,
+        (photoIndex) => setLightboxIndex(photoIndex),
+        () => {
+          setMapEvents((prev) => [
+            ...prev,
+            {
+              type: "ANIMATION_ENDED",
+              tripSlug: trip.slug,
+              commandId: `animation-${Date.now()}`,
+            },
+          ]);
+        }
+      );
+    },
+    [animateTrip, mapRef, setLightboxIndex, setMapEvents, website?.trackableId]
+  );
+
+  // Effect: automatically trigger when selectedTrip changes
+  useEffect(() => {
+    if (!selectedTrip || tripsWithPositions.length === 0) return;
+
+    const tripWithPositions = tripsWithPositions.find(
+      (t) => t.slug === selectedTrip.slug
+    );
+
+    if (tripWithPositions && tripWithPositions.positions.length > 0) {
+      animateTripDirect({
+        ...tripWithPositions,
+        markers: selectedTrip.markers,
+      });
+    }
+  }, [selectedTrip, tripsWithPositions, animateTripDirect]);
+
+  return {
+    tripsWithPositions,
+    animateTripDirect,
+    refs: {
+      animationRef,
+      vehicleMarkerRef,
+      startTimeRef,
+      currentPositionIndexRef,
+      visibleMarkersRef,
+    },
+  };
+}

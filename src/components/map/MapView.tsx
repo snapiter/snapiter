@@ -11,11 +11,11 @@ import { useMapCommandHandler } from '@/hooks/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/useMapCommands';
 import { useTripsWithPositions } from '@/hooks/useTripsWithPositions';
 import { useSelectedTrip } from '@/hooks/useSelectedTrip';
-import { animateTrip, type AnimationRefs } from '@/utils/tripAnimationHandler';
 import MapWrapper from './MapWrapper';
 import { useTrackableByHostname } from '@/hooks/useTrackableByHostname';
 import { useResponsiveMapHeight } from '@/hooks/map/useResponsiveMapHeight';
 import { useAutoFlyToMarker } from '@/hooks/map/useAutoFlyToMarker';
+import { useTripAnimation } from '@/hooks/map/useTripAnimation';
 
 interface MapViewProps {
   trips?: TripWithMarkers[];
@@ -23,64 +23,16 @@ interface MapViewProps {
 
 export default function MapView({ trips = [] }: MapViewProps) {
   const { trip: selectedTrip } = useSelectedTrip();
-  const { data: website } = useTrackableByHostname();
 
   const { runCommand } = useMapCommands();
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
-  const setLightboxIndex = useSetAtom(lightboxIndexAtom);
-  const [mapEvents,setMapEvents] = useAtom(mapEventsAtom);
 
   const mapRef = useRef<MapRef | null>(null);
   
-  // Animation state refs
-  const animationRef = useRef<number | null>(null);
-  const vehicleMarkerRef = useRef<maplibregl.Marker | null>(null);
-  const startTimeRef = useRef<number | null>(null);
-  const currentPositionIndexRef = useRef<number>(0);
-  const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
 
   const { data: tripsWithPositions = [] } = useTripsWithPositions(trips);
 
-
-  const animateTripDirect = (trip: TripDetailed) => {
-    const refs: AnimationRefs = {
-      animationRef,
-      vehicleMarkerRef,
-      startTimeRef,
-      currentPositionIndexRef,
-      visibleMarkersRef,
-    };
-
-    animateTrip(
-      trip,
-      mapRef,
-      refs,
-      website!!.trackableId,
-      (photoIndex: number) => setLightboxIndex(photoIndex),
-      () => {
-        setMapEvents(prev => [...prev, { 
-          type: 'ANIMATION_ENDED', 
-          tripSlug: trip.slug, 
-          commandId: `animation-${Date.now()}` 
-        }]);
-      }
-    );
-  };
-
-
-  useEffect(() => {
-    if (selectedTrip && tripsWithPositions.length > 0) {
-      const tripWithPositions = tripsWithPositions.find(t => t.slug === selectedTrip.slug);
-
-      if (tripWithPositions && tripWithPositions.positions.length > 0) {
-        animateTripDirect({
-          ...tripWithPositions,
-          markers: selectedTrip.markers
-        });
-      }
-    }
-  }, [selectedTrip, tripsWithPositions]);
-
+  useTripAnimation(mapRef, trips);
 
   useMapCommandHandler(mapRef, trips);
 
