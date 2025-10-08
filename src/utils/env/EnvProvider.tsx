@@ -2,9 +2,15 @@
 
 import React, { createContext } from "react";
 
-export const EnvContext = createContext<Record<string, string | undefined>>({});
+type EnvConfig = {
+    SNAPITER_RUNTIME_MAPTILER_KEY: string;
+}
 
-export default function EnvProvider({ children, value }: { children: React.ReactNode, value: Record<string, string | undefined> }) {
+export const EnvContext = createContext<EnvConfig>({
+    SNAPITER_RUNTIME_MAPTILER_KEY: ""
+});
+
+export default function EnvProvider({ children, value }: { children: React.ReactNode, value: EnvConfig }) {
     return (
         <EnvContext.Provider value={value} >
             {children}
