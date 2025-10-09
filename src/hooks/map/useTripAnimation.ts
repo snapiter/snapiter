@@ -37,7 +37,6 @@ export function useTripAnimation(
         return;
       }
 
-      console.log('animateTripDirect2', trip);
       currentlyAnimatingSlugRef.current = trip.slug;
 
 
@@ -71,7 +70,6 @@ export function useTripAnimation(
   );
 
   useEffect(() => {
-    // Clear the ref when switching trips
     if (selectedTrip?.slug !== currentlyAnimatingSlugRef.current) {
       currentlyAnimatingSlugRef.current = null;
     }

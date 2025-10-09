@@ -18,21 +18,19 @@ export function useTripWithPosition(trackableId: string, tripId: string) {
     retry: 1
   });
 }
-
 export function useTrip(trip: Trip | null) {
   const api = useApiClient();
+
   return useQuery<TripDetailed>({
     queryKey: ['trip', trip?.trackableId, trip?.slug],
     queryFn: async () => {
       if (!trip?.trackableId || !trip?.slug) throw new Error('IDs are required');
       const positions = await api.get<Position[]>(`/api/trackables/${trip?.trackableId}/trips/${trip?.slug}/positions`);
-      const markers = await api.get<Marker[]>(
-        `/api/trackables/${trip?.trackableId}/trips/${trip?.slug}/markers`
-      );
+      const markers = await api.get<Marker[]>(`/api/trackables/${trip?.trackableId}/trips/${trip?.slug}/markers`);
       return { ...trip, positions, markers };
     },
     enabled: !!trip?.trackableId && !!trip?.slug,
+    retry: 1,
     staleTime: 5 * 60 * 1000,
-    retry: 1
-    });
+  });
 }
