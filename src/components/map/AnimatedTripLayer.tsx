@@ -8,7 +8,6 @@ interface AnimatedTripLayerProps {
 export default function AnimatedTripLayer({ trip }: AnimatedTripLayerProps) {
     const color = trip.color || '#3b82f6';
 
-
     return (
         <Source
             id={`route-${trip.slug}-animation`}

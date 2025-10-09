@@ -10,7 +10,7 @@ import Brand from '@/components/Brand';
 import { useTrackableByHostname } from '@/hooks/trackable/useTrackableByHostname';
 import { useMapCommands } from '@/hooks/commands/useMapCommands';
 import { useAtomValue } from 'jotai';
-import { mapEventsAtom } from '@/store/atoms';
+import { mapReadyAtom } from '@/store/atoms';
 import ErrorComponent from '@/components/ErrorComponent';
 import DesktopSidebar from '@/components/map/desktop/DesktopSidebar';
 import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
@@ -24,10 +24,9 @@ export default function Home() {
 
   const { data: website, isLoading, error } = useTrackableByHostname();
   const { runCommand } = useMapCommands();
-  const mapEvents = useAtomValue(mapEventsAtom);
+  const mapReady = useAtomValue(mapReadyAtom);
 
   const { trip: selectedTrip } = useSelectedTrip();
-  const mapReady = mapEvents.some(event => event.type === 'MAP_READY');
 
   const { data: trips = [], isLoading: tripsLoading } = useTripsByHostname();
 

@@ -129,3 +129,8 @@ export type MapEvent =
 
 export const mapCommandsAtom = atom<MapCommand[]>([]);
 export const mapEventsAtom = atom<MapEvent[]>([]);
+
+// Derived atom that only updates when MAP_READY status changes
+export const mapReadyAtom = atom(
+  (get) => get(mapEventsAtom).some(event => event.type === 'MAP_READY')
+);

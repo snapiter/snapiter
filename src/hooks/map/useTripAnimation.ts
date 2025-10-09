@@ -24,6 +24,7 @@ export function useTripAnimation(
   const startTimeRef = useRef<number | null>(null);
   const currentPositionIndexRef = useRef<number>(0);
   const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
+  const currentlyAnimatingSlugRef = useRef<string | null>(null);
   const setMapEvents = useSetAtom(mapEventsAtom);
 
   const { trip: selectedTrip } = useSelectedTrip();
@@ -32,6 +33,14 @@ export function useTripAnimation(
 
   const animateTripDirect = useCallback(
     (trip: TripDetailed) => {
+      if (currentlyAnimatingSlugRef.current === trip.slug) {
+        return;
+      }
+
+      console.log('animateTripDirect2', trip);
+      currentlyAnimatingSlugRef.current = trip.slug;
+
+
       const refs: AnimationRefs = {
         animationRef,
         vehicleMarkerRef,
@@ -62,7 +71,10 @@ export function useTripAnimation(
   );
 
   useEffect(() => {
-    if (!selectedTrip ) return;
+    // Clear the ref when switching trips
+    if (selectedTrip?.slug !== currentlyAnimatingSlugRef.current) {
+      currentlyAnimatingSlugRef.current = null;
+    }
 
     if (selectedTrip && selectedTrip.positions.length > 0) {
       animateTripDirect({
@@ -70,5 +82,5 @@ export function useTripAnimation(
         markers: selectedTrip.markers,
       });
     }
-  }, [selectedTrip, animateTripDirect]);
+  }, [selectedTrip]);
 }
