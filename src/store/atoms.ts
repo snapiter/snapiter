@@ -116,7 +116,6 @@ export type MapCommand =
   | { type: 'PANEL_COLLAPSE'; id: string };
 
 export type MapEvent = 
-  | { type: 'ANIMATION_ENDED'; tripSlug: string; commandId: string }
   | { type: 'FLY_TO_ENDED'; coordinates: [number, number]; commandId: string }
   | { type: 'MARKER_HIGHLIGHTED'; markerId: string | null; commandId: string }
   | { type: 'MARKER_HIGHLIGHTED_LEAVE'; markerId: string | null; commandId: string }

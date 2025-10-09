@@ -53,17 +53,7 @@ export function useTripAnimation(
         mapRef,
         refs,
         trip.trackableId,
-        (photoIndex) => setLightboxIndex(photoIndex),
-        () => {
-          setMapEvents((prev) => [
-            ...prev,
-            {
-              type: "ANIMATION_ENDED",
-              tripSlug: trip.slug,
-              commandId: `animation-${Date.now()}`,
-            },
-          ]);
-        }
+        (photoIndex) => setLightboxIndex(photoIndex)
       );
     },
     [animateTrip, mapRef, setLightboxIndex, setMapEvents]

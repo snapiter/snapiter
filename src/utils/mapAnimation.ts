@@ -11,7 +11,6 @@ export function createAnimationLoop(
   currentPositionIndexRef: { current: number },
   startTimeRef: { current: number | null },
   animationRef: { current: number | null },
-  onComplete?: () => void
 ) {
   const animate = () => {
     if (!mapRef.current || !selectedTrip || activePositions.length < 2) return;
@@ -76,7 +75,6 @@ export function createAnimationLoop(
     } else {
       animationRef.current = null;
       startTimeRef.current = null;
-      onComplete?.();
     }
   };
 
@@ -92,7 +90,6 @@ export function startAnimation(
   currentPositionIndexRef: { current: number },
   startTimeRef: { current: number | null },
   animationRef: { current: number | null },
-  onComplete?: () => void
 ) {
   const animate = createAnimationLoop(
     mapRef,
@@ -102,8 +99,7 @@ export function startAnimation(
     visibleMarkersRef,
     currentPositionIndexRef,
     startTimeRef,
-    animationRef,
-    onComplete
+    animationRef
   );
 
   const map = mapRef.current?.getMap();

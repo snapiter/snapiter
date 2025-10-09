@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import MapView from '@/components/map/MapView';
 import BottomDrawer from '@/components/map/mobile/BottomDrawer';
 import TripSwiper from '@/components/map/mobile/TripSwiper';
@@ -20,7 +20,6 @@ import { useTripsByHostname } from '@/hooks/trips/useTripsByHostname';
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const isMobile = useIsMobile();
-
   const { data: website, isLoading, error } = useTrackableByHostname();
   const { runCommand } = useMapCommands();
   const mapReady = useAtomValue(mapReadyAtom);
@@ -47,7 +46,6 @@ export default function Home() {
       <ErrorComponent message={error.message} />
     );
   }
-
 
   return (
     <>

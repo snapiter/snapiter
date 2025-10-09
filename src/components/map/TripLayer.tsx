@@ -2,7 +2,7 @@ import { useTripWithPosition } from "@/hooks/trips/useTrip";
 import { selectedTripAtom, Trip } from "@/store/atoms";
 import { EnvContext } from "@/utils/env/EnvProvider";
 import { createRouteData } from "@/utils/mapBounds";
-import { useContext, useEffect, useMemo } from "react";
+import { memo, useContext, useEffect, useMemo } from "react";
 import { Source, Layer, useMap } from "react-map-gl/maplibre";
 import type {
   FeatureCollection,

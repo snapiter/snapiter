@@ -19,7 +19,6 @@ export function animateTrip(
   refs: AnimationRefs,
   trackableId: string,
   onPhotoClick?: (photoIndex: number) => void,
-  onComplete?: () => void
 ) {
   const map = mapRef.current?.getMap();
   if (!map) return;
@@ -65,9 +64,6 @@ export function animateTrip(
     refs.visibleMarkersRef,
     refs.currentPositionIndexRef,
     refs.startTimeRef,
-    refs.animationRef,
-    () => {
-      onComplete?.();
-    }
+    refs.animationRef
   );
 }
