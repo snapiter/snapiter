@@ -24,17 +24,12 @@ export default function PhotoCarousel() {
   const isExpanded = useAtomValue(bottomPanelExpandedAtom);
   const { runCommand } = useMapCommands();
 
-  const handlePhotoClick = (index: number) => {
-    runCommand({ type: 'LIGHTBOX_OPEN', photoIndex: index });
-  };
 
-  const handleSlideChange = (swiper: SwiperType) => {
-    const activeIndex = swiper.activeIndex;
-    const activePhoto = selectedTrip.markers[activeIndex];
-    if (activePhoto) {
-      runCommand({ type: 'HIGHLIGHT_MARKER', markerId: activePhoto.markerId });
-    }
-  };
+
+  if (selectedTrip === null || selectedTrip.markers.length === 0) {
+    return <></>;
+  }
+
   if (!isExpanded) {
     return (
       <div className="relative w-full pt-4">
@@ -45,10 +40,16 @@ export default function PhotoCarousel() {
     );
   }
 
-
-  if (selectedTrip === null || selectedTrip.markers.length === 0) {
-    return <></>;
-  }
+  const handlePhotoClick = (index: number) => {
+    runCommand({ type: 'LIGHTBOX_OPEN', photoIndex: index });
+  };
+  const handleSlideChange = (swiper: SwiperType) => {
+    const activeIndex = swiper.activeIndex;
+    const activePhoto = selectedTrip.markers[activeIndex];
+    if (activePhoto) {
+      runCommand({ type: 'HIGHLIGHT_MARKER', markerId: activePhoto.markerId });
+    }
+  };
 
   return (
     <div className="pt-4">
