@@ -1,7 +1,7 @@
 "use client";
 
 import StackCard from "@/components/dashboard/layout/StackCard";
-import { useTrips } from "@/hooks/useTrips";
+import { useTrips } from "@/hooks/trips/useTrips";
 import ActiveTripCard from "@/components/dashboard/cards/trips/ActiveTripCard";
 import StartTripCard from "@/components/dashboard/cards/trips/StartTripCard";
 import TrackableCard from "@/components/dashboard/cards/TrackableCard";

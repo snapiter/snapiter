@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import type { Marker, Trip } from '@/store/atoms';
-import { useApiClient } from './useApiClient';
+import { useApiClient } from '../useApiClient';
 import { TripWithMarkers } from '@/store/atoms';
 
 

@@ -2,7 +2,7 @@ import PhotoGrid from '../../PhotoGrid';
 import type { Marker, Trip } from '@/store/atoms';
 import { FaRoute } from 'react-icons/fa6';
 import DayAndPhoto from '../DayAndPhoto';
-import { useSelectedTrip } from '@/hooks/useSelectedTrip';
+import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
   
 export default function DesktopMarkerMenu() {
   const { trip } = useSelectedTrip();

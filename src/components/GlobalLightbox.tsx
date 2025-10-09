@@ -3,8 +3,8 @@
 import { useAtomValue } from 'jotai';
 import Lightbox from 'yet-another-react-lightbox';
 import { lightboxIndexAtom } from '@/store/atoms';
-import { useMapCommands } from '@/hooks/useMapCommands';
-import { useSelectedTrip } from '@/hooks/useSelectedTrip';
+import { useMapCommands } from '@/hooks/commands/useMapCommands';
+import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
 import 'yet-another-react-lightbox/styles.css';
 import { getMarkerImage } from '@/services/thumbnail';
 

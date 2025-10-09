@@ -1,5 +1,5 @@
 import Card from "./Card";
-import { useTrackableById } from "@/hooks/useTrackableById";
+import { useTrackableById } from "@/hooks/trackable/useTrackableById";
 import { FaGlobe } from "react-icons/fa6";
 import { SecondaryButton } from "@snapiter/designsystem";
 

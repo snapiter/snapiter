@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useRef, useState } from 'react';
-import { useMapCommands } from '@/hooks/useMapCommands';
+import { useMapCommands } from '@/hooks/commands/useMapCommands';
 import { Marker } from '@/store/atoms';
 import { getMarkerUrlThumbnail } from '@/services/thumbnail';
 

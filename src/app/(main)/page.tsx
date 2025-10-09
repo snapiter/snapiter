@@ -7,14 +7,14 @@ import TripSwiper from '@/components/map/mobile/TripSwiper';
 import SnapIterLoader from '@/components/SnapIterLoader';
 import DynamicTitle from '@/components/DynamicTitle';
 import Brand from '@/components/Brand';
-import { useTrackableByHostname } from '@/hooks/useTrackableByHostname';
-import { useMapCommands } from '@/hooks/useMapCommands';
+import { useTrackableByHostname } from '@/hooks/trackable/useTrackableByHostname';
+import { useMapCommands } from '@/hooks/commands/useMapCommands';
 import { useAtomValue } from 'jotai';
 import { mapEventsAtom } from '@/store/atoms';
-import { useTrips } from '@/hooks/useTrips';
+import { useTrips } from '@/hooks/trips/useTrips';
 import ErrorComponent from '@/components/ErrorComponent';
 import DesktopSidebar from '@/components/map/desktop/DesktopSidebar';
-import { useSelectedTrip } from '@/hooks/useSelectedTrip';
+import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
 import PhotoCarousel from '@/components/map/mobile/PhotoCarousel';
 import { useIsMobile } from '@/hooks/useIsMobile';
 

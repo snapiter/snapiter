@@ -1,13 +1,13 @@
 "use client";
 
 import { RefObject, use, useEffect, useRef, useState } from "react";
-import { useTripWithPosition } from "@/hooks/useTripWithPosition";
+import { useTripWithPosition } from "@/hooks/trips/useTripWithPosition";
 import Card from "@/components/dashboard/cards/Card";
 import StackCard from "@/components/dashboard/layout/StackCard";
 import { Layer, MapRef, Marker, Source } from "react-map-gl/maplibre";
 import MapWrapper from "@/components/map/MapWrapper";
 import { createRouteData, fitMapBounds } from "@/utils/mapBounds";
-import { useTripWithMarkers } from "@/hooks/useTripWithMarkers";
+import { useTripWithMarkers } from "@/hooks/trips/useTripWithMarkers";
 import MarkersCard from "@/components/dashboard/cards/markers/MarkersCard";
 import ActiveTripCard from "@/components/dashboard/cards/trips/ActiveTripCard";
 import EditTripCard from "@/components/dashboard/cards/trips/EditTripCard";

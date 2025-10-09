@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import type { Marker, Trip, TripWithMarkers } from '@/store/atoms';
-import { useApiClient } from './useApiClient';
+import { useApiClient } from '../useApiClient';
 
 
 export function useTripWithMarkers(trip: Trip | null) {

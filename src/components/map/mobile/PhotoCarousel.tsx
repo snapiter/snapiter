@@ -2,7 +2,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
-import { useMapCommands } from '@/hooks/useMapCommands';
+import { useMapCommands } from '@/hooks/commands/useMapCommands';
 
 import { Marker } from '@/store/atoms';
 import { getMarkerUrlThumbnail } from '@/services/thumbnail';

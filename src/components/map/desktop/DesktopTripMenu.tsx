@@ -1,11 +1,11 @@
 'use client';
 
-import { useSelectedTrip } from '@/hooks/useSelectedTrip';
+import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
 import { FaRoute } from 'react-icons/fa6';
 import { formatTripDate } from '@/utils/formatTripDate';
-import { useMapCommands } from '@/hooks/useMapCommands';
-import { useTripsByHostname } from '@/hooks/useTripsByHostname';
-import { useTrackableByHostname } from '@/hooks/useTrackableByHostname';
+import { useMapCommands } from '@/hooks/commands/useMapCommands';
+import { useTripsByHostname } from '@/hooks/trips/useTripsByHostname';
+import { useTrackableByHostname } from '@/hooks/trackable/useTrackableByHostname';
 import { Logo } from '@snapiter/designsystem';
 
 export default function DesktopTripMenu() {

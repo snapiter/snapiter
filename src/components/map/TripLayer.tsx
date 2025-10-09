@@ -1,4 +1,4 @@
-import { useTripWithPosition } from "@/hooks/useTripWithPosition";
+import { useTripWithPosition } from "@/hooks/trips/useTripWithPosition";
 import { Trip } from "@/store/atoms";
 import { EnvContext } from "@/utils/env/EnvProvider";
 import { createRouteData } from "@/utils/mapBounds";

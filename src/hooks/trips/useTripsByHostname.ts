@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import type { Trip } from '@/store/atoms';
-import { useApiClient } from './useApiClient';
-import { useTrackableByHostname } from './useTrackableByHostname';
+import { useApiClient } from '../useApiClient';
+import { useTrackableByHostname } from '../trackable/useTrackableByHostname';
 
 export function useTripsByHostname() {
   const { data: website } = useTrackableByHostname();

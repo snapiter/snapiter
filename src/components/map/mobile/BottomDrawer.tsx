@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAtomValue } from 'jotai';
 import { bottomPanelExpandedAtom } from '@/store/atoms';
-import { useMapCommands } from '@/hooks/useMapCommands';
+import { useMapCommands } from '@/hooks/commands/useMapCommands';
 import { Sheet, SheetRef } from 'react-modal-sheet';
 import { config } from '@/config';
 

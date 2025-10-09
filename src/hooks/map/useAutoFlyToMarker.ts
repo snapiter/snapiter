@@ -1,9 +1,9 @@
 import { fitMapBounds } from "@/utils/mapBounds";
-import { useMapCommands } from "../useMapCommands";
+import { useMapCommands } from "../commands/useMapCommands";
 import { useAtomValue } from "jotai";
 import { mapEventsAtom, Trip } from "@/store/atoms";
 import { useEffect } from "react";
-import { useSelectedTrip } from "../useSelectedTrip";
+import { useSelectedTrip } from "../trips/useSelectedTrip";
 import { MapRef } from "react-map-gl/maplibre";
 
 

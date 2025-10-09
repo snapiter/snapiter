@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from "react";
 import type { TripDetailed } from "@/store/atoms";
 import type maplibregl from "maplibre-gl";
-import { useSelectedTrip } from "../useSelectedTrip";
+import { useSelectedTrip } from "../trips/useSelectedTrip";
 import { lightboxIndexAtom, mapEventsAtom, Trip } from "@/store/atoms";
 import { useSetAtom } from "jotai";
 import { animateTrip, } from '@/utils/tripAnimationHandler';

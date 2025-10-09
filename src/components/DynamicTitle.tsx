@@ -1,6 +1,6 @@
 'use client';
 
-import { useTrackableByHostname } from '@/hooks/useTrackableByHostname';
+import { useTrackableByHostname } from '@/hooks/trackable/useTrackableByHostname';
 import { useEffect } from 'react';
 
 export default function DynamicTitle() {

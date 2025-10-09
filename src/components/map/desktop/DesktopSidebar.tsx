@@ -1,7 +1,7 @@
 import DesktopMarkerMenu from './DesktopMarkerMenu';
-import { useSelectedTrip } from '@/hooks/useSelectedTrip';
+import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
 import DesktopTripMenu from './DesktopTripMenu';
-import { useTripsByHostname } from '@/hooks/useTripsByHostname';
+import { useTripsByHostname } from '@/hooks/trips/useTripsByHostname';
 
 export default function DesktopSidebar() {
   const { data: trips } = useTripsByHostname();

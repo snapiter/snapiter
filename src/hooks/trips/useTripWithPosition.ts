@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import type { Marker, Position, Trip, TripDetailed, TripWithPositions } from '@/store/atoms';
-import { useApiClient } from './useApiClient';
+import { useApiClient } from '../useApiClient';
 
 export function useTripWithPosition(trackableId: string, tripId: string) {
   const api = useApiClient();

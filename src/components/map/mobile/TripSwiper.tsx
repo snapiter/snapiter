@@ -3,9 +3,9 @@ import 'swiper/css/pagination';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import { useMapCommands } from '@/hooks/useMapCommands';
+import { useMapCommands } from '@/hooks/commands/useMapCommands';
 import MobileTripDetails from './MobileTripDetails';
-import { useTripsByHostname } from '@/hooks/useTripsByHostname';
+import { useTripsByHostname } from '@/hooks/trips/useTripsByHostname';
 
 
 export default function TripSwiper() {
