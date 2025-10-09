@@ -29,7 +29,6 @@ export function useTripAnimation(
   const setMapEvents = useSetAtom(mapEventsAtom);
 
   const { trip: selectedTrip } = useSelectedTrip();
-  const { data: tripsWithPositions = [] } = useTripsWithPositions(trips);
 
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
 
@@ -65,17 +64,13 @@ export function useTripAnimation(
   );
 
   useEffect(() => {
-    if (!selectedTrip || tripsWithPositions.length === 0) return;
+    if (!selectedTrip ) return;
 
-    const tripWithPositions = tripsWithPositions.find(
-      (t) => t.slug === selectedTrip.slug
-    );
-
-    if (tripWithPositions && tripWithPositions.positions.length > 0) {
+    if (selectedTrip && selectedTrip.positions.length > 0) {
       animateTripDirect({
-        ...tripWithPositions,
+        ...selectedTrip,
         markers: selectedTrip.markers,
       });
     }
-  }, [selectedTrip, tripsWithPositions, animateTripDirect]);
+  }, [selectedTrip, animateTripDirect]);
 }
