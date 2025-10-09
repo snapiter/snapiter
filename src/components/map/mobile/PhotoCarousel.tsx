@@ -8,6 +8,7 @@ import { Marker } from '@/store/atoms';
 import { getMarkerUrlThumbnail } from '@/services/thumbnail';
 import { useAtomValue } from 'jotai';
 import { bottomPanelExpandedAtom } from '@/store/atoms';
+import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
 
 export interface Photo {
   id: string;
@@ -17,11 +18,9 @@ export interface Photo {
   markerId?: string;
 }
 
-interface PhotoCarouselProps {
-  markers: Marker[];
-  className?: string;
-}
-export default function PhotoCarousel({ markers, className = '' }: PhotoCarouselProps) {
+export default function PhotoCarousel() {
+  const { trip: selectedTrip } = useSelectedTrip();
+
   const isExpanded = useAtomValue(bottomPanelExpandedAtom);
   const { runCommand } = useMapCommands();
 
@@ -31,14 +30,14 @@ export default function PhotoCarousel({ markers, className = '' }: PhotoCarousel
 
   const handleSlideChange = (swiper: SwiperType) => {
     const activeIndex = swiper.activeIndex;
-    const activePhoto = markers[activeIndex];
+    const activePhoto = selectedTrip.markers[activeIndex];
     if (activePhoto) {
       runCommand({ type: 'HIGHLIGHT_MARKER', markerId: activePhoto.markerId });
     }
   };
   if (!isExpanded) {
     return (
-      <div className="relative w-full">
+      <div className="relative w-full pt-4">
         <div className="bg-muted rounded-lg animate-pulse flex items-center justify-center h-64">
           <div className="w-8 h-8 border-2 border-border border-t-primary rounded-full animate-spin"></div>
         </div>
@@ -46,17 +45,23 @@ export default function PhotoCarousel({ markers, className = '' }: PhotoCarousel
     );
   }
 
-    return (
-      <div className={`w-full ${className}`}>
+
+  if (selectedTrip === null || selectedTrip.markers.length === 0) {
+    return <></>;
+  }
+
+  return (
+    <div className="pt-4">
+      <div className="w-full">
         <Swiper
           modules={[Pagination]}
           spaceBetween={10}
-          slidesPerView={markers.length > 1 ? 1.2 : 1}
+          slidesPerView={selectedTrip.markers.length > 1 ? 1.2 : 1}
           navigation={false}
           onSlideChange={handleSlideChange}
           className="h-full rounded-lg"
         >
-          {markers.map((marker: Marker, index: number) => (
+          {selectedTrip.markers.map((marker: Marker, index: number) => (
             <SwiperSlide key={marker.markerId} className="relative">
               <div
                 className="relative w-full h-64 cursor-pointer hover:opacity-90 transition-opacity"
@@ -80,5 +85,6 @@ export default function PhotoCarousel({ markers, className = '' }: PhotoCarousel
           ))}
         </Swiper>
       </div>
-    );
-  }
+    </div>
+  );
+}

@@ -13,7 +13,6 @@ import { useAtomValue } from 'jotai';
 import { mapReadyAtom } from '@/store/atoms';
 import ErrorComponent from '@/components/ErrorComponent';
 import DesktopSidebar from '@/components/map/desktop/DesktopSidebar';
-import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
 import PhotoCarousel from '@/components/map/mobile/PhotoCarousel';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useTripsByHostname } from '@/hooks/trips/useTripsByHostname';
@@ -25,8 +24,6 @@ export default function Home() {
   const { data: website, isLoading, error } = useTrackableByHostname();
   const { runCommand } = useMapCommands();
   const mapReady = useAtomValue(mapReadyAtom);
-
-  const { trip: selectedTrip } = useSelectedTrip();
 
   const { data: trips = [], isLoading: tripsLoading } = useTripsByHostname();
 
@@ -64,11 +61,7 @@ export default function Home() {
           <BottomDrawer>
             <div className="w-full h-full">
               <TripSwiper />
-              {selectedTrip?.markers && selectedTrip?.markers.length > 0 && (
-                <div className="pt-4">
-                  <PhotoCarousel markers={selectedTrip.markers} />
-                </div>
-              )}
+              <PhotoCarousel />
             </div>
           </BottomDrawer>)
           }
