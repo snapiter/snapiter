@@ -4,6 +4,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { useContext, type CSSProperties, type ReactNode, type RefObject } from "react";
 import type { MapRef, MapLayerMouseEvent } from "react-map-gl/maplibre";
+import { AttributionControl } from 'maplibre-gl';
 import { EnvContext } from '@/utils/env/EnvProvider';
 
 export type MapViewProps = {
@@ -27,7 +28,9 @@ export default function MapWrapper({
 }: MapViewProps) {
 
   const env = useContext(EnvContext);
-  
+  const isRetina = typeof window !== 'undefined' && window.devicePixelRatio > 1;
+  const tileUrl = `https://api.maptiler.com/maps/landscape/{z}/{x}/{y}${isRetina ? '@2x' : ''}.png?key=${env.SNAPITER_MAPTILER_KEY}`;
+
   return (
     <Map
       ref={mapRef}
@@ -35,12 +38,36 @@ export default function MapWrapper({
         longitude: 5.1214201,
         latitude: 52.0907374,
         zoom: 12,
+      }}  mapStyle={{
+        version: 8,
+        sources: {
+          "maptiler-raster": {
+            type: "raster",
+            tiles: [
+              tileUrl
+            ],
+            tileSize: 256, // or 256, depending on style
+            attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
+          },
+        },
+        layers: [
+          {
+            id: "maptiler-raster",
+            type: "raster",
+            source: "maptiler-raster",
+          },
+        ],
       }}
-      mapStyle={`https://api.maptiler.com/maps/landscape/style.json?key=${env.SNAPITER_MAPTILER_KEY}`}
-      attributionControl={{
-        compact: true,
+      attributionControl={false}
+      onLoad={(e) => {
+        onMapReady?.();
+        const map = e.target;
+        map.addControl(new AttributionControl({ compact: true }), 'top-right');
       }}
-      onLoad={() => onMapReady?.()}
+      // attributionControl={{
+      //   compact: true,
+      // }}
+      // onLoad={() => onMapReady?.()}
       onMouseMove={onMouseMove}
       onClick={onClick}
       interactiveLayerIds={interactiveLayerIds}
