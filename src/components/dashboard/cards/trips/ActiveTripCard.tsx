@@ -6,7 +6,7 @@ import { FaX } from "react-icons/fa6";
 import { formatTripDate } from "@/utils/formatTripDate";
 import { useState } from "react";
 import ConfirmDialog from "../../layout/ConfirmDialog";
-import { useUpdateTrip } from "@/hooks/trips/useUpdateTrip";
+import { useUpdateTrip } from "@/hooks/dashboard/trips/useUpdateTrip";
 
 interface ActiveTripCardProps {
     trip: Trip;

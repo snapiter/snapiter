@@ -1,7 +1,7 @@
 "use client";
 
 import { RefObject, use, useEffect, useRef, useState } from "react";
-import { useTripWithPosition } from "@/hooks/trips/useTripWithPosition";
+import { useTripWithPosition } from "@/hooks/trips/useTrip";
 import Card from "@/components/dashboard/cards/Card";
 import StackCard from "@/components/dashboard/layout/StackCard";
 import { Layer, MapRef, Marker, Source } from "react-map-gl/maplibre";

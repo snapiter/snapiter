@@ -7,7 +7,7 @@ import { PrimaryButton } from "@snapiter/designsystem";
 import TextInput from "../../input/TextInput";
 import TextArea from "../../input/TextArea";
 import { useRouter } from "next/navigation";
-import { useCreateTrip } from "@/hooks/trips/useCreateTrip";
+import { useCreateTrip } from "@/hooks/dashboard/trips/useCreateTrip";
 
 interface StartTripCardProps {
     trackableId: string;

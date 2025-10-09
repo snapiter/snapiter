@@ -11,7 +11,6 @@ export function useTripsByHostname() {
     queryKey: ['trips', website?.trackableId],
     queryFn: async (): Promise<Trip[]> => {
       if (!website?.trackableId) return []; 
-      
       return await api.get<Trip[]>(`/api/trackables/${website.trackableId}/trips`);
 
     },

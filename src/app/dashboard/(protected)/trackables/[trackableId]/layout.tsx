@@ -8,7 +8,7 @@ import { FaRoute, FaVanShuttle } from "react-icons/fa6";
 import { useTrackableById } from "@/hooks/trackable/useTrackableById";
 import { dashboardLoading } from "@/store/atoms";
 import { useAtomValue } from "jotai";
-import { useTrips } from "@/hooks/trips/useTrips";
+import { useTrips } from "@/hooks/dashboard/trips/useTrips";
 import { createTrackableMenuItem, dashboardMenuItem } from "../../menu";
 import { Logo } from "@snapiter/designsystem";
 import { useTrackables } from "@/hooks/dashboard/trackables/useTrackables";

@@ -12,7 +12,7 @@ export function useTripWithPosition(trackableId: string, tripId: string) {
       const trip = await api.get<Trip>(`/api/trackables/${trackableId}/trips/${tripId}`);
       return { ...trip, positions: positionsQuery.data ?? [] };
     },
-    enabled: !!positionsQuery.data, // wait for positions
+    enabled: !!positionsQuery.data,
     staleTime: 5 * 60 * 1000,
     retry: 1,
     placeholderData: positionsQuery.data

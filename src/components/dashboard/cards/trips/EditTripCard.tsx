@@ -10,7 +10,7 @@ import { slugify } from "@/utils/slugify";
 import { FaRegFloppyDisk } from "react-icons/fa6";
 import { Trip } from "@/store/atoms";
 import { SpeedSlider } from "../../input/SpeedSlider";
-import { useUpdateTrip } from "@/hooks/trips/useUpdateTrip";
+import { useUpdateTrip } from "@/hooks/dashboard/trips/useUpdateTrip";
 
 interface EditTripCardProps {
     trackableId: string;

@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import type { Marker, Trip } from '@/store/atoms';
-import { useApiClient } from '../useApiClient';
+import { useApiClient } from '../../useApiClient';
 import { TripWithMarkers } from '@/store/atoms';
 
 
@@ -13,7 +13,6 @@ export function useTrips(trackableId: string | null) {
     queryKey: ['trips-with-markers', trackableId],
     queryFn: async (): Promise<TripWithMarkers[]> => {
       if (!trackableId) throw new Error('Trackable ID is required');
-
       const trips = await api.get<Trip[]>(`/api/trackables/${trackableId}/trips`);
 
       const tripsWithMarkers = await Promise.all(
