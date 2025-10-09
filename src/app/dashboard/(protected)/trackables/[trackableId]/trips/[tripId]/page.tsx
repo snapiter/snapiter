@@ -1,7 +1,7 @@
 "use client";
 
 import { RefObject, use, useEffect, useRef, useState } from "react";
-import { useTripWithPositionById } from "@/hooks/useTripWithPosition";
+import { useTripWithPosition } from "@/hooks/useTripWithPosition";
 import Card from "@/components/dashboard/cards/Card";
 import StackCard from "@/components/dashboard/layout/StackCard";
 import { Layer, MapRef, Marker, Source } from "react-map-gl/maplibre";
@@ -18,7 +18,7 @@ export default function TripsPage({
   params: Promise<{ trackableId: string; tripId: string }>;
 }) {
   const { trackableId, tripId } = use(params);
-  const { data: trip, isLoading, isError } = useTripWithPositionById(
+  const { data: trip, isLoading, isError } = useTripWithPosition(
     trackableId,
     tripId
   );

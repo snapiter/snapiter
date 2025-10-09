@@ -12,7 +12,7 @@ interface TripLayerProps {
   }
   
 export default function TripLayer({ trip, selectedTripSlug, hoveredTripSlug }: TripLayerProps) {
-    const { data: tripWithPositions = { ...trip, positions: [] } } = useTripWithPosition(trip);
+    const { data: tripWithPositions = { ...trip, positions: [] } } = useTripWithPosition(trip.trackableId, trip.slug);
 
     const env = useContext(EnvContext);
     

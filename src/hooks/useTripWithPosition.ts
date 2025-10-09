@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { Marker, Position, Trip, TripDetailed, TripWithPositions } from '@/store/atoms';
 import { useApiClient } from './useApiClient';
 
-export function useTripWithPositionById(trackableId: string, tripId: string) {
+export function useTripWithPosition(trackableId: string, tripId: string) {
   const api = useApiClient();
 
   return useQuery<TripWithPositions>({
@@ -21,28 +21,7 @@ export function useTripWithPositionById(trackableId: string, tripId: string) {
     staleTime: 5 * 60 * 1000,
     retry: 1
   });
-
 }
-
-export function useTripWithPosition(trip: Trip) {
-  const api = useApiClient();
-
-  return useQuery<TripWithPositions>({
-    queryKey: ['trip-with-positions', trip.trackableId, trip.slug],
-    queryFn: async () => {
-      const positions = await api.get<Position[]>(
-        `/api/trackables/${trip.trackableId}/trips/${trip.slug}/positions`
-      );
-
-      return { ...trip, positions };
-    },
-    staleTime: 5 * 60 * 1000,
-    retry: 1,
-    placeholderData: { ...trip, positions: [] },
-  });
-
-}
-
 
 export function useDetailedTrip(trip: Trip | null) {
   const api = useApiClient();
