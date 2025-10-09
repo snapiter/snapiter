@@ -76,7 +76,7 @@ export function createAnimationLoop(
     } else {
       animationRef.current = null;
       startTimeRef.current = null;
-      onComplete?.(); // Fire callback when animation completes
+      onComplete?.();
     }
   };
 
