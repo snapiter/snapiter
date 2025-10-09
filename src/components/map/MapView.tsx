@@ -11,6 +11,7 @@ import { useAutoFlyToMarker } from '@/hooks/map/useAutoFlyToMarker';
 import { useTripAnimation } from '@/hooks/map/useTripAnimation';
 import TripLayer from './TripLayer';
 import AnimatedTripLayer from './AnimatedTripLayer';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 interface MapViewProps {
   trips?: Trip[];
@@ -21,10 +22,13 @@ export default function MapView({ trips = [] }: MapViewProps) {
 
   const { runCommand } = useMapCommands();
   const [hoveredTrip, setHoveredTrip] = useState<string | null>(null);
+  
+  const isMobile = useIsMobile();
 
   const mapRef = useRef<MapRef | null>(null);
 
   useTripAnimation(mapRef);
+
 
   useMapCommandHandler(mapRef);
 
@@ -87,13 +91,15 @@ export default function MapView({ trips = [] }: MapViewProps) {
         height: "100%",
       }}
     >
-      {trips.map(trip => (
+      {trips
+      .filter(trip => isMobile ? trip.slug === selectedTrip?.slug : true)
+      .map(trip => (
         <Fragment key={trip.slug}>
           <TripLayer
             key={trip.slug}
             trip={trip}
             selectedTripSlug={selectedTrip?.slug}
-            hoveredTripSlug={hoveredTrip}
+            hoveredTripSlug={hoveredTrip ?? undefined}
           />
           <AnimatedTripLayer
             trip={trip}

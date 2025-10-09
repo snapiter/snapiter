@@ -8,7 +8,7 @@ import { Source, Layer } from "react-map-gl/maplibre";
 interface TripLayerProps {
     trip: Trip;
     selectedTripSlug?: string;
-    hoveredTripSlug: string | null;
+    hoveredTripSlug?: string;
   }
   
 export default function TripLayer({ trip, selectedTripSlug, hoveredTripSlug }: TripLayerProps) {
