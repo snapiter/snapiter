@@ -2,41 +2,38 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper/modules';
+import { Pagination, Virtual } from 'swiper/modules';
 import { useMapCommands } from '@/hooks/commands/useMapCommands';
 import MobileTripDetails from './MobileTripDetails';
 import { useTripsByHostname } from '@/hooks/trips/useTripsByHostname';
 
-
 export default function TripSwiper() {
   const { runCommand } = useMapCommands();
-
-  const { data: trips } = useTripsByHostname();
+  const { data: trips = [] } = useTripsByHostname();
 
   const handleSlideChange = (swiper: any) => {
-    runCommand({
-      type: 'SELECT_TRIP',
-      tripSlug: trips[swiper.activeIndex].slug
-    });
+    const activeTrip = trips[swiper.activeIndex];
+    if (activeTrip) {
+      runCommand({ type: 'SELECT_TRIP', tripSlug: activeTrip.slug });
+    }
   };
 
-  if (trips.length === 0) return <></>;
-    
+  if (!trips.length) return null;
+
   return (
-      <Swiper
-        modules={[Pagination]}
-        spaceBetween={16}
-        slidesPerView={trips.length > 1 ? 1.1 : 1} // 1.1 for multiple slides, 1 for single slide
-        onSlideChange={handleSlideChange}
-        className=""
-      >
-        {trips.map((trip) => (
-          <SwiperSlide key={`swiper-${trip.slug}`} className="">
-            <MobileTripDetails 
-              trip={trip} 
-            />  
-          </SwiperSlide>
-        ))}
-      </Swiper>
+    <Swiper
+      modules={[Pagination, Virtual]}
+      virtual
+      spaceBetween={16}
+      slidesPerView={trips.length > 1 ? 1.1 : 1}
+      onSlideChange={handleSlideChange}
+      lazyPreloadPrevNext={1}
+    >
+      {trips.map((trip, index) => (
+        <SwiperSlide key={trip.slug} virtualIndex={index}>
+          <MobileTripDetails trip={trip} />
+        </SwiperSlide>
+      ))}
+    </Swiper>
   );
 }
