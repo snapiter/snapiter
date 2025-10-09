@@ -1,5 +1,5 @@
 import { type MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
-import 'maplibre-gl/dist/maplibre-gl.css';
+
 import { Trip } from '@/store/atoms';
 import { useRef, useState, RefObject, Fragment } from 'react';
 import { useMapCommandHandler } from '@/hooks/commands/useMapCommandHandler';
