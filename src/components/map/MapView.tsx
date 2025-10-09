@@ -1,6 +1,6 @@
 import { type MapRef } from 'react-map-gl/maplibre';
 import { Trip } from '@/store/atoms';
-import { useRef, RefObject, Fragment } from 'react';
+import { useRef, RefObject, Fragment, useMemo } from 'react';
 import { useMapCommandHandler } from '@/hooks/commands/useMapCommandHandler';
 import { useMapCommands } from '@/hooks/commands/useMapCommands';
 import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
@@ -17,17 +17,24 @@ interface MapViewProps {
 }
 
 export default function MapView({ trips = [] }: MapViewProps) {
+  console.log('trips', trips);
   const { trip: selectedTrip } = useSelectedTrip();
   const { runCommand } = useMapCommands();
   const isMobile = useIsMobile();
 
   const mapRef = useRef<MapRef | null>(null);
 
+  const visibleTrips = useMemo(() => {
+    return trips.filter((trip) => (isMobile ? trip.slug === selectedTrip?.slug : true));
+  }, [trips, isMobile, selectedTrip?.slug]);
+  
   // Map-related hooks
   useTripAnimation(mapRef);
   useMapCommandHandler(mapRef);
   useAutoFlyToMarker(mapRef);
   useResponsiveMapHeight(mapRef);
+
+  console.log('visibleTrips', visibleTrips);
 
   return (
     <MapWrapper
@@ -36,9 +43,7 @@ export default function MapView({ trips = [] }: MapViewProps) {
       interactiveLayerIds={trips.map((trip) => `route-line-${trip.slug}`)}
       mapStyle={{ height: '100%' }}
     >
-      {trips
-        .filter((trip) => (isMobile ? trip.slug === selectedTrip?.slug : true))
-        .map((trip) => (
+      {visibleTrips.map((trip) => (
           <Fragment key={trip.slug}>
             <TripLayer
               trip={trip}
