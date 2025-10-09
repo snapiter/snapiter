@@ -24,11 +24,11 @@ export default function MapView({ trips = [] }: MapViewProps) {
 
   const mapRef = useRef<MapRef | null>(null);
 
-  useTripAnimation(mapRef, trips);
+  useTripAnimation(mapRef);
 
-  useMapCommandHandler(mapRef, trips);
+  useMapCommandHandler(mapRef);
 
-  useAutoFlyToMarker(mapRef, trips);
+  useAutoFlyToMarker(mapRef);
 
   useResponsiveMapHeight(mapRef)
 

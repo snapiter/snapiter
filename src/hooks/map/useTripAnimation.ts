@@ -1,5 +1,4 @@
 import { useEffect, useRef, useCallback } from "react";
-import { useTripsWithPositions } from "@/hooks/useTripsWithPositions";
 import type { TripDetailed } from "@/store/atoms";
 import type maplibregl from "maplibre-gl";
 import { useSelectedTrip } from "../useSelectedTrip";
@@ -18,8 +17,7 @@ interface AnimationRefs {
 
 
 export function useTripAnimation(
-  mapRef: React.RefObject<MapRef | null>,
-  trips: Trip[]
+  mapRef: React.RefObject<MapRef | null>
 ) {
   const animationRef = useRef<number | null>(null);
   const vehicleMarkerRef = useRef<maplibregl.Marker | null>(null);

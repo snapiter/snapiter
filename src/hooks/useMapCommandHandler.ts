@@ -8,8 +8,7 @@ import { stopAnimation } from '@/utils/mapAnimation';
 import logger from '@/utils/logger';
 
 export function useMapCommandHandler(
-  mapRef: React.RefObject<MapRef | null>,
-  trips: Trip[]
+  mapRef: React.RefObject<MapRef | null>
 ) {
   const commands = useAtomValue(mapCommandsAtom);
   const setMapEvents = useSetAtom(mapEventsAtom);
@@ -84,14 +83,8 @@ export function useMapCommandHandler(
         }
         
         case 'SELECT_TRIP': {
-          const trip = trips.filter(t => t.slug === command.tripSlug).pop();
-          if(trip) {
-            setSelectedTrip(command.tripSlug)
-            emitEvent({ type: 'TRIP_SELECTED', tripSlug: command.tripSlug, commandId: command.id });
-          }
-          else {
-            console.error("Invalid trip found")
-          }
+          setSelectedTrip(command.tripSlug)
+          emitEvent({ type: 'TRIP_SELECTED', tripSlug: command.tripSlug, commandId: command.id });
           break;
         }
         
