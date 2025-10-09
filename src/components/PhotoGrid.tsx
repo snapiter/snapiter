@@ -9,12 +9,11 @@ import { getMarkerUrlThumbnail } from '@/services/thumbnail';
 
 interface PhotoGridProps {
   markers: Marker[];
-  className?: string;
 }
 
 const BOUNCE_MS = 150; // tune this "bounce rate" window
 
-export default function PhotoGrid({ markers, className = '' }: PhotoGridProps) {
+export default function PhotoGrid({ markers }: PhotoGridProps) {
   const { runCommand } = useMapCommands();
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set(markers.map(p => p.markerId)));
 
@@ -64,7 +63,7 @@ export default function PhotoGrid({ markers, className = '' }: PhotoGridProps) {
   };
 
   return (
-    <div className={`w-full ${className}`}>
+    <div className="w-full">
       <div
         className="grid grid-cols-1 lg:grid-cols-2 gap-3 px-4"
         onMouseEnter={handleGridMouseEnter}
