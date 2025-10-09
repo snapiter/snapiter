@@ -2,13 +2,9 @@ import { useTripWithPosition } from "@/hooks/trips/useTrip";
 import { selectedTripAtom, Trip } from "@/store/atoms";
 import { EnvContext } from "@/utils/env/EnvProvider";
 import { createRouteData } from "@/utils/mapBounds";
-import { memo, useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { Source, Layer, useMap } from "react-map-gl/maplibre";
-import type {
-  FeatureCollection,
-  LineString,
-  GeoJsonProperties,
-} from "geojson";
+
 import { useMapCommands } from "@/hooks/commands/useMapCommands";
 import { useAtomValue } from "jotai";
 
@@ -17,7 +13,8 @@ interface TripLayerProps {
 }
 
 export default function TripLayer({ trip }: TripLayerProps) {
-  const selectedTripSlug = useAtomValue(selectedTripAtom);  
+  const selectedTripSlug = useAtomValue(selectedTripAtom);
+
   const { data: tripWithPositions = { ...trip, positions: [] } } =
     useTripWithPosition(trip.trackableId, trip.slug);
 
@@ -35,17 +32,7 @@ export default function TripLayer({ trip }: TripLayerProps) {
     [tripWithPositions.positions]
   );
 
-  const shouldShowBaseLine =
-    !isSelected || env.SNAPITER_SHOW_BASE_LINE_UNDER_ANIMATION;
-
-  const routeData: FeatureCollection<LineString, GeoJsonProperties> = useMemo(() => {
-    if (!tripWithPositions.positions || tripWithPositions.positions.length < 2) {
-      return { type: "FeatureCollection", features: [] };
-    }
-    return shouldShowBaseLine
-      ? createRouteData(tripWithPositions.positions)
-      : { type: "FeatureCollection", features: [] };
-  }, [tripWithPositions.positions, shouldShowBaseLine]);
+  const routeData = createRouteData(tripWithPositions.positions)
 
   useEffect(() => {
     if (!map) return;
@@ -95,6 +82,13 @@ export default function TripLayer({ trip }: TripLayerProps) {
 
   if (coordinates.length < 2) return null;
 
+
+  const shouldShowBaseLine =
+  env.SNAPITER_SHOW_BASE_LINE_UNDER_ANIMATION
+    ? true
+    : isSelected;
+
+
   return (
     <Source id={`route-${trip.slug}`} type="geojson" data={routeData}>
       <Layer
@@ -104,7 +98,7 @@ export default function TripLayer({ trip }: TripLayerProps) {
         paint={{
           "line-width": 4,
           "line-color": color,
-          "line-opacity": isSelected ? 1 : 0.3,
+          "line-opacity": shouldShowBaseLine ? 1 : 0.3,
         }}
       />
     </Source>
