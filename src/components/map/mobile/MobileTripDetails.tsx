@@ -2,7 +2,7 @@ import type { Trip, TripWithMarkers } from '@/store/atoms';
 import { getMarkerUrlThumbnail } from '@/services/thumbnail';
 import Image from 'next/image';
 import DayAndPhoto from '../DayAndPhoto';
-import { useTripWithMarkers } from '@/hooks/useMarkers';
+import { useTripWithMarkers } from '@/hooks/useTripWithMarkers';
 
 interface TripDetailsProps {
   trip: Trip;

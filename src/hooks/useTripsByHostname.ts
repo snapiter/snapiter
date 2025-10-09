@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type { Marker, Trip } from '@/store/atoms';
+import type { Trip } from '@/store/atoms';
 import { useApiClient } from './useApiClient';
 import { useTrackableByHostname } from './useTrackableByHostname';
 
@@ -10,23 +10,10 @@ export function useTripsByHostname() {
   const query = useQuery({
     queryKey: ['trips-with-markers', website?.trackableId],
     queryFn: async (): Promise<Trip[]> => {
-      if (!website?.trackableId) return []; // no id yet → just empty trips
+      if (!website?.trackableId) return []; 
       
-      const trips = await api.get<Trip[]>(`/api/trackables/${website.trackableId}/trips`);
-      return trips;
-      // return Promise.all(
-      //   trips.map(async (trip) => {
-      //     try {
-      //       const markers = await api.get<Marker[]>(
-      //         `/api/trackables/${trip.trackableId}/trips/${trip.slug}/markers`
-      //       );
-      //       return { ...trip, markers };
-      //     } catch (err) {
-      //       console.error(`Failed to load markers for trip ${trip.slug}`, err);
-      //       return { ...trip, markers: [] };
-      //     }
-      //   })
-      // );
+      return await api.get<Trip[]>(`/api/trackables/${website.trackableId}/trips`);
+
     },
     enabled: !!website?.trackableId,
     staleTime: 10 * 60 * 1000,
