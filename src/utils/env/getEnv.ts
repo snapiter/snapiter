@@ -14,6 +14,8 @@ export default function getEnv(): EnvConfig {
 
   return {
     ...DEFAULT_ENV,
-    ...raw
+    ...raw,
+    SNAPITER_SHOW_BASE_LINE_UNDER_ANIMATION:
+      raw.SNAPITER_SHOW_BASE_LINE_UNDER_ANIMATION === "true"
   };
 }
