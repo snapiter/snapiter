@@ -7,7 +7,7 @@ import StackCard from "@/components/dashboard/layout/StackCard";
 import { Layer, MapRef, Marker, Source } from "react-map-gl/maplibre";
 import MapWrapper from "@/components/map/MapWrapper";
 import { createRouteData, fitMapBounds } from "@/utils/mapBounds";
-import { useMarkers } from "@/hooks/useMarkers";
+import { useTripWithMarkers } from "@/hooks/useMarkers";
 import MarkersCard from "@/components/dashboard/cards/markers/MarkersCard";
 import ActiveTripCard from "@/components/dashboard/cards/trips/ActiveTripCard";
 import EditTripCard from "@/components/dashboard/cards/trips/EditTripCard";
@@ -22,7 +22,7 @@ export default function TripsPage({
     trackableId,
     tripId
   );
-  const { data: markers } = useMarkers(trip ?? null);
+  const { data: tripWithMarkers } = useTripWithMarkers(trip ?? null);
   const [mapReady, setMapReady] = useState(false);
 
   const mapRef = useRef<MapRef | null>(null);
@@ -43,8 +43,8 @@ export default function TripsPage({
       <ActiveTripCard trip={trip} key={trip.slug} />
       <EditTripCard trackableId={trackableId} trip={trip} />
     </StackCard>
-      <StackCard columns={markers && markers.length > 0 ? 2 : 1 }>
-        <MarkersCard markers={markers ?? []} />
+      <StackCard columns={tripWithMarkers && tripWithMarkers.markers.length > 0 ? 2 : 1 }>
+        <MarkersCard markers={tripWithMarkers?.markers ?? []} />
         <Card title="Map">
           <MapWrapper
             onMapReady={() => {
