@@ -22,12 +22,11 @@ export function useResponsiveMapHeight(
 
             if (isMobile) {
                 container.style.height = isPanelExpanded
-                    ? `${window.innerHeight * config.expandedHeightCalculation}px`
+                    ? `calc(100vh - ${config.expandedHeight - config.panelDragBarHeight}px)`
                     : `calc(100vh - ${config.collapsedHeight - config.panelDragBarHeight}px)`;
             } else {
                 container.style.height = "100vh";
             }
-
             map.resize();
         }
     }, [isPanelExpanded, mapRef]);
@@ -36,6 +35,12 @@ export function useResponsiveMapHeight(
   useEffect(() => {
     updateMapHeight();
   }, [updateMapHeight]);
+
+  useEffect(() => {
+    if (!mapRef.current) return;
+    updateMapHeight();
+  }, [mapRef.current]);
+
 
   useEffect(() => {
     window.addEventListener("resize", updateMapHeight);

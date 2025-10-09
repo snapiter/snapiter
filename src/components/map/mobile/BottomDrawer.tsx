@@ -11,7 +11,7 @@ export default function BottomDrawer({ children }: { children: React.ReactNode }
   const [mounted, setMounted] = React.useState(false);
   const ref = React.useRef<SheetRef>(null);
 
-  const snapIndices = [0, config.collapsedHeight, config.expandedHeightCalculation, 1];
+  const snapIndices = [0, config.collapsedHeight, config.expandedHeight, 1];
   
   const expandedSnapIndex = 2;
   const collapsedSnapIndex = 1;
