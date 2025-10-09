@@ -30,7 +30,6 @@ export function useMapCommandHandler(
     if (commands.length === 0 || !mapRef.current) return;
 
     const command = commands[commands.length - 1];
-    
 
     const map = mapRef.current.getMap();
     if (!map) return;
@@ -103,7 +102,7 @@ export function useMapCommandHandler(
     };
 
     handleCommand();
-  }, [commands, setLightboxIndex, setMapEvents, mapRef]);
+  }, [commands]);
 
   // Cleanup function
   useEffect(() => {

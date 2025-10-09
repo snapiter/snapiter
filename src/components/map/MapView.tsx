@@ -17,7 +17,6 @@ interface MapViewProps {
 }
 
 export default function MapView({ trips = [] }: MapViewProps) {
-  console.log('trips', trips);
   const { trip: selectedTrip } = useSelectedTrip();
   const { runCommand } = useMapCommands();
   const isMobile = useIsMobile();

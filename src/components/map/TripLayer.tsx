@@ -60,8 +60,7 @@ export default function TripLayer({ trip }: TripLayerProps) {
       realMap.off("mouseleave", layerId, handleMouseLeave);
       realMap.off("click", layerId, handleClick);
     };
-  }, [map, trip.slug, runCommand, tripWithPositions.positions.length]);
-  
+  }, [trip.slug, tripWithPositions.positions.length]);
 
 
   const routeData = createRouteData(tripWithPositions.positions);
