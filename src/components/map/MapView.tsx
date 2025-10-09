@@ -27,13 +27,10 @@ export default function MapView({ trips = [] }: MapViewProps) {
     return trips.filter((trip) => (isMobile ? trip.slug === selectedTrip?.slug : true));
   }, [trips, isMobile, selectedTrip?.slug]);
   
-  // Map-related hooks
   useTripAnimation(mapRef);
   useMapCommandHandler(mapRef);
   useAutoFlyToMarker(mapRef);
   useResponsiveMapHeight(mapRef);
-
-  console.log('visibleTrips', visibleTrips);
 
   return (
     <MapWrapper

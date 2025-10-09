@@ -29,17 +29,21 @@ export default function TripLayer({ trip }: TripLayerProps) {
   
     const handleMouseEnter = (e: maplibregl.MapLayerMouseEvent) => {
       if (e.features?.[0]?.layer?.id !== layerId) return;
+      if (!realMap.getLayer(layerId)) return;
+    
       realMap.getCanvas().style.cursor = "pointer";
       realMap.setPaintProperty(layerId, "line-width", 6);
       realMap.setPaintProperty(layerId, "line-opacity", 1);
     };
-  
+    
     const handleMouseLeave = () => {
+      if (!realMap.getLayer(layerId)) return;
+    
       realMap.getCanvas().style.cursor = "";
       realMap.setPaintProperty(layerId, "line-width", 4);
       realMap.setPaintProperty(layerId, "line-opacity", 0.3);
     };
-  
+    
     const handleClick = (e: maplibregl.MapLayerMouseEvent) => {
       if (e.features?.[0]?.layer?.id !== layerId) return;
       const clickedSlug = trip.slug;
