@@ -55,7 +55,7 @@ export function useTripAnimation(
         (photoIndex) => setLightboxIndex(photoIndex)
       );
     },
-    [animateTrip, mapRef, setLightboxIndex]
+    [mapRef, setLightboxIndex]
   );
 
   useEffect(() => {
