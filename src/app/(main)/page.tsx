@@ -39,12 +39,10 @@ export default function Home() {
       <ErrorComponent message={error.message} />
     );
   }
-
   return (
     <>
       <DynamicTitle />
       <div className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row">
-        {/* Single MapView - responsive sizing */}
         <div className="flex-1 md:w-1/2 lg:w-2/3 relative transition-all duration-300 h-full">
           <MapView trips={trips} />
         </div>
@@ -61,12 +59,10 @@ export default function Home() {
           <DesktopSidebar />
         )}
 
-        {/* Loading Overlay */}
         {(!isLoaded) && (
           <SnapIterLoader trackable={trackable ?? null} />
         )}
 
-        {/* Brand - Bottom Left (Desktop Only) */}
         <div className="hidden md:block absolute bottom-4 left-4 z-10">
           <Brand />
         </div>

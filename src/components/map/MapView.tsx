@@ -1,7 +1,6 @@
 import { type MapRef } from 'react-map-gl/maplibre';
-import { Trip, mapReadyAtom } from '@/store/atoms';
+import { Trip, mapReadyAtom, selectedTripAtom } from '@/store/atoms';
 import { useRef, RefObject, Fragment, useMemo } from 'react';
-import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
 import MapWrapper from './MapWrapper';
 import { useResponsiveMapHeight } from '@/hooks/map/useResponsiveMapHeight';
 import { useAutoFlyToMarker } from '@/hooks/map/useAutoFlyToMarker';
@@ -9,22 +8,22 @@ import { useTripAnimation } from '@/hooks/map/useTripAnimation';
 import TripLayer from './TripLayer';
 import AnimatedTripLayer from './AnimatedTripLayer';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useSetAtom } from 'jotai';
+import { useSetAtom, useAtomValue } from 'jotai';
 
 interface MapViewProps {
   trips?: Trip[];
 }
 
 export default function MapView({ trips = [] }: MapViewProps) {
-  const { trip: selectedTrip } = useSelectedTrip();
+  const selectedTripSlug = useAtomValue(selectedTripAtom);
   const setMapReady = useSetAtom(mapReadyAtom);
   const isMobile = useIsMobile();
 
   const mapRef = useRef<MapRef | null>(null);
 
   const visibleTrips = useMemo(() => {
-    return trips.filter((trip) => (isMobile ? trip.slug === selectedTrip?.slug : true));
-  }, [trips, isMobile, selectedTrip?.slug]);
+    return trips.filter((trip) => (isMobile ? trip.slug === selectedTripSlug : true));
+  }, [trips, isMobile, selectedTripSlug]);
 
   const interactiveLayerIds = useMemo(() =>
     trips.map((trip) => `route-line-${trip.slug}`),
@@ -34,6 +33,7 @@ export default function MapView({ trips = [] }: MapViewProps) {
   useTripAnimation(mapRef);
   useAutoFlyToMarker(mapRef);
   useResponsiveMapHeight(mapRef);
+
 
   return (
     <MapWrapper
