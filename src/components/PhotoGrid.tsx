@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import { Marker, lightboxIndexAtom, highlightedMarkerAtom } from '@/store/atoms';
 import { getMarkerUrlThumbnail } from '@/services/thumbnail';
 import { useSetAtom } from 'jotai';
+import { SafeImage } from './SafeImage';
 
 
 interface PhotoGridProps {
@@ -83,7 +84,7 @@ export default function PhotoGrid({ markers }: PhotoGridProps) {
               </div>
             )}
 
-            <Image
+            <SafeImage
               src={getMarkerUrlThumbnail(marker, "500x500")}
               alt={marker.title}
               fill
@@ -92,6 +93,7 @@ export default function PhotoGrid({ markers }: PhotoGridProps) {
               }`}
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
               onLoad={() => handleImageLoad(marker.markerId)}
+              size='small'
             />
 
             {marker.description && (
