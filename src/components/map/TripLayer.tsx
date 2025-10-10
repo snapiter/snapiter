@@ -79,17 +79,15 @@ export default function TripLayer({ trip }: TripLayerProps) {
   const color = trip.color || "#3b82f6";
 
 
-  const shouldShowBaseLine =
-  env.SNAPITER_SHOW_BASE_LINE_UNDER_ANIMATION
-    ? true
-    : isSelected;
-
-    if(isSelected) {
-      console.log("trip.slug", trip.slug);
-    }
+  let opacity = 0.3;
+  if(isSelected && !env.SNAPITER_SHOW_BASE_LINE_UNDER_ANIMATION) {
+    opacity = 0;
+  }
 
   return (
-    <Source id={`route-${trip.slug}`} type="geojson" data={routeData}>
+    <Source 
+    id={`route-${trip.slug}`} 
+    type="geojson" data={routeData}>
       <Layer
         id={`route-line-${trip.slug}`}
         type="line"
@@ -97,7 +95,7 @@ export default function TripLayer({ trip }: TripLayerProps) {
         paint={{
           "line-width": 4,
           "line-color": color,
-          "line-opacity": shouldShowBaseLine ? 1 : 0.3,
+          "line-opacity": opacity,
         }}
       />
     </Source>
