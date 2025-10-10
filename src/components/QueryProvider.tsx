@@ -2,10 +2,11 @@
 
 import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { useState } from "react";
-import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
+import { useEffect, useState } from "react";
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 
 export default function QueryProvider({ children }: { children: React.ReactNode }) {
+  const [persister, setPersister] = useState<any>(null);
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
@@ -21,9 +22,17 @@ export default function QueryProvider({ children }: { children: React.ReactNode 
     },
   }));
 
-  const [persister] = useState(() => createAsyncStoragePersister({
-    storage: window.localStorage,
-  }));
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const p = createAsyncStoragePersister({
+        storage: window.localStorage,
+      });
+      setPersister(p);
+    }
+  }, []);
+
+  if (!persister) return null;
 
   return (
     <PersistQueryClientProvider
@@ -32,9 +41,8 @@ export default function QueryProvider({ children }: { children: React.ReactNode 
         persister,
         maxAge: 2 * 24 * 60 * 60 * 1000,
         dehydrateOptions: {
-          shouldDehydrateQuery: (query) => {
-            return query.queryKey[0] === 'trips' || query.queryKey[0] === 'website';
-          },
+          shouldDehydrateQuery: (query) =>
+            query.queryKey[0] === 'trips' || query.queryKey[0] === 'website',
         },
       }}
     >
