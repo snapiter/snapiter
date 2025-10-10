@@ -10,12 +10,15 @@ export function useTripsByHostname() {
   const query = useQuery({
     queryKey: ['trips', website?.trackableId],
     queryFn: async (): Promise<Trip[]> => {
-      if (!website?.trackableId) return []; 
+      if (!website?.trackableId) return [];
       return await api.get<Trip[]>(`/api/trackables/${website.trackableId}/trips`);
 
     },
     enabled: !!website?.trackableId,
-    staleTime: 10 * 60 * 1000,
+    staleTime: 15 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     retry: (failureCount, error) => {
       if (error instanceof Error && error.message.includes('404')) {
         return false;
