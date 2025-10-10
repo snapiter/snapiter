@@ -8,7 +8,7 @@ export function useTripsByHostname() {
   const api = useApiClient();
 
   const query = useQuery({
-    queryKey: ['trips', website?.trackableId],
+    queryKey: ['trips', website?.trackableId ?? ""],
     queryFn: async (): Promise<Trip[]> => {
       if (!website?.trackableId) return [];
       return await api.get<Trip[]>(`/api/trackables/${website.trackableId}/trips`);

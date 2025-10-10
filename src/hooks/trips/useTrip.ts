@@ -25,7 +25,7 @@ export function useTrip(trip: Trip | null) {
   const api = useApiClient();
 
   return useQuery<TripDetailed>({
-    queryKey: ['trip', trip?.trackableId, trip?.slug],
+    queryKey: ['trip', trip?.trackableId ?? "", trip?.slug ?? ""],
     queryFn: async () => {
       if (!trip?.trackableId || !trip?.slug) throw new Error('IDs are required');
       const positions = await api.get<Position[]>(`/api/trackables/${trip?.trackableId}/trips/${trip?.slug}/positions`);
