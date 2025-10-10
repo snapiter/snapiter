@@ -4,8 +4,8 @@ import { useTrackableByHostname } from '@/hooks/trackable/useTrackableByHostname
 import { useEffect } from 'react';
 
 export default function DynamicTitle() {
-  const { data: website } = useTrackableByHostname();
-  const title = website?.title;
+  const { data: trackable } = useTrackableByHostname();
+  const title = trackable?.title;
   
   useEffect(() => {
     if (title) {

@@ -10,10 +10,10 @@ import { useSetAtom } from 'jotai';
 import { selectedTripAtom } from '@/store/atoms';
 
 export default function DesktopTripMenu() {
-  const { data: trips } = useTripsByHostname();
+  const { trips: trips } = useTripsByHostname();
   const selectedTrip = useSelectedTrip();
   const setSelectedTrip = useSetAtom(selectedTripAtom);
-  const { data: website } = useTrackableByHostname();
+  const { data: trackable } = useTrackableByHostname();
 
   const displayActiveIndex = trips.findIndex(trip => trip.slug === selectedTrip?.trip?.slug);
 
@@ -30,7 +30,7 @@ export default function DesktopTripMenu() {
     <div className="w-full bg-surface border-r border-border h-full overflow-y-auto flex-1">
       <div className="p-4">
         <div className="flex items-center gap-3 mb-2">
-          <Logo size="md" showTitle={true} title={website?.title}/>
+          <Logo size="md" showTitle={true} title={trackable?.title}/>
         </div>
         <p className="text-sm text-muted">
           {trips.length} {trips.length === 1 ? 'Journey' : 'Journeys'}

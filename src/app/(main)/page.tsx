@@ -7,7 +7,6 @@ import TripSwiper from '@/components/map/mobile/TripSwiper';
 import SnapIterLoader from '@/components/SnapIterLoader';
 import DynamicTitle from '@/components/DynamicTitle';
 import Brand from '@/components/Brand';
-import { useTrackableByHostname } from '@/hooks/trackable/useTrackableByHostname';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { mapReadyAtom, selectedTripAtom } from '@/store/atoms';
 import ErrorComponent from '@/components/ErrorComponent';
@@ -19,14 +18,13 @@ import { useTripsByHostname } from '@/hooks/trips/useTripsByHostname';
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const isMobile = useIsMobile();
-  const { data: website, isLoading, error } = useTrackableByHostname();
   const setSelectedTrip = useSetAtom(selectedTripAtom);
   const mapReady = useAtomValue(mapReadyAtom);
 
-  const { data: trips = [], isLoading: tripsLoading } = useTripsByHostname();
+  const { trackable, trips: trips = [], isLoading, error } = useTripsByHostname();
 
   useEffect(() => {
-    if (website && mapReady && !isLoading && !tripsLoading) {
+    if (trackable && mapReady && !isLoading) {
       setTimeout(() => {
         setIsLoaded(true);
         if (trips.length > 0) {
@@ -34,8 +32,7 @@ export default function Home() {
         }
       }, 1000);
     }
-  }, [website, mapReady, trips, isLoading, setSelectedTrip]);
-
+  }, [trackable, mapReady, trips, isLoading, setSelectedTrip]);
 
   if (error) {
     return (
@@ -66,7 +63,7 @@ export default function Home() {
 
         {/* Loading Overlay */}
         {(!isLoaded) && (
-          <SnapIterLoader website={website ?? null} />
+          <SnapIterLoader trackable={trackable ?? null} />
         )}
 
         {/* Brand - Bottom Left (Desktop Only) */}

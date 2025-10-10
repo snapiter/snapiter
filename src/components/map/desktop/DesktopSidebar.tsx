@@ -4,7 +4,7 @@ import DesktopTripMenu from './DesktopTripMenu';
 import { useTripsByHostname } from '@/hooks/trips/useTripsByHostname';
 
 export default function DesktopSidebar() {
-  const { data: trips } = useTripsByHostname();
+  const { trips: trips } = useTripsByHostname();
   const { trip: selectedTrip } = useSelectedTrip();
 
   if (selectedTrip === undefined) {

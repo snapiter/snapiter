@@ -5,7 +5,7 @@ import { useTrip } from "./useTrip";
 
 export function useSelectedTrip() {
     const selectedTripSlug = useAtomValue(selectedTripAtom);
-    const { data: trips, isSuccess: tripsSuccess } = useTripsByHostname();
+    const { trips: trips, isSuccess: tripsSuccess } = useTripsByHostname();
     const selectedTrip = trips?.find(t => t.slug === selectedTripSlug);
 
     const { data: trip, isSuccess: tripSuccess } = useTrip(selectedTrip ?? null);

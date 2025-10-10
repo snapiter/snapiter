@@ -11,7 +11,7 @@ export function useTrackableByHostname() {
   const hostname = useHostname();
 
   const query = useQuery({
-    queryKey: queryKeys.website(hostname ?? ''),
+    queryKey: queryKeys.trackable(hostname ?? ''),
     queryFn: async () => {
       if (!hostname) throw new Error('Hostname is required');
       return api.get<Trackable>(`/api/trackables/host/${hostname}`);

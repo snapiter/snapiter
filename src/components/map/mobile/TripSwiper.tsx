@@ -10,7 +10,7 @@ import { selectedTripAtom } from '@/store/atoms';
 
 export default function TripSwiper() {
   const setSelectedTrip = useSetAtom(selectedTripAtom);
-  const { data: trips = [] } = useTripsByHostname();
+  const { trips: trips = [] } = useTripsByHostname();
 
   const handleSlideChange = (swiper: any) => {
     const activeTrip = trips[swiper.activeIndex];

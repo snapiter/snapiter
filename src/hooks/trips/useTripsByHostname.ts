@@ -5,16 +5,16 @@ import { useTrackableByHostname } from '../trackable/useTrackableByHostname';
 import { queryKeys } from '@/utils/queryKeys';
 
 export function useTripsByHostname() {
-  const { data: website } = useTrackableByHostname();
+  const { data: trackable } = useTrackableByHostname();
   const api = useApiClient();
 
   const query = useQuery({
-    queryKey: queryKeys.trips(website?.trackableId ?? ''),
+    queryKey: queryKeys.trips(trackable?.trackableId ?? ''),
     queryFn: async (): Promise<Trip[]> => {
-      if (!website?.trackableId) return [];
-      return await api.get<Trip[]>(`/api/trackables/${website.trackableId}/trips`);
+      if (!trackable?.trackableId) return [];
+      return await api.get<Trip[]>(`/api/trackables/${trackable.trackableId}/trips`);
     },
-    enabled: !!website?.trackableId,
+    enabled: !!trackable?.trackableId,
     staleTime: 2 * 24 * 60 * 60 * 1000,
     gcTime: 2 * 24 * 60 * 60 * 1000,
     refetchOnMount: false,
@@ -30,7 +30,8 @@ export function useTripsByHostname() {
 
   return {
     ...query,
-    data: query.data ?? [],
+    trackable: trackable,
+    trips: query.data ?? [],
   };
 }
 
