@@ -3,6 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import { slugify } from "@/utils/slugify";
+import { queryKeys } from "@/utils/queryKeys";
 
 export interface CreateTripInput {
     trackableId: string;
@@ -31,13 +32,11 @@ export function useCreateTrip() {
       return payload; // return what was created (useful for redirecting)
     },
     onSuccess: (_data, variables) => {
-      // Invalidate cached trips for this trackable
-
       queryClient.invalidateQueries({
-        queryKey: ['trip-with-positions', variables.trackableId, slugify(variables.title)],
+        queryKey: queryKeys.trips(variables.trackableId),
       });
       queryClient.invalidateQueries({
-        queryKey: ["trips-with-markers", variables.trackableId],
+        queryKey: queryKeys.tripsWithMarkers(variables.trackableId),
       });
     },
   });

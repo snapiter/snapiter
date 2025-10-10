@@ -3,6 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import { Device } from "@/store/atoms";
+import { queryKeys } from "@/utils/queryKeys";
 
 export interface DeleteDeviceInput {
     trackableId: string;
@@ -25,7 +26,7 @@ export function useDeleteDevice() {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: ['devices', variables.trackableId],
+        queryKey: queryKeys.devices(variables.trackableId),
       });
     },
   });

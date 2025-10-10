@@ -6,6 +6,7 @@ import { QuickCreateRes } from "@/store/atoms";
 import { useState } from "react";
 import { useCreateDevice } from "@/hooks/dashboard/useCreateDevice";
 import { useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "@/utils/queryKeys";
 
 interface AddPhoneCardProps {
     trackableId: string;
@@ -21,7 +22,7 @@ export default function AddPhoneCard({ trackableId }: AddPhoneCardProps) {
     function handleClose() {
         setModalOpen(false);
         queryClient.invalidateQueries({
-            queryKey: ["devices", trackableId],
+            queryKey: queryKeys.devices(trackableId),
         });
     }
     async function addPhone() {

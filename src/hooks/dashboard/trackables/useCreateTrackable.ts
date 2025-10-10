@@ -2,6 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
+import { queryKeys } from "@/utils/queryKeys";
 
 export interface CreateTrackableInput {
     title: string;
@@ -27,7 +28,7 @@ export function useCreateTrackable() {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: ['trackables'],
+        queryKey: queryKeys.trackables(),
       });
     },
   });
