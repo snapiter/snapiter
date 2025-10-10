@@ -33,7 +33,7 @@ export default function QueryProvider({ children }: { children: React.ReactNode 
         maxAge: 2 * 24 * 60 * 60 * 1000,
         dehydrateOptions: {
           shouldDehydrateQuery: (query) => {
-            return query.queryKey[0] === 'trips';
+            return query.queryKey[0] === 'trips' || query.queryKey[0] === 'website';
           },
         },
       }}

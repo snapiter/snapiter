@@ -16,7 +16,10 @@ export function useTrackableByHostname() {
       return api.get<Trackable>(`/api/trackables/host/${hostname}`);
     },
     enabled: !!hostname,
-    staleTime: 10 * 60 * 1000,
+    staleTime: 2 * 24 * 60 * 60 * 1000,
+    gcTime: 2 * 24 * 60 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     retry: (failureCount, error) => {
       if (error instanceof Error && error.message.includes('404')) {
         return false;
