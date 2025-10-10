@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import type { Trackable } from '@/store/atoms';
 import { useDashboardApiClient } from '../useDashboardApiClient';
+import { queryKeys } from '@/utils/queryKeys';
 
 export function useTrackables() {
   const api = useDashboardApiClient()
-  
+
   const query = useQuery({
-    queryKey: ['trackables'],
+    queryKey: queryKeys.trackables(),
     queryFn: async () => {
       return api.get<Trackable[]>(`/api/trackables`)
     },
