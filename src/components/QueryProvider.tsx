@@ -4,6 +4,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { useEffect, useState } from "react";
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
+import { QueryKey } from '@/utils/queryKeys';
 
 export default function QueryProvider({ children }: { children: React.ReactNode }) {
   const [persister, setPersister] = useState<any>(null);
@@ -42,7 +43,7 @@ export default function QueryProvider({ children }: { children: React.ReactNode 
         maxAge: 2 * 24 * 60 * 60 * 1000,
         dehydrateOptions: {
           shouldDehydrateQuery: (query) =>
-            query.queryKey[0] === 'trips' || query.queryKey[0] === 'website',
+            query.queryKey[0] === QueryKey.TRIPS || query.queryKey[0] === QueryKey.WEBSITE,
         },
       }}
     >

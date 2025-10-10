@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import type { Marker, Position, Trip, TripDetailed, TripWithPositions } from '@/store/atoms';
 import { useApiClient } from '../useApiClient';
+import { queryKeys } from '@/utils/queryKeys';
 
 export function useTripWithPosition(trackableId: string, tripId: string) {
   const api = useApiClient();
 
   return useQuery<TripWithPositions>({
-    queryKey: ['trip-with-positions', trackableId, tripId],
+    queryKey: queryKeys.tripWithPositions(trackableId, tripId),
     queryFn: async () => {
       const trip = await api.get<Trip>(`/api/trackables/${trackableId}/trips/${tripId}`);
       const positions = await api.get<Position[]>(`/api/trackables/${trackableId}/trips/${tripId}/positions`);
@@ -25,7 +26,7 @@ export function useTrip(trip: Trip | null) {
   const api = useApiClient();
 
   return useQuery<TripDetailed>({
-    queryKey: ['trip', trip?.trackableId ?? "", trip?.slug ?? ""],
+    queryKey: queryKeys.trip(trip?.trackableId ?? '', trip?.slug ?? ''),
     queryFn: async () => {
       if (!trip?.trackableId || !trip?.slug) throw new Error('IDs are required');
       const positions = await api.get<Position[]>(`/api/trackables/${trip?.trackableId}/trips/${trip?.slug}/positions`);

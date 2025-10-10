@@ -2,13 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import type { Trip } from '@/store/atoms';
 import { useApiClient } from '../useApiClient';
 import { useTrackableByHostname } from '../trackable/useTrackableByHostname';
+import { queryKeys } from '@/utils/queryKeys';
 
 export function useTripsByHostname() {
   const { data: website } = useTrackableByHostname();
   const api = useApiClient();
 
   const query = useQuery({
-    queryKey: ['trips', website?.trackableId ?? ""],
+    queryKey: queryKeys.trips(website?.trackableId ?? ''),
     queryFn: async (): Promise<Trip[]> => {
       if (!website?.trackableId) return [];
       return await api.get<Trip[]>(`/api/trackables/${website.trackableId}/trips`);

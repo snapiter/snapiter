@@ -4,13 +4,14 @@ import { Trackable } from '@/store/atoms';
 import { useHostname } from '../useApiData';
 import { useEffect } from 'react';
 import { getTrackableIcon } from '@/services/thumbnail';
+import { queryKeys } from '@/utils/queryKeys';
 
 export function useTrackableByHostname() {
   const api = useApiClient();
   const hostname = useHostname();
 
   const query = useQuery({
-    queryKey: ['website', hostname],
+    queryKey: queryKeys.website(hostname ?? ''),
     queryFn: async () => {
       if (!hostname) throw new Error('Hostname is required');
       return api.get<Trackable>(`/api/trackables/host/${hostname}`);
