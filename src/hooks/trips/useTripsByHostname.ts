@@ -12,11 +12,10 @@ export function useTripsByHostname() {
     queryFn: async (): Promise<Trip[]> => {
       if (!website?.trackableId) return [];
       return await api.get<Trip[]>(`/api/trackables/${website.trackableId}/trips`);
-
     },
     enabled: !!website?.trackableId,
-    staleTime: 15 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
+    staleTime: 2 * 24 * 60 * 60 * 1000,
+    gcTime: 2 * 24 * 60 * 60 * 1000,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retry: (failureCount, error) => {
