@@ -14,7 +14,10 @@ export function useTripWithPosition(trackableId: string, tripId: string) {
       return { ...trip, positions };
     },
     enabled: !!trackableId && !!tripId,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 10 * 60 * 1000, 
+    gcTime: 15 * 60 * 1000, 
+    refetchOnMount: false, 
+    refetchOnWindowFocus: false, 
     retry: 1
   });
 }
@@ -31,6 +34,9 @@ export function useTrip(trip: Trip | null) {
     },
     enabled: !!trip?.trackableId && !!trip?.slug,
     retry: 1,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 10 * 60 * 1000, 
+    gcTime: 15 * 60 * 1000,
+    refetchOnMount: false, 
+    refetchOnWindowFocus: false, 
   });
 }

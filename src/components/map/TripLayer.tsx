@@ -2,7 +2,7 @@ import { useTripWithPosition } from "@/hooks/trips/useTrip";
 import { selectedTripAtom, Trip } from "@/store/atoms";
 import { EnvContext } from "@/utils/env/EnvProvider";
 import { createRouteData } from "@/utils/mapBounds";
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo, useCallback, useRef } from "react";
 import { Source, Layer, useMap } from "react-map-gl/maplibre";
 
 import { useAtomValue, useSetAtom } from "jotai";
@@ -19,34 +19,44 @@ export default function TripLayer({ trip }: TripLayerProps) {
 
   const env = useContext(EnvContext);
   const { current: map } = useMap();
+  const layerIdRef = useRef(`route-line-${trip.slug}`);
+
+  const handleMouseEnter = useCallback((e: maplibregl.MapLayerMouseEvent) => {
+    if (!map) return;
+    const realMap = map.getMap();
+    const layerId = layerIdRef.current;
+
+    if (e.features?.[0]?.layer?.id !== layerId) return;
+    if (!realMap.getLayer(layerId)) return;
+
+    realMap.getCanvas().style.cursor = "pointer";
+    realMap.setPaintProperty(layerId, "line-width", 6);
+    realMap.setPaintProperty(layerId, "line-opacity", 1);
+  }, [map]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (!map) return;
+    const realMap = map.getMap();
+    const layerId = layerIdRef.current;
+
+    if (!realMap.getLayer(layerId)) return;
+
+    realMap.getCanvas().style.cursor = "";
+    realMap.setPaintProperty(layerId, "line-width", 4);
+    realMap.setPaintProperty(layerId, "line-opacity", 0.3);
+  }, [map]);
+
+  const handleClick = useCallback((e: maplibregl.MapLayerMouseEvent) => {
+    const layerId = layerIdRef.current;
+    if (e.features?.[0]?.layer?.id !== layerId) return;
+    setSelectedTrip(trip.slug);
+  }, [setSelectedTrip, trip.slug]);
 
   useEffect(() => {
     if (!map || tripWithPositions.positions.length < 2) return;
 
     const realMap = map.getMap();
-    const layerId = `route-line-${trip.slug}`;
-
-    const handleMouseEnter = (e: maplibregl.MapLayerMouseEvent) => {
-      if (e.features?.[0]?.layer?.id !== layerId) return;
-      if (!realMap.getLayer(layerId)) return;
-
-      realMap.getCanvas().style.cursor = "pointer";
-      realMap.setPaintProperty(layerId, "line-width", 6);
-      realMap.setPaintProperty(layerId, "line-opacity", 1);
-    };
-
-    const handleMouseLeave = () => {
-      if (!realMap.getLayer(layerId)) return;
-
-      realMap.getCanvas().style.cursor = "";
-      realMap.setPaintProperty(layerId, "line-width", 4);
-      realMap.setPaintProperty(layerId, "line-opacity", 0.3);
-    };
-
-    const handleClick = (e: maplibregl.MapLayerMouseEvent) => {
-      if (e.features?.[0]?.layer?.id !== layerId) return;
-      setSelectedTrip(trip.slug);
-    };
+    const layerId = layerIdRef.current;
 
     realMap.on("mousemove", layerId, handleMouseEnter);
     realMap.on("mouseleave", layerId, handleMouseLeave);
@@ -57,7 +67,7 @@ export default function TripLayer({ trip }: TripLayerProps) {
       realMap.off("mouseleave", layerId, handleMouseLeave);
       realMap.off("click", layerId, handleClick);
     };
-  }, [trip.slug, tripWithPositions.positions.length]);
+  }, [map, tripWithPositions.positions.length, handleMouseEnter, handleMouseLeave, handleClick]);
 
 
   const routeData = createRouteData(tripWithPositions.positions);
