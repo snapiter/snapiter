@@ -26,7 +26,7 @@ export default function PhotoCarousel() {
 
 
 
-  if (selectedTrip === null || selectedTrip.markers.length === 0) {
+  if (!selectedTrip || selectedTrip.markers.length === 0) {
     return <></>;
   }
 
