@@ -10,6 +10,7 @@ import { bottomPanelExpandedAtom } from '@/store/atoms';
 import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
 import { useState } from 'react';
 import { FaEyeSlash } from 'react-icons/fa6';
+import { SafeImage } from '@/components/SafeImage';
 
 export interface Photo {
   id: string;
@@ -88,34 +89,5 @@ export default function PhotoCarousel() {
         </Swiper>
       </div>
     </div>
-  );
-}
-
-
-
-
-interface SafeImageProps extends React.ComponentProps<typeof Image> {
-  src: string;
-  alt: string;
-}
-
-export function SafeImage({ src, alt, ...props }: SafeImageProps) {
-  const [error, setError] = useState(true);
-
-  if (error) {
-    return (
-      <div className="absolute inset-0 flex border border-border items-center justify-center bg-background rounded-lg text-gray-500">
-        <FaEyeSlash className="text-4xl text-muted" />
-      </div>
-    );
-  }
-
-  return (
-    <Image
-      {...props}
-      src={src}
-      alt={alt}
-      onError={() => setError(true)}
-    />
   );
 }

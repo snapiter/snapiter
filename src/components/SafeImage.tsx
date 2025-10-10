@@ -1,0 +1,29 @@
+import { useState } from "react";
+import Image from "next/image";
+import { FaEyeSlash } from "react-icons/fa6";
+
+interface SafeImageProps extends React.ComponentProps<typeof Image> {
+    src: string;
+    alt: string;
+}
+
+export function SafeImage({ src, alt, ...props }: SafeImageProps) {
+    const [error, setError] = useState(false);
+
+    if (error) {
+        return (
+            <div className="absolute inset-0 flex border border-border items-center justify-center bg-background rounded-lg">
+                <FaEyeSlash className="text-4xl text-muted" />
+            </div>
+        );
+    }
+
+    return (
+        <Image
+            {...props}
+            src={src}
+            alt={alt}
+            onError={() => setError(true)}
+        />
+    );
+}
