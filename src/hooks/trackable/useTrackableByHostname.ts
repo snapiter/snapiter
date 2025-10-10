@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useApiClient } from '../useApiClient';
 import { Trackable } from '@/store/atoms';
-import { useHostname } from '../useApiData';
+import { useHostname } from '../useHostname';
 import { useEffect } from 'react';
 import { getTrackableIcon } from '@/services/thumbnail';
 import { queryKeys } from '@/utils/queryKeys';

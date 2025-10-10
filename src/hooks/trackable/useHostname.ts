@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function useHostname() {
+export function useHostname() {
   const [hostname, setHostname] = useState<string>('');
 
   useEffect(() => {
@@ -31,6 +31,3 @@ function useHostname() {
 
   return hostname;
 }
-
-
-export { useHostname };
