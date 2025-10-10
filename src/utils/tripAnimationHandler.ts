@@ -7,6 +7,7 @@ import { fitMapBounds } from '@/utils/mapBounds';
 
 export interface AnimationRefs {
   animationRef: React.RefObject<number | null>;
+  timeoutRef: React.RefObject<number | null>;
   vehicleMarkerRef: React.RefObject<maplibregl.Marker | null>;
   startTimeRef: React.RefObject<number | null>;
   currentPositionIndexRef: React.RefObject<number>;
@@ -24,7 +25,7 @@ export function animateTrip(
   if (!map) return;
 
   // Stop current animation and clean up
-  stopAnimation(refs.animationRef);
+  stopAnimation(refs.animationRef, refs.timeoutRef);
   cleanupMarkers(refs.visibleMarkersRef, refs.vehicleMarkerRef);
 
   // Reset animation state
@@ -64,6 +65,7 @@ export function animateTrip(
     refs.visibleMarkersRef,
     refs.currentPositionIndexRef,
     refs.startTimeRef,
-    refs.animationRef
+    refs.animationRef,
+    refs.timeoutRef
   );
 }

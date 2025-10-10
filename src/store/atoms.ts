@@ -111,3 +111,15 @@ export type FlyToCommand = {
 export const flyToAtom = atom<FlyToCommand | null>(null);
 
 export const highlightedMarkerAtom = atom<string | null>(null);
+
+export type AnimationState = {
+  animationId: number | null;
+  timeoutId: number | null;
+  currentSlug: string | null;
+};
+
+export const animationStateAtom = atom<AnimationState>({
+  animationId: null,
+  timeoutId: null,
+  currentSlug: null,
+});

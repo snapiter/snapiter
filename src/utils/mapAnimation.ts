@@ -11,6 +11,7 @@ export function startAnimation(
   currentPositionIndexRef: React.RefObject<number>,
   startTimeRef: React.RefObject<number | null>,
   animationRef: React.RefObject<number | null>,
+  timeoutRef: React.RefObject<number | null>,
 ) {
   const map = mapRef.current?.getMap?.();
   if (!map || !selectedTrip || activePositions.length < 2) return;
@@ -70,18 +71,27 @@ export function startAnimation(
     updateMarkersOnMap(visibleMarkers, visibleMarkersRef, map);
 
     if (progress < 1) {
-      setTimeout(animateMap, 100);
+      timeoutRef.current = window.setTimeout(animateMap, 100);
+    } else {
+      timeoutRef.current = null;
     }
   };
 
   animationRef.current = requestAnimationFrame(animateVehicle);
-  setTimeout(animateMap, 100);
+  timeoutRef.current = window.setTimeout(animateMap, 100);
 }
 
 /** Stop animation cleanly */
-export function stopAnimation(animationRef: React.RefObject<number | null>) {
+export function stopAnimation(
+  animationRef: React.RefObject<number | null>,
+  timeoutRef: React.RefObject<number | null>
+) {
   if (animationRef.current) {
     cancelAnimationFrame(animationRef.current);
     animationRef.current = null;
+  }
+  if (timeoutRef.current) {
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = null;
   }
 }

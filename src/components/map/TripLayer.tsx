@@ -84,6 +84,9 @@ export default function TripLayer({ trip }: TripLayerProps) {
     ? true
     : isSelected;
 
+    if(isSelected) {
+      console.log("trip.slug", trip.slug);
+    }
 
   return (
     <Source id={`route-${trip.slug}`} type="geojson" data={routeData}>
