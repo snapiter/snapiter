@@ -2,9 +2,9 @@
 
 import Image from 'next/image';
 import { useRef, useState } from 'react';
-import { useMapCommands } from '@/hooks/commands/useMapCommands';
-import { Marker } from '@/store/atoms';
+import { Marker, lightboxIndexAtom, highlightedMarkerAtom } from '@/store/atoms';
 import { getMarkerUrlThumbnail } from '@/services/thumbnail';
+import { useSetAtom } from 'jotai';
 
 
 interface PhotoGridProps {
@@ -14,7 +14,8 @@ interface PhotoGridProps {
 const BOUNCE_MS = 150; // tune this "bounce rate" window
 
 export default function PhotoGrid({ markers }: PhotoGridProps) {
-  const { runCommand } = useMapCommands();
+  const setLightboxIndex = useSetAtom(lightboxIndexAtom);
+  const setHighlightedMarker = useSetAtom(highlightedMarkerAtom);
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set(markers.map(p => p.markerId)));
 
   // track the last hovered photo and a pending leave timeout
@@ -32,7 +33,7 @@ export default function PhotoGrid({ markers }: PhotoGridProps) {
     clearLeaveTimer();
     leaveTimerRef.current = window.setTimeout(() => {
       if (lastHoverIdRef.current) {
-        runCommand({ type: 'HIGHLIGHT_MARKER_LEAVE', markerId: lastHoverIdRef.current });
+        setHighlightedMarker(null);
         lastHoverIdRef.current = null;
       }
       leaveTimerRef.current = null;
@@ -42,7 +43,7 @@ export default function PhotoGrid({ markers }: PhotoGridProps) {
   const handlePhotoEnter = (markerId: string) => {
     clearLeaveTimer();                // user is still inside grid; cancel any pending leave
     lastHoverIdRef.current = markerId; // remember current hovered photo
-    runCommand({ type: 'HIGHLIGHT_MARKER', markerId: markerId });
+    setHighlightedMarker(markerId);
   };
 
   const handleGridMouseEnter = () => {
@@ -73,7 +74,7 @@ export default function PhotoGrid({ markers }: PhotoGridProps) {
           <div
             key={marker.markerId}
             className="relative aspect-square cursor-pointer hover:opacity-90 transition-opacity group"
-            onClick={() => runCommand({ type: 'LIGHTBOX_OPEN', photoIndex: index })}
+            onClick={() => setLightboxIndex(index)}
             onMouseEnter={() => handlePhotoEnter(marker.markerId)}
           >
             {loadingImages.has(marker.markerId) && (

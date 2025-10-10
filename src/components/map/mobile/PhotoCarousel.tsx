@@ -2,11 +2,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
-import { useMapCommands } from '@/hooks/commands/useMapCommands';
 
-import { Marker } from '@/store/atoms';
+import { Marker, lightboxIndexAtom, highlightedMarkerAtom } from '@/store/atoms';
 import { getMarkerUrlThumbnail } from '@/services/thumbnail';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { bottomPanelExpandedAtom } from '@/store/atoms';
 import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
 
@@ -22,7 +21,8 @@ export default function PhotoCarousel() {
   const { trip: selectedTrip } = useSelectedTrip();
 
   const isExpanded = useAtomValue(bottomPanelExpandedAtom);
-  const { runCommand } = useMapCommands();
+  const setLightboxIndex = useSetAtom(lightboxIndexAtom);
+  const setHighlightedMarker = useSetAtom(highlightedMarkerAtom);
 
 
 
@@ -41,13 +41,13 @@ export default function PhotoCarousel() {
   }
 
   const handlePhotoClick = (index: number) => {
-    runCommand({ type: 'LIGHTBOX_OPEN', photoIndex: index });
+    setLightboxIndex(index);
   };
   const handleSlideChange = (swiper: SwiperType) => {
     const activeIndex = swiper.activeIndex;
     const activePhoto = selectedTrip.markers[activeIndex];
     if (activePhoto) {
-      runCommand({ type: 'HIGHLIGHT_MARKER', markerId: activePhoto.markerId });
+      setHighlightedMarker(activePhoto.markerId);
     }
   };
 

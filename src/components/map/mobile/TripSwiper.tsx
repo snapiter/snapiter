@@ -3,18 +3,19 @@ import 'swiper/css/pagination';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Virtual } from 'swiper/modules';
-import { useMapCommands } from '@/hooks/commands/useMapCommands';
 import MobileTripDetails from './MobileTripDetails';
 import { useTripsByHostname } from '@/hooks/trips/useTripsByHostname';
+import { useSetAtom } from 'jotai';
+import { selectedTripAtom } from '@/store/atoms';
 
 export default function TripSwiper() {
-  const { runCommand } = useMapCommands();
+  const setSelectedTrip = useSetAtom(selectedTripAtom);
   const { data: trips = [] } = useTripsByHostname();
 
   const handleSlideChange = (swiper: any) => {
     const activeTrip = trips[swiper.activeIndex];
     if (activeTrip) {
-      runCommand({ type: 'SELECT_TRIP', tripSlug: activeTrip.slug });
+      setSelectedTrip(activeTrip.slug);
     }
   };
 

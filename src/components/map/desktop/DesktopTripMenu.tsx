@@ -3,24 +3,22 @@
 import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
 import { FaRoute } from 'react-icons/fa6';
 import { formatTripDate } from '@/utils/formatTripDate';
-import { useMapCommands } from '@/hooks/commands/useMapCommands';
 import { useTripsByHostname } from '@/hooks/trips/useTripsByHostname';
 import { useTrackableByHostname } from '@/hooks/trackable/useTrackableByHostname';
 import { Logo } from '@snapiter/designsystem';
+import { useSetAtom } from 'jotai';
+import { selectedTripAtom } from '@/store/atoms';
 
 export default function DesktopTripMenu() {
   const { data: trips } = useTripsByHostname();
   const selectedTrip = useSelectedTrip();
-  const { runCommand } = useMapCommands();
+  const setSelectedTrip = useSetAtom(selectedTripAtom);
   const { data: website } = useTrackableByHostname();
 
   const displayActiveIndex = trips.findIndex(trip => trip.slug === selectedTrip?.trip?.slug);
 
   const handleTripSelect = (index: number) => {
-    runCommand({
-      type: 'SELECT_TRIP',
-      tripSlug: trips[index].slug
-    });
+    setSelectedTrip(trips[index].slug);
   };
 
   

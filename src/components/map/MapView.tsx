@@ -1,8 +1,6 @@
 import { type MapRef } from 'react-map-gl/maplibre';
-import { Trip } from '@/store/atoms';
+import { Trip, mapReadyAtom } from '@/store/atoms';
 import { useRef, RefObject, Fragment, useMemo } from 'react';
-import { useMapCommandHandler } from '@/hooks/commands/useMapCommandHandler';
-import { useMapCommands } from '@/hooks/commands/useMapCommands';
 import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
 import MapWrapper from './MapWrapper';
 import { useResponsiveMapHeight } from '@/hooks/map/useResponsiveMapHeight';
@@ -11,6 +9,7 @@ import { useTripAnimation } from '@/hooks/map/useTripAnimation';
 import TripLayer from './TripLayer';
 import AnimatedTripLayer from './AnimatedTripLayer';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { useSetAtom } from 'jotai';
 
 interface MapViewProps {
   trips?: Trip[];
@@ -18,7 +17,7 @@ interface MapViewProps {
 
 export default function MapView({ trips = [] }: MapViewProps) {
   const { trip: selectedTrip } = useSelectedTrip();
-  const { runCommand } = useMapCommands();
+  const setMapReady = useSetAtom(mapReadyAtom);
   const isMobile = useIsMobile();
 
   const mapRef = useRef<MapRef | null>(null);
@@ -26,17 +25,21 @@ export default function MapView({ trips = [] }: MapViewProps) {
   const visibleTrips = useMemo(() => {
     return trips.filter((trip) => (isMobile ? trip.slug === selectedTrip?.slug : true));
   }, [trips, isMobile, selectedTrip?.slug]);
-  
+
+  const interactiveLayerIds = useMemo(() =>
+    trips.map((trip) => `route-line-${trip.slug}`),
+    [trips]
+  );
+
   useTripAnimation(mapRef);
-  useMapCommandHandler(mapRef);
   useAutoFlyToMarker(mapRef);
   useResponsiveMapHeight(mapRef);
 
   return (
     <MapWrapper
       mapRef={mapRef as RefObject<MapRef>}
-      onMapReady={() => runCommand({ type: 'MAP_READY' })}
-      interactiveLayerIds={trips.map((trip) => `route-line-${trip.slug}`)}
+      onMapReady={() => setMapReady(true)}
+      interactiveLayerIds={interactiveLayerIds}
       mapStyle={{ height: '100%' }}
     >
       {visibleTrips.map((trip) => (

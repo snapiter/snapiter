@@ -25,9 +25,6 @@ export type Trackable = {
   hostName: string;
 };
 
-//   createdAt: new Date(raw.createdAt),
-//   lastReportedAt: new Date(raw.lastReportedAt),
-
 export type Device = {
   trackableId: string;
   deviceId: string;
@@ -96,40 +93,21 @@ export interface QuickCreateRes {
   qrDataUrl?: string;
 };
 
-// slug of the selected trip
 export const selectedTripAtom = atom<string | null>(null);
 
 export const bottomPanelExpandedAtom = atom<boolean>(false);
 
 export const lightboxIndexAtom = atom<number>(-1);
 
-// Map Command/Event System
-export type MapCommand = 
-  | { type: 'FLY_TO'; coordinates: [number, number]; zoom?: number; duration?: number, id: string }
-  | { type: 'HIGHLIGHT_MARKER'; markerId: string | null; id: string }
-  | { type: 'HIGHLIGHT_MARKER_LEAVE'; markerId: string | null; id: string }
-  | { type: 'LIGHTBOX_OPEN'; photoIndex: number; id: string }
-  | { type: 'LIGHTBOX_CLOSE'; id: string }
-  | { type: 'MAP_READY'; id: string }
-  | { type: 'SELECT_TRIP'; tripSlug: string; id: string }
-  | { type: 'PANEL_EXPAND'; id: string }
-  | { type: 'PANEL_COLLAPSE'; id: string };
+export const mapReadyAtom = atom<boolean>(false);
 
-export type MapEvent = 
-  | { type: 'FLY_TO_ENDED'; coordinates: [number, number]; commandId: string }
-  | { type: 'MARKER_HIGHLIGHTED'; markerId: string | null; commandId: string }
-  | { type: 'MARKER_HIGHLIGHTED_LEAVE'; markerId: string | null; commandId: string }
-  | { type: 'LIGHTBOX_OPENED'; photoIndex: number; commandId: string }
-  | { type: 'LIGHTBOX_CLOSED'; commandId: string }
-  | { type: 'MAP_READY'; commandId: string }
-  | { type: 'TRIP_SELECTED'; tripSlug: string; commandId: string }
-  | { type: 'PANEL_EXPANDED'; commandId: string }
-  | { type: 'PANEL_COLLAPSED'; commandId: string };
+export type FlyToCommand = {
+  coordinates: [number, number];
+  zoom?: number;
+  duration?: number;
+  timestamp: number; // Used to trigger the effect
+};
 
-export const mapCommandsAtom = atom<MapCommand[]>([]);
-export const mapEventsAtom = atom<MapEvent[]>([]);
+export const flyToAtom = atom<FlyToCommand | null>(null);
 
-// Derived atom that only updates when MAP_READY status changes
-export const mapReadyAtom = atom(
-  (get) => get(mapEventsAtom).some(event => event.type === 'MAP_READY')
-);
+export const highlightedMarkerAtom = atom<string | null>(null);

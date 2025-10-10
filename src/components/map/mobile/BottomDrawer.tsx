@@ -1,18 +1,17 @@
 import React from 'react';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { bottomPanelExpandedAtom } from '@/store/atoms';
-import { useMapCommands } from '@/hooks/commands/useMapCommands';
 import { Sheet, SheetRef } from 'react-modal-sheet';
 import { config } from '@/config';
 
 export default function BottomDrawer({ children }: { children: React.ReactNode }) {
   const isExpanded = useAtomValue(bottomPanelExpandedAtom);
-  const { runCommand } = useMapCommands();
+  const setBottomPanelExpanded = useSetAtom(bottomPanelExpandedAtom);
   const [mounted, setMounted] = React.useState(false);
   const ref = React.useRef<SheetRef>(null);
 
   const snapIndices = [0, config.collapsedHeight, config.expandedHeight, 1];
-  
+
   const expandedSnapIndex = 2;
   const collapsedSnapIndex = 1;
   const fullScreenSnapIndex = 3;
@@ -29,27 +28,26 @@ export default function BottomDrawer({ children }: { children: React.ReactNode }
   }, [ref.current, isExpanded]);
 
   if (!mounted) return null; // 🚀 prevent SSR mismatch
-
   return (
     <Sheet
       ref={ref}
       isOpen={true}
-      onClose={() => runCommand({ type: 'PANEL_COLLAPSE' })}
+      onClose={() => setBottomPanelExpanded(false)}
       onSnap={(index) => {
         if (index === expandedSnapIndex && !isExpanded) {
-          runCommand({ type: 'PANEL_EXPAND' });
+          setBottomPanelExpanded(true);
         }
         if(index === collapsedSnapIndex && isExpanded) {
-          runCommand({ type: 'PANEL_COLLAPSE' });
+          setBottomPanelExpanded(false);
         }
         if(index === fullScreenSnapIndex) {
-          runCommand({ type: 'PANEL_EXPAND' });
+          setBottomPanelExpanded(true);
         }
       }}
       className="md:hidden"
       snapPoints={snapIndices}
       initialSnap={0}
-      
+
     >
       <Sheet.Container style={{ zIndex: 102, backgroundColor: 'transparent', borderRadius: '100px' }} className="bg-background rounded-t-3xl">
         <Sheet.Header className="bg-background rounded-t-3xl py-2 cursor-grab border-b border-border">

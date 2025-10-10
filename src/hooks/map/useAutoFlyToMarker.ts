@@ -1,40 +1,49 @@
 import { fitMapBounds } from "@/utils/mapBounds";
-import { useMapCommands } from "../commands/useMapCommands";
-import { useAtomValue } from "jotai";
-import { mapEventsAtom, Trip } from "@/store/atoms";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { highlightedMarkerAtom, flyToAtom } from "@/store/atoms";
 import { useEffect } from "react";
 import { useSelectedTrip } from "../trips/useSelectedTrip";
 import { MapRef } from "react-map-gl/maplibre";
 
 
 export function useAutoFlyToMarker(mapRef: React.RefObject<MapRef | null>) {
-    const mapEvents = useAtomValue(mapEventsAtom);
+    const highlightedMarkerId = useAtomValue(highlightedMarkerAtom);
     const { trip: selectedTrip } = useSelectedTrip();
-    const { runCommand } = useMapCommands();
+    const [flyTo, setFlyTo] = useAtom(flyToAtom);
 
     useEffect(() => {
-        const lastEvent = mapEvents[mapEvents.length - 1];
-        if (!lastEvent) return;
-        if(!selectedTrip) return;
+      if (!flyTo || !mapRef.current) return;
+  
+      const map = mapRef.current.getMap();
+      if (!map) return;
+  
+      map.flyTo({
+        center: flyTo.coordinates,
+        zoom: flyTo.zoom || 10,
+        duration: flyTo.duration || 1000
+      });
+    }, [flyTo?.timestamp]);
 
-        // If the marker is highlighted, fly to the marker
-        if (lastEvent.type === 'MARKER_HIGHLIGHTED') {
-            const marker = selectedTrip.markers?.filter(i => i.markerId == lastEvent.markerId).pop()
+
+    useEffect(() => {
+        if (!selectedTrip) return;
+
+        // If a marker is highlighted, fly to it
+        if (highlightedMarkerId) {
+            const marker = selectedTrip.markers?.find(m => m.markerId === highlightedMarkerId);
             if (marker) {
-                runCommand({
-                    type: 'FLY_TO',
+                setFlyTo({
                     coordinates: [marker.longitude, marker.latitude],
                     zoom: 8,
-                    duration: 1500
+                    duration: 1500,
+                    timestamp: Date.now()
                 });
             }
-        }
-
-        // If the marker is left, fit the map bounds to the trip
-        if (lastEvent.type === 'MARKER_HIGHLIGHTED_LEAVE') {
-            if (selectedTrip) {
+        } else {
+            // If no marker is highlighted, fit bounds to the entire trip
+            if (selectedTrip.positions && selectedTrip.positions.length > 0) {
                 fitMapBounds(mapRef, selectedTrip.positions);
             }
         }
-    }, [mapEvents]);
+    }, [highlightedMarkerId, selectedTrip?.slug]);
 }

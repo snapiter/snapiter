@@ -2,7 +2,7 @@ import { useEffect, useRef, useCallback } from "react";
 import type { TripDetailed } from "@/store/atoms";
 import type maplibregl from "maplibre-gl";
 import { useSelectedTrip } from "../trips/useSelectedTrip";
-import { lightboxIndexAtom, mapEventsAtom, Trip } from "@/store/atoms";
+import { lightboxIndexAtom } from "@/store/atoms";
 import { useSetAtom } from "jotai";
 import { animateTrip, } from '@/utils/tripAnimationHandler';
 import { MapRef } from "react-map-gl/maplibre";
@@ -25,7 +25,6 @@ export function useTripAnimation(
   const currentPositionIndexRef = useRef<number>(0);
   const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
   const currentlyAnimatingSlugRef = useRef<string | null>(null);
-  const setMapEvents = useSetAtom(mapEventsAtom);
 
   const { trip: selectedTrip } = useSelectedTrip();
 
@@ -56,7 +55,7 @@ export function useTripAnimation(
         (photoIndex) => setLightboxIndex(photoIndex)
       );
     },
-    [animateTrip, mapRef, setLightboxIndex, setMapEvents]
+    [animateTrip, mapRef, setLightboxIndex]
   );
 
   useEffect(() => {

@@ -8,9 +8,8 @@ import SnapIterLoader from '@/components/SnapIterLoader';
 import DynamicTitle from '@/components/DynamicTitle';
 import Brand from '@/components/Brand';
 import { useTrackableByHostname } from '@/hooks/trackable/useTrackableByHostname';
-import { useMapCommands } from '@/hooks/commands/useMapCommands';
-import { useAtomValue } from 'jotai';
-import { mapReadyAtom } from '@/store/atoms';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { mapReadyAtom, selectedTripAtom } from '@/store/atoms';
 import ErrorComponent from '@/components/ErrorComponent';
 import DesktopSidebar from '@/components/map/desktop/DesktopSidebar';
 import PhotoCarousel from '@/components/map/mobile/PhotoCarousel';
@@ -21,7 +20,7 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const isMobile = useIsMobile();
   const { data: website, isLoading, error } = useTrackableByHostname();
-  const { runCommand } = useMapCommands();
+  const setSelectedTrip = useSetAtom(selectedTripAtom);
   const mapReady = useAtomValue(mapReadyAtom);
 
   const { data: trips = [], isLoading: tripsLoading } = useTripsByHostname();
@@ -31,14 +30,11 @@ export default function Home() {
       setTimeout(() => {
         setIsLoaded(true);
         if (trips.length > 0) {
-          runCommand({
-            type: 'SELECT_TRIP',
-            tripSlug: trips[0].slug
-          });
+          setSelectedTrip(trips[0].slug);
         }
       }, 1000);
     }
-  }, [website, mapReady, trips, isLoading, runCommand]);
+  }, [website, mapReady, trips, isLoading, setSelectedTrip]);
 
 
   if (error) {
