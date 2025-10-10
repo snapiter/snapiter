@@ -8,6 +8,8 @@ import { getMarkerUrlThumbnail } from '@/services/thumbnail';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { bottomPanelExpandedAtom } from '@/store/atoms';
 import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
+import { useState } from 'react';
+import { FaEyeSlash } from 'react-icons/fa6';
 
 export interface Photo {
   id: string;
@@ -33,7 +35,7 @@ export default function PhotoCarousel() {
   if (!isExpanded) {
     return (
       <div className="relative w-full pt-4">
-        <div className="bg-muted rounded-lg animate-pulse flex items-center justify-center h-64">
+        <div className="bg-background border border-muted rounded-lg animate-pulse flex items-center justify-center h-64">
           <div className="w-8 h-8 border-2 border-border border-t-primary rounded-full animate-spin"></div>
         </div>
       </div>
@@ -68,13 +70,12 @@ export default function PhotoCarousel() {
                 className="relative w-full h-64 cursor-pointer hover:opacity-90 transition-opacity"
                 onClick={() => handlePhotoClick(index)}
               >
-                <Image
+                <SafeImage
                   src={getMarkerUrlThumbnail(marker, "500x500")}
                   alt={marker.title || 'Marker photo'}
                   fill
                   className="object-cover rounded-lg"
                   sizes="(max-width: 640px) 100vw, 500px"
-
                 />
               </div>
               {marker.description && (
@@ -87,5 +88,34 @@ export default function PhotoCarousel() {
         </Swiper>
       </div>
     </div>
+  );
+}
+
+
+
+
+interface SafeImageProps extends React.ComponentProps<typeof Image> {
+  src: string;
+  alt: string;
+}
+
+export function SafeImage({ src, alt, ...props }: SafeImageProps) {
+  const [error, setError] = useState(true);
+
+  if (error) {
+    return (
+      <div className="absolute inset-0 flex border border-border items-center justify-center bg-background rounded-lg text-gray-500">
+        <FaEyeSlash className="text-4xl text-muted" />
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      {...props}
+      src={src}
+      alt={alt}
+      onError={() => setError(true)}
+    />
   );
 }
