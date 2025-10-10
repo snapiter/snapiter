@@ -1,13 +1,14 @@
 "use client";
 
 import { RefObject, use, useEffect, useRef, useState } from "react";
-import { useTripWithPosition } from "@/hooks/trips/useTrip";
+import { useTrip } from "@/hooks/trips/useTrip";
+import { useTripPositions } from "@/hooks/trips/useTripPositions";
+import { useTripMarkers } from "@/hooks/trips/useTripMarkers";
 import Card from "@/components/dashboard/cards/Card";
 import StackCard from "@/components/dashboard/layout/StackCard";
 import { Layer, MapRef, Marker, Source } from "react-map-gl/maplibre";
 import MapWrapper from "@/components/map/MapWrapper";
 import { createRouteData, fitMapBounds } from "@/utils/mapBounds";
-import { useTripWithMarkers } from "@/hooks/trips/useTripWithMarkers";
 import MarkersCard from "@/components/dashboard/cards/markers/MarkersCard";
 import ActiveTripCard from "@/components/dashboard/cards/trips/ActiveTripCard";
 import EditTripCard from "@/components/dashboard/cards/trips/EditTripCard";
@@ -18,21 +19,19 @@ export default function TripsPage({
   params: Promise<{ trackableId: string; tripId: string }>;
 }) {
   const { trackableId, tripId } = use(params);
-  const { data: trip, isLoading, isError } = useTripWithPosition(
-    trackableId,
-    tripId
-  );
-  const { data: tripWithMarkers } = useTripWithMarkers(trip ?? null);
+  const { data: trip, isLoading, isError } = useTrip(trackableId, tripId);
+  const { data: positions = [] } = useTripPositions(trackableId, tripId);
+  const { data: markers = [] } = useTripMarkers(trackableId, tripId);
   const [mapReady, setMapReady] = useState(false);
 
   const mapRef = useRef<MapRef | null>(null);
 
 
   useEffect(() => {
-    if (mapReady && mapRef.current && trip && trip?.positions && trip.positions.length > 1) {
-      fitMapBounds(mapRef, trip.positions);
+    if (mapReady && mapRef.current && positions.length > 1) {
+      fitMapBounds(mapRef, positions);
     }
-  }, [trip?.positions, mapRef.current, mapReady]);
+  }, [positions, mapRef.current, mapReady]);
 
 
   if (isLoading || isError || !trip) return <></>;
@@ -43,8 +42,8 @@ export default function TripsPage({
       <ActiveTripCard trip={trip} key={trip.slug} />
       <EditTripCard trackableId={trackableId} trip={trip} />
     </StackCard>
-      <StackCard columns={tripWithMarkers && tripWithMarkers.markers.length > 0 ? 2 : 1 }>
-        <MarkersCard markers={tripWithMarkers?.markers ?? []} />
+      <StackCard columns={markers.length > 0 ? 2 : 1 }>
+        <MarkersCard markers={markers} />
         <Card title="Map">
           <MapWrapper
             onMapReady={() => {
@@ -54,17 +53,17 @@ export default function TripsPage({
             mapStyle={{ height: "400px" }}
           >
             {(() => {
-              if (!trip || trip.positions.length < 2) return null;
+              if (!trip || positions.length < 2) return null;
 
               const color = trip.color || "#3b82f6";
 
-              const coordinates = trip.positions
+              const coordinates = positions
                 .toReversed()
                 .map((p) => [p.longitude, p.latitude]);
 
               if (coordinates.length < 2) return null;
 
-              const routeData = createRouteData(trip.positions);
+              const routeData = createRouteData(positions);
 
               return (
                 <Source

@@ -1,8 +1,7 @@
 export enum QueryKey {
   TRIPS = 'trips',
-  TRIP_WITH_POSITIONS = 'trip-with-positions',
-  TRIP = 'trip',
-  MARKERS = 'markers',
+  TRIP_POSITIONS = 'trip-positions',
+  TRIP_MARKERS = 'trip-markers',
   TRIPS_WITH_MARKERS = 'trips-with-markers',
   TRACKABLES = 'trackables',
   TRACKABLE = 'trackable',
@@ -11,9 +10,8 @@ export enum QueryKey {
 
 export const queryKeys = {
   trips: (trackableId: string) => [QueryKey.TRIPS, trackableId] as const,
-  tripWithPositions: (trackableId: string, tripId: string) => [QueryKey.TRIP_WITH_POSITIONS, trackableId, tripId] as const,
-  trip: (trackableId: string, slug: string) => [QueryKey.TRIP, trackableId, slug] as const,
-  markers: (trackableId: string, slug: string) => [QueryKey.MARKERS, trackableId, slug] as const,
+  tripPositions: (trackableId: string, slug: string) => [QueryKey.TRIP_POSITIONS, trackableId, slug] as const,
+  tripMarkers: (trackableId: string, slug: string) => [QueryKey.TRIP_MARKERS, trackableId, slug] as const,
   tripsWithMarkers: (trackableId: string) => [QueryKey.TRIPS_WITH_MARKERS, trackableId] as const,
   trackables: () => [QueryKey.TRACKABLES] as const,
   trackable: (trackableId: string) => [QueryKey.TRACKABLE, trackableId] as const,

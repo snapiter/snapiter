@@ -1,16 +1,16 @@
-import type { Trip, TripWithMarkers } from '@/store/atoms';
+import type { Trip } from '@/store/atoms';
 import { getMarkerUrlThumbnail } from '@/services/thumbnail';
 import Image from 'next/image';
 import DayAndPhoto from '../DayAndPhoto';
-import { useTripWithMarkers } from '@/hooks/trips/useTripWithMarkers';
+import { useTripMarkers } from '@/hooks/trips/useTripMarkers';
 
 interface TripDetailsProps {
   trip: Trip;
 }
 
 export default function MobileTripDetails({ trip }: TripDetailsProps) {
-  const { data: tripWithMarkers } = useTripWithMarkers(trip);
-  if (trip === undefined || trip === null || tripWithMarkers === undefined) {
+  const { data: markers = [] } = useTripMarkers(trip?.trackableId ?? '', trip?.slug ?? '');
+  if (trip === undefined || trip === null) {
     return <></>
   }
 
@@ -21,11 +21,11 @@ export default function MobileTripDetails({ trip }: TripDetailsProps) {
             style={{ '--trip-color': trip.color ?? 'transparent' } as React.CSSProperties}
             className="flex border border-[var(--trip-color)] rounded-lg items-center space-x-2 p-2 min-h-22"
           >
-            {tripWithMarkers.markers.length > 0 ? (
+            {markers.length > 0 ? (
                 <div className="max-w-1/3 flex-shrink-0">
                   <Image
-                    src={getMarkerUrlThumbnail(tripWithMarkers.markers[0])}
-                    alt={tripWithMarkers.markers[0].title}
+                    src={getMarkerUrlThumbnail(markers[0])}
+                    alt={markers[0].title}
                     className="object-cover rounded-lg h-16 w-16"
                     width={64}
                     height={64}
@@ -41,7 +41,7 @@ export default function MobileTripDetails({ trip }: TripDetailsProps) {
               >
                 {trip.title}
               </h2>
-              <DayAndPhoto startDate={trip.startDate} endDate={trip.endDate} markersLength={tripWithMarkers.markers.length} />
+              <DayAndPhoto startDate={trip.startDate} endDate={trip.endDate} markersLength={markers.length} />
             </div>
           </div>
         </div>

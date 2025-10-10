@@ -1,4 +1,4 @@
-import { useTripWithPosition } from "@/hooks/trips/useTrip";
+import { useTripPositions } from "@/hooks/trips/useTripPositions";
 import { selectedTripAtom, Trip } from "@/store/atoms";
 import { EnvContext } from "@/utils/env/EnvProvider";
 import { createRouteData } from "@/utils/mapBounds";
@@ -15,7 +15,7 @@ export default function TripLayer({ trip }: TripLayerProps) {
   const selectedTripSlug = useAtomValue(selectedTripAtom);
   const setSelectedTrip = useSetAtom(selectedTripAtom);
 
-  const { data: tripWithPositions = { ...trip, positions: [] } } = useTripWithPosition(trip.trackableId, trip.slug);
+  const { data: positions = [] } = useTripPositions(trip.trackableId, trip.slug);
 
   const env = useContext(EnvContext);
   const { current: map } = useMap();
@@ -53,7 +53,7 @@ export default function TripLayer({ trip }: TripLayerProps) {
   }, [setSelectedTrip, trip.slug]);
 
   useEffect(() => {
-    if (!map || tripWithPositions.positions.length < 2) return;
+    if (!map || positions.length < 2) return;
 
     const realMap = map.getMap();
     const layerId = layerIdRef.current;
@@ -67,13 +67,13 @@ export default function TripLayer({ trip }: TripLayerProps) {
       realMap.off("mouseleave", layerId, handleMouseLeave);
       realMap.off("click", layerId, handleClick);
     };
-  }, [map, tripWithPositions.positions.length, handleMouseEnter, handleMouseLeave, handleClick]);
+  }, [map, positions.length, handleMouseEnter, handleMouseLeave, handleClick]);
 
 
-  const routeData = createRouteData(tripWithPositions.positions);
-  
+  const routeData = createRouteData(positions);
 
-  if (tripWithPositions.positions.length < 2) return null;
+
+  if (positions.length < 2) return null;
 
   const isSelected = trip.slug === selectedTripSlug;
   const color = trip.color || "#3b82f6";

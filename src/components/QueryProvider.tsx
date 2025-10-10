@@ -43,7 +43,10 @@ export default function QueryProvider({ children }: { children: React.ReactNode 
         maxAge: 2 * 24 * 60 * 60 * 1000,
         dehydrateOptions: {
           shouldDehydrateQuery: (query) =>
-            query.queryKey[0] === QueryKey.TRIPS || query.queryKey[0] === QueryKey.TRACKABLE,
+            query.queryKey[0] === QueryKey.TRIPS ||
+            query.queryKey[0] === QueryKey.TRACKABLE ||
+            query.queryKey[0] === QueryKey.TRIP_POSITIONS ||
+            query.queryKey[0] === QueryKey.TRIP_MARKERS
         },
       }}
     >
