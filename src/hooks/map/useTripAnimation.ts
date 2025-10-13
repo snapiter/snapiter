@@ -1,119 +1,45 @@
-import { useAtom, useSetAtom } from "jotai";
-import type maplibregl from "maplibre-gl";
-import { useCallback, useEffect, useRef } from "react";
+import { useSetAtom } from "jotai";
+import { useEffect, useRef } from "react";
 import type { MapRef } from "react-map-gl/maplibre";
-import type { TripDetailed } from "@/store/atoms";
-import { animationStateAtom, lightboxIndexAtom } from "@/store/atoms";
-import { animateTrip } from "@/utils/tripAnimationHandler";
+import { lightboxIndexAtom } from "@/store/atoms";
+import { TripAnimator } from "@/utils/TripAnimator";
 import { useSelectedTrip } from "../trips/useSelectedTrip";
 
-interface AnimationRefs {
-  animationRef: React.MutableRefObject<number | null>;
-  timeoutRef: React.MutableRefObject<number | null>;
-  vehicleMarkerRef: React.MutableRefObject<maplibregl.Marker | null>;
-  startTimeRef: React.MutableRefObject<number | null>;
-  currentPositionIndexRef: React.MutableRefObject<number>;
-  visibleMarkersRef: React.MutableRefObject<Record<string, maplibregl.Marker>>;
-}
-
 export function useTripAnimation(mapRef: React.RefObject<MapRef | null>) {
-  const animationRef = useRef<number | null>(null);
-  const timeoutRef = useRef<number | null>(null);
-  const vehicleMarkerRef = useRef<maplibregl.Marker | null>(null);
-  const startTimeRef = useRef<number | null>(null);
-  const currentPositionIndexRef = useRef<number>(0);
-  const visibleMarkersRef = useRef<Record<string, maplibregl.Marker>>({});
-
-  const [animationState, setAnimationState] = useAtom(animationStateAtom);
   const { trip: selectedTrip } = useSelectedTrip();
-
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
 
-  const animateTripDirect = useCallback(
-    (trip: TripDetailed) => {
-      if (animationState.currentSlug === trip.slug) {
-        return;
-      }
+  const animatorRef = useRef<TripAnimator | null>(null);
 
-      if (animationState.animationId !== null) {
-        cancelAnimationFrame(animationState.animationId);
-      }
-      if (animationState.timeoutId !== null) {
-        clearTimeout(animationState.timeoutId);
-      }
-      if (vehicleMarkerRef.current) {
-        vehicleMarkerRef.current.remove();
-        vehicleMarkerRef.current = null;
-      }
-      Object.values(visibleMarkersRef.current).forEach((marker) =>
-        marker.remove(),
-      );
-      visibleMarkersRef.current = {};
-
-      const map = mapRef.current?.getMap();
-      if (map && animationState.currentSlug) {
-        const oldAnimationSource = map.getSource(
-          `route-${animationState.currentSlug}-animation`,
-        ) as any;
-        if (oldAnimationSource) {
-          oldAnimationSource.setData({
-            type: "FeatureCollection",
-            features: [
-              {
-                type: "Feature",
-                properties: {},
-                geometry: {
-                  type: "LineString",
-                  coordinates: [],
-                },
-              },
-            ],
-          });
-        }
-      }
-
-      const refs: AnimationRefs = {
-        animationRef,
-        timeoutRef,
-        vehicleMarkerRef,
-        startTimeRef,
-        currentPositionIndexRef,
-        visibleMarkersRef,
-      };
-
-      animateTrip(trip, mapRef, refs, trip.trackableId, (photoIndex) =>
-        setLightboxIndex(photoIndex),
-      );
-
-      setAnimationState({
-        animationId: animationRef.current,
-        timeoutId: timeoutRef.current,
-        currentSlug: trip.slug,
-      });
-    },
-    [mapRef, setLightboxIndex, animationState, setAnimationState],
-  );
+  if (!animatorRef.current) {
+    animatorRef.current = new TripAnimator(mapRef, (photoIndex) =>
+      setLightboxIndex(photoIndex),
+    );
+  }
 
   useEffect(() => {
-    if (selectedTrip?.slug !== animationState.currentSlug) {
-      if (animationState.animationId !== null) {
-        cancelAnimationFrame(animationState.animationId);
-      }
-      if (animationState.timeoutId !== null) {
-        clearTimeout(animationState.timeoutId);
-      }
-      setAnimationState({
-        animationId: null,
-        timeoutId: null,
-        currentSlug: null,
-      });
+    const animator = animatorRef.current;
+    if (!animator) return;
+
+    if (!selectedTrip || selectedTrip.positions.length === 0) {
+      animator.cleanup();
+      return;
     }
 
-    if (selectedTrip && selectedTrip.positions.length > 0) {
-      animateTripDirect({
-        ...selectedTrip,
-        markers: selectedTrip.markers,
-      });
+    if (animator.getCurrentSlug() !== selectedTrip.slug) {
+      animator.animate(selectedTrip, selectedTrip.trackableId);
     }
-  }, [selectedTrip?.slug]);
+
+    return () => {
+      // Don't cleanup here - let the next effect handle it
+      // Only cleanup on unmount
+    };
+  }, [selectedTrip?.slug, selectedTrip?.trackableId]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      animatorRef.current?.cleanup();
+    };
+  }, []);
 }
