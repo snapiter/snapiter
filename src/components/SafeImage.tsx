@@ -29,6 +29,7 @@ export function SafeImage({ src, alt, size = "medium", ...props }: SafeImageProp
   return (
     <Image
       {...props}
+      loading="lazy"
       src={src}
       alt={alt}
       onError={() => setError(true)}
