@@ -1,11 +1,11 @@
 "use client";
 
-import { mobileMenuOpen } from "@/store/atoms";
+import { Logo } from "@snapiter/designsystem";
 import { useAtom } from "jotai";
 import { FaX } from "react-icons/fa6";
-import MenuItem, { MenuItemProps } from "./MenuItem";
+import { mobileMenuOpen } from "@/store/atoms";
 import LogoutButton from "../buttons/LogoutButton";
-import { Logo } from "@snapiter/designsystem";
+import MenuItem, { type MenuItemProps } from "./MenuItem";
 
 export default function Menu({ items }: { items: MenuItemProps[] }) {
   const [isOpen, setIsOpen] = useAtom(mobileMenuOpen);
@@ -19,9 +19,7 @@ export default function Menu({ items }: { items: MenuItemProps[] }) {
       <div className="md:hidden">
         <div className="flex items-center justify-between mb-6">
           <Logo size="sm" showTitle={true} />
-          <button
-            onClick={() => setIsOpen(false)}
-          >
+          <button onClick={() => setIsOpen(false)}>
             <FaX />
           </button>
         </div>

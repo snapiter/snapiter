@@ -1,19 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
-import MapView from '@/components/map/MapView';
-import BottomDrawer from '@/components/map/mobile/BottomDrawer';
-import TripSwiper from '@/components/map/mobile/TripSwiper';
-import SnapIterLoader from '@/components/SnapIterLoader';
-import DynamicTitle from '@/components/DynamicTitle';
-import Brand from '@/components/Brand';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { mapReadyAtom, selectedTripAtom } from '@/store/atoms';
-import ErrorComponent from '@/components/ErrorComponent';
-import DesktopSidebar from '@/components/map/desktop/DesktopSidebar';
-import PhotoCarousel from '@/components/map/mobile/PhotoCarousel';
-import { useIsMobile } from '@/hooks/useIsMobile';
-import { useTripsByHostname } from '@/hooks/trips/useTripsByHostname';
+import { useAtomValue, useSetAtom } from "jotai";
+import { useEffect, useRef, useState } from "react";
+import Brand from "@/components/Brand";
+import DynamicTitle from "@/components/DynamicTitle";
+import ErrorComponent from "@/components/ErrorComponent";
+import DesktopSidebar from "@/components/map/desktop/DesktopSidebar";
+import MapView from "@/components/map/MapView";
+import BottomDrawer from "@/components/map/mobile/BottomDrawer";
+import PhotoCarousel from "@/components/map/mobile/PhotoCarousel";
+import TripSwiper from "@/components/map/mobile/TripSwiper";
+import SnapIterLoader from "@/components/SnapIterLoader";
+import { useTripsByHostname } from "@/hooks/trips/useTripsByHostname";
+import { useIsMobile } from "@/hooks/useIsMobile";
+import { mapReadyAtom, selectedTripAtom } from "@/store/atoms";
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -21,7 +21,7 @@ export default function Home() {
   const setSelectedTrip = useSetAtom(selectedTripAtom);
   const mapReady = useAtomValue(mapReadyAtom);
 
-  const { trackable, trips: trips = [], isLoading, error } = useTripsByHostname();
+  const { trackable, trips = [], isLoading, error } = useTripsByHostname();
 
   useEffect(() => {
     if (trackable && mapReady && !isLoading) {
@@ -35,9 +35,7 @@ export default function Home() {
   }, [trackable, mapReady, trips, isLoading, setSelectedTrip]);
 
   if (error) {
-    return (
-      <ErrorComponent message={error.message} />
-    );
+    return <ErrorComponent message={error.message} />;
   }
   return (
     <>
@@ -53,15 +51,11 @@ export default function Home() {
               <TripSwiper />
               <PhotoCarousel />
             </div>
-          </BottomDrawer>)
-          }
-        {!isMobile && (
-          <DesktopSidebar />
+          </BottomDrawer>
         )}
+        {!isMobile && <DesktopSidebar />}
 
-        {(!isLoaded) && (
-          <SnapIterLoader trackable={trackable ?? null} />
-        )}
+        {!isLoaded && <SnapIterLoader trackable={trackable ?? null} />}
 
         <div className="hidden md:block absolute bottom-4 left-4 z-10">
           <Brand />

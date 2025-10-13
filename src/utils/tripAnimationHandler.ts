@@ -1,9 +1,13 @@
-import type maplibregl from 'maplibre-gl';
-import type { MapRef } from 'react-map-gl/maplibre';
-import type { TripDetailed } from '@/store/atoms';
-import { createTripMarkers, createVehicleMarker, cleanupMarkers } from '@/utils/mapMarkers';
-import { startAnimation, stopAnimation } from '@/utils/mapAnimation';
-import { fitMapBounds } from '@/utils/mapBounds';
+import type maplibregl from "maplibre-gl";
+import type { MapRef } from "react-map-gl/maplibre";
+import type { TripDetailed } from "@/store/atoms";
+import { startAnimation, stopAnimation } from "@/utils/mapAnimation";
+import { fitMapBounds } from "@/utils/mapBounds";
+import {
+  cleanupMarkers,
+  createTripMarkers,
+  createVehicleMarker,
+} from "@/utils/mapMarkers";
 
 export interface AnimationRefs {
   animationRef: React.RefObject<number | null>;
@@ -33,28 +37,41 @@ export function animateTrip(
   refs.startTimeRef.current = null;
 
   // Reset the animation route line to empty
-  const animationRouteSource = map.getSource(`route-${tripDetailed.slug}-animation`) as any;
+  const animationRouteSource = map.getSource(
+    `route-${tripDetailed.slug}-animation`,
+  ) as any;
   if (animationRouteSource) {
     animationRouteSource.setData({
-      type: 'FeatureCollection',
-      features: [{
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'LineString',
-          coordinates: []
-        }
-      }]
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          properties: {},
+          geometry: {
+            type: "LineString",
+            coordinates: [],
+          },
+        },
+      ],
     });
   }
 
   const activePositions = tripDetailed.positions.toReversed();
-  
-  createTripMarkers(tripDetailed.markers, refs.visibleMarkersRef, (photoIndex: number) => {
-    onPhotoClick?.(photoIndex);
-  });
-  
-  createVehicleMarker(activePositions[0], refs.vehicleMarkerRef, map, trackableId);
+
+  createTripMarkers(
+    tripDetailed.markers,
+    refs.visibleMarkersRef,
+    (photoIndex: number) => {
+      onPhotoClick?.(photoIndex);
+    },
+  );
+
+  createVehicleMarker(
+    activePositions[0],
+    refs.vehicleMarkerRef,
+    map,
+    trackableId,
+  );
   fitMapBounds(mapRef, activePositions);
 
   startAnimation(
@@ -66,6 +83,6 @@ export function animateTrip(
     refs.currentPositionIndexRef,
     refs.startTimeRef,
     refs.animationRef,
-    refs.timeoutRef
+    refs.timeoutRef,
   );
 }

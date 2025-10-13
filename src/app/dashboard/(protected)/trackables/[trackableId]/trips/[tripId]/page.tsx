@@ -1,17 +1,17 @@
 "use client";
 
-import { RefObject, use, useEffect, useRef, useState } from "react";
-import { useTrip } from "@/hooks/trips/useTrip";
-import { useTripPositions } from "@/hooks/trips/useTripPositions";
-import { useTripMarkers } from "@/hooks/trips/useTripMarkers";
+import { type RefObject, use, useEffect, useRef, useState } from "react";
+import { Layer, type MapRef, Marker, Source } from "react-map-gl/maplibre";
 import Card from "@/components/dashboard/cards/Card";
-import StackCard from "@/components/dashboard/layout/StackCard";
-import { Layer, MapRef, Marker, Source } from "react-map-gl/maplibre";
-import MapWrapper from "@/components/map/MapWrapper";
-import { createRouteData, fitMapBounds } from "@/utils/mapBounds";
 import MarkersCard from "@/components/dashboard/cards/markers/MarkersCard";
 import ActiveTripCard from "@/components/dashboard/cards/trips/ActiveTripCard";
 import EditTripCard from "@/components/dashboard/cards/trips/EditTripCard";
+import StackCard from "@/components/dashboard/layout/StackCard";
+import MapWrapper from "@/components/map/MapWrapper";
+import { useTrip } from "@/hooks/trips/useTrip";
+import { useTripMarkers } from "@/hooks/trips/useTripMarkers";
+import { useTripPositions } from "@/hooks/trips/useTripPositions";
+import { createRouteData, fitMapBounds } from "@/utils/mapBounds";
 
 export default function TripsPage({
   params,
@@ -26,23 +26,21 @@ export default function TripsPage({
 
   const mapRef = useRef<MapRef | null>(null);
 
-
   useEffect(() => {
     if (mapReady && mapRef.current && positions.length > 1) {
       fitMapBounds(mapRef, positions);
     }
   }, [positions, mapRef.current, mapReady]);
 
-
   if (isLoading || isError || !trip) return <></>;
 
   return (
     <>
-    <StackCard columns={1}>
-      <ActiveTripCard trip={trip} key={trip.slug} />
-      <EditTripCard trackableId={trackableId} trip={trip} />
-    </StackCard>
-      <StackCard columns={markers.length > 0 ? 2 : 1 }>
+      <StackCard columns={1}>
+        <ActiveTripCard trip={trip} key={trip.slug} />
+        <EditTripCard trackableId={trackableId} trip={trip} />
+      </StackCard>
+      <StackCard columns={markers.length > 0 ? 2 : 1}>
         <MarkersCard markers={markers} />
         <Card title="Map">
           <MapWrapper

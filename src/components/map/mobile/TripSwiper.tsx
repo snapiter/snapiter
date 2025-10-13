@@ -1,16 +1,16 @@
-import 'swiper/css';
-import 'swiper/css/pagination';
+import "swiper/css";
+import "swiper/css/pagination";
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Virtual } from 'swiper/modules';
-import MobileTripDetails from './MobileTripDetails';
-import { useTripsByHostname } from '@/hooks/trips/useTripsByHostname';
-import { useSetAtom } from 'jotai';
-import { selectedTripAtom } from '@/store/atoms';
+import { useSetAtom } from "jotai";
+import { Pagination, Virtual } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { useTripsByHostname } from "@/hooks/trips/useTripsByHostname";
+import { selectedTripAtom } from "@/store/atoms";
+import MobileTripDetails from "./MobileTripDetails";
 
 export default function TripSwiper() {
   const setSelectedTrip = useSetAtom(selectedTripAtom);
-  const { trips: trips = [] } = useTripsByHostname();
+  const { trips = [] } = useTripsByHostname();
 
   const handleSlideChange = (swiper: any) => {
     const activeTrip = trips[swiper.activeIndex];

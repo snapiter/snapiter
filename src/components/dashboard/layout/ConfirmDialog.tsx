@@ -1,7 +1,7 @@
 "use client";
 
-import { ReactNode } from "react";
 import { PrimaryButton, SecondaryButton } from "@snapiter/designsystem";
+import type { ReactNode } from "react";
 
 interface ConfirmDialogProps {
   title?: string;
@@ -30,11 +30,7 @@ export default function ConfirmDialog({
 
         <div className="flex justify-end gap-2">
           <SecondaryButton text={cancelText} onClick={onCancel} />
-          <PrimaryButton
-            text={confirmText}
-            icon={icon}
-            onClick={onConfirm}
-          />
+          <PrimaryButton text={confirmText} icon={icon} onClick={onConfirm} />
         </div>
       </div>
     </div>

@@ -1,12 +1,15 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { useRef, useState } from 'react';
-import { Marker, lightboxIndexAtom, highlightedMarkerAtom } from '@/store/atoms';
-import { getMarkerUrlThumbnail } from '@/services/thumbnail';
-import { useSetAtom } from 'jotai';
-import { SafeImage } from './SafeImage';
-
+import { useSetAtom } from "jotai";
+import Image from "next/image";
+import { useRef, useState } from "react";
+import { getMarkerUrlThumbnail } from "@/services/thumbnail";
+import {
+  highlightedMarkerAtom,
+  lightboxIndexAtom,
+  type Marker,
+} from "@/store/atoms";
+import { SafeImage } from "./SafeImage";
 
 interface PhotoGridProps {
   markers: Marker[];
@@ -17,7 +20,9 @@ const BOUNCE_MS = 150; // tune this "bounce rate" window
 export default function PhotoGrid({ markers }: PhotoGridProps) {
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
   const setHighlightedMarker = useSetAtom(highlightedMarkerAtom);
-  const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set(markers.map(p => p.markerId)));
+  const [loadingImages, setLoadingImages] = useState<Set<string>>(
+    new Set(markers.map((p) => p.markerId)),
+  );
 
   // track the last hovered photo and a pending leave timeout
   const lastHoverIdRef = useRef<string | null>(null);
@@ -42,7 +47,7 @@ export default function PhotoGrid({ markers }: PhotoGridProps) {
   };
 
   const handlePhotoEnter = (markerId: string) => {
-    clearLeaveTimer();                // user is still inside grid; cancel any pending leave
+    clearLeaveTimer(); // user is still inside grid; cancel any pending leave
     lastHoverIdRef.current = markerId; // remember current hovered photo
     setHighlightedMarker(markerId);
   };
@@ -57,7 +62,7 @@ export default function PhotoGrid({ markers }: PhotoGridProps) {
   };
 
   const handleImageLoad = (markerId: string) => {
-    setLoadingImages(prev => {
+    setLoadingImages((prev) => {
       const next = new Set(prev);
       next.delete(markerId);
       return next;
@@ -89,11 +94,11 @@ export default function PhotoGrid({ markers }: PhotoGridProps) {
               alt={marker.title}
               fill
               className={`object-cover rounded-lg transition-opacity duration-300 ${
-                loadingImages.has(marker.markerId) ? 'opacity-0' : 'opacity-100'
+                loadingImages.has(marker.markerId) ? "opacity-0" : "opacity-100"
               }`}
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
               onLoad={() => handleImageLoad(marker.markerId)}
-              size='small'
+              size="small"
             />
 
             {marker.description && (

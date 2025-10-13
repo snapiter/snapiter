@@ -25,10 +25,14 @@ export function useUpdateTrip() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ trackableId, originalSlug, trip }: UpdateTripInput) => {
+    mutationFn: async ({
+      trackableId,
+      originalSlug,
+      trip,
+    }: UpdateTripInput) => {
       return apiClient.put<void>(
         `/api/trackables/${trackableId}/trips/${originalSlug}`,
-        trip
+        trip,
       );
     },
     onSuccess: (_data, variables) => {

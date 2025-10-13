@@ -1,11 +1,11 @@
-import { useEffect, useRef, useCallback } from "react";
-import type { TripDetailed } from "@/store/atoms";
+import { useAtom, useSetAtom } from "jotai";
 import type maplibregl from "maplibre-gl";
+import { useCallback, useEffect, useRef } from "react";
+import type { MapRef } from "react-map-gl/maplibre";
+import type { TripDetailed } from "@/store/atoms";
+import { animationStateAtom, lightboxIndexAtom } from "@/store/atoms";
+import { animateTrip } from "@/utils/tripAnimationHandler";
 import { useSelectedTrip } from "../trips/useSelectedTrip";
-import { lightboxIndexAtom, animationStateAtom } from "@/store/atoms";
-import { useSetAtom, useAtom } from "jotai";
-import { animateTrip, } from '@/utils/tripAnimationHandler';
-import { MapRef } from "react-map-gl/maplibre";
 
 interface AnimationRefs {
   animationRef: React.MutableRefObject<number | null>;
@@ -16,10 +16,7 @@ interface AnimationRefs {
   visibleMarkersRef: React.MutableRefObject<Record<string, maplibregl.Marker>>;
 }
 
-
-export function useTripAnimation(
-  mapRef: React.RefObject<MapRef | null>
-) {
+export function useTripAnimation(mapRef: React.RefObject<MapRef | null>) {
   const animationRef = useRef<number | null>(null);
   const timeoutRef = useRef<number | null>(null);
   const vehicleMarkerRef = useRef<maplibregl.Marker | null>(null);
@@ -48,23 +45,29 @@ export function useTripAnimation(
         vehicleMarkerRef.current.remove();
         vehicleMarkerRef.current = null;
       }
-      Object.values(visibleMarkersRef.current).forEach(marker => marker.remove());
+      Object.values(visibleMarkersRef.current).forEach((marker) =>
+        marker.remove(),
+      );
       visibleMarkersRef.current = {};
 
       const map = mapRef.current?.getMap();
       if (map && animationState.currentSlug) {
-        const oldAnimationSource = map.getSource(`route-${animationState.currentSlug}-animation`) as any;
+        const oldAnimationSource = map.getSource(
+          `route-${animationState.currentSlug}-animation`,
+        ) as any;
         if (oldAnimationSource) {
           oldAnimationSource.setData({
-            type: 'FeatureCollection',
-            features: [{
-              type: 'Feature',
-              properties: {},
-              geometry: {
-                type: 'LineString',
-                coordinates: []
-              }
-            }]
+            type: "FeatureCollection",
+            features: [
+              {
+                type: "Feature",
+                properties: {},
+                geometry: {
+                  type: "LineString",
+                  coordinates: [],
+                },
+              },
+            ],
           });
         }
       }
@@ -78,12 +81,8 @@ export function useTripAnimation(
         visibleMarkersRef,
       };
 
-      animateTrip(
-        trip,
-        mapRef,
-        refs,
-        trip.trackableId,
-        (photoIndex) => setLightboxIndex(photoIndex)
+      animateTrip(trip, mapRef, refs, trip.trackableId, (photoIndex) =>
+        setLightboxIndex(photoIndex),
       );
 
       setAnimationState({
@@ -92,7 +91,7 @@ export function useTripAnimation(
         currentSlug: trip.slug,
       });
     },
-    [mapRef, setLightboxIndex, animationState, setAnimationState]
+    [mapRef, setLightboxIndex, animationState, setAnimationState],
   );
 
   useEffect(() => {

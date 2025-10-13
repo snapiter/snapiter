@@ -1,19 +1,19 @@
-import { useQuery } from '@tanstack/react-query';
-import { useApiClient } from '../useApiClient';
-import { Trackable } from '@/store/atoms';
-import { useHostname } from './useHostname';
-import { useEffect } from 'react';
-import { getTrackableIcon } from '@/services/thumbnail';
-import { queryKeys } from '@/utils/queryKeys';
+import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { getTrackableIcon } from "@/services/thumbnail";
+import type { Trackable } from "@/store/atoms";
+import { queryKeys } from "@/utils/queryKeys";
+import { useApiClient } from "../useApiClient";
+import { useHostname } from "./useHostname";
 
 export function useTrackableByHostname() {
   const api = useApiClient();
   const hostname = useHostname();
 
   const query = useQuery({
-    queryKey: queryKeys.trackable(hostname ?? ''),
+    queryKey: queryKeys.trackable(hostname ?? ""),
     queryFn: async () => {
-      if (!hostname) throw new Error('Hostname is required');
+      if (!hostname) throw new Error("Hostname is required");
       return api.get<Trackable>(`/api/trackables/host/${hostname}`);
     },
     enabled: !!hostname,
@@ -22,7 +22,7 @@ export function useTrackableByHostname() {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retry: (failureCount, error) => {
-      if (error instanceof Error && error.message.includes('404')) {
+      if (error instanceof Error && error.message.includes("404")) {
         return false;
       }
       return failureCount < 2;

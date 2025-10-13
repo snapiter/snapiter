@@ -1,5 +1,5 @@
-import { useState } from "react";
 import Image from "next/image";
+import { useState } from "react";
 import { FaEyeSlash } from "react-icons/fa6";
 
 interface SafeImageProps extends React.ComponentProps<typeof Image> {
@@ -8,15 +8,16 @@ interface SafeImageProps extends React.ComponentProps<typeof Image> {
   size?: "small" | "medium" | "large";
 }
 
-export function SafeImage({ src, alt, size = "medium", ...props }: SafeImageProps) {
+export function SafeImage({
+  src,
+  alt,
+  size = "medium",
+  ...props
+}: SafeImageProps) {
   const [error, setError] = useState(false);
 
   const sizeClass =
-    size === "small"
-      ? "text-2xl"
-      : size === "large"
-      ? "text-6xl"
-      : "text-4xl"; // default medium
+    size === "small" ? "text-2xl" : size === "large" ? "text-6xl" : "text-4xl"; // default medium
 
   if (error) {
     return (

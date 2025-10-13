@@ -15,7 +15,8 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="underline hover:text-foreground transition-colors"
-            >SnapIter
+            >
+              SnapIter
             </Link>
             . Licensed under the{" "}
             <Link

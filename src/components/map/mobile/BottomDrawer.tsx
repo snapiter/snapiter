@@ -1,10 +1,14 @@
-import React from 'react';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { bottomPanelExpandedAtom } from '@/store/atoms';
-import { Sheet, SheetRef } from 'react-modal-sheet';
-import { config } from '@/config';
+import { useAtomValue, useSetAtom } from "jotai";
+import React from "react";
+import { Sheet, type SheetRef } from "react-modal-sheet";
+import { config } from "@/config";
+import { bottomPanelExpandedAtom } from "@/store/atoms";
 
-export default function BottomDrawer({ children }: { children: React.ReactNode }) {
+export default function BottomDrawer({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const isExpanded = useAtomValue(bottomPanelExpandedAtom);
   const setBottomPanelExpanded = useSetAtom(bottomPanelExpandedAtom);
   const [mounted, setMounted] = React.useState(false);
@@ -24,7 +28,6 @@ export default function BottomDrawer({ children }: { children: React.ReactNode }
     } else {
       ref.current.snapTo(collapsedSnapIndex);
     }
-
   }, [ref.current, isExpanded]);
 
   if (!mounted) return null; // 🚀 prevent SSR mismatch
@@ -37,27 +40,31 @@ export default function BottomDrawer({ children }: { children: React.ReactNode }
         if (index === expandedSnapIndex && !isExpanded) {
           setBottomPanelExpanded(true);
         }
-        if(index === collapsedSnapIndex && isExpanded) {
+        if (index === collapsedSnapIndex && isExpanded) {
           setBottomPanelExpanded(false);
         }
-        if(index === fullScreenSnapIndex) {
+        if (index === fullScreenSnapIndex) {
           setBottomPanelExpanded(true);
         }
       }}
       className="md:hidden"
       snapPoints={snapIndices}
       initialSnap={0}
-
     >
-      <Sheet.Container style={{ zIndex: 102, backgroundColor: 'transparent', borderRadius: '100px' }} className="bg-background rounded-t-3xl">
+      <Sheet.Container
+        style={{
+          zIndex: 102,
+          backgroundColor: "transparent",
+          borderRadius: "100px",
+        }}
+        className="bg-background rounded-t-3xl"
+      >
         <Sheet.Header className="bg-background rounded-t-3xl py-2 cursor-grab border-b border-border">
           <div className="flex justify-center py-2">
             <div className="w-10 h-1 rounded-full bg-foreground" />
           </div>
         </Sheet.Header>
-        <Sheet.Content className="bg-background"
-         disableDrag={true}
-        >
+        <Sheet.Content className="bg-background" disableDrag={true}>
           <div className="p-2">{children}</div>
         </Sheet.Content>
       </Sheet.Container>

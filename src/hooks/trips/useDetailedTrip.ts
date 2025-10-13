@@ -1,10 +1,10 @@
-import type { Trip, TripDetailed } from '@/store/atoms';
-import { useTripPositions } from './useTripPositions';
-import { useTripMarkers } from './useTripMarkers';
+import type { Trip, TripDetailed } from "@/store/atoms";
+import { useTripMarkers } from "./useTripMarkers";
+import { useTripPositions } from "./useTripPositions";
 
 export function useDetailedTrip(trip: Trip | null) {
-  const positions = useTripPositions(trip?.trackableId ?? '', trip?.slug ?? '');
-  const markers = useTripMarkers(trip?.trackableId ?? '', trip?.slug ?? '');
+  const positions = useTripPositions(trip?.trackableId ?? "", trip?.slug ?? "");
+  const markers = useTripMarkers(trip?.trackableId ?? "", trip?.slug ?? "");
 
   const isLoading = positions.isLoading || markers.isLoading;
   const isSuccess = positions.isSuccess && markers.isSuccess;
@@ -12,7 +12,11 @@ export function useDetailedTrip(trip: Trip | null) {
 
   const data: TripDetailed | undefined =
     trip && isSuccess
-      ? { ...trip, positions: positions.data ?? [], markers: markers.data ?? [] }
+      ? {
+          ...trip,
+          positions: positions.data ?? [],
+          markers: markers.data ?? [],
+        }
       : undefined;
 
   return {

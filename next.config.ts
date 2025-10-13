@@ -1,14 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  output: "standalone",
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'api.snapiter.com',
-        port: '',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "api.snapiter.com",
+        port: "",
+        pathname: "/**",
       },
     ],
   },

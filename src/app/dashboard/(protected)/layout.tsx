@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../../globals.css";
+import { Footer } from "@snapiter/designsystem";
+import { Provider } from "jotai";
+import ErrorBox from "@/components/dashboard/layout/ErrorBox";
 import Header from "@/components/dashboard/layout/Header";
 import LoadingBar from "@/components/dashboard/layout/LoadingBar";
-import ErrorBox from "@/components/dashboard/layout/ErrorBox";
-import { Provider } from "jotai";
-import { Footer } from "@snapiter/designsystem";
-import EnvProvider from "@/utils/env/EnvProvider";
 import QueryProvider from "@/components/QueryProvider";
+import EnvProvider from "@/utils/env/EnvProvider";
 import getEnv from "@/utils/env/getEnv";
 import "../dashboard.css";
-import { ENV_PREFIX } from "@/utils/env/envprefix";
 import Script from "next/script";
+import { ENV_PREFIX } from "@/utils/env/envprefix";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,11 +38,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-      <Script
+        <Script
           id="runtimeEnv"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
-            __html: `window.${ENV_PREFIX}=${JSON.stringify(env)};`
+            __html: `window.${ENV_PREFIX}=${JSON.stringify(env)};`,
           }}
         />
       </head>
@@ -55,9 +55,7 @@ export default function RootLayout({
               <Header />
               <LoadingBar />
               <ErrorBox />
-              <div className="flex flex-1 relative">
-                {children}
-              </div>
+              <div className="flex flex-1 relative">{children}</div>
               <Footer withMenu={false} />
             </Provider>
           </QueryProvider>

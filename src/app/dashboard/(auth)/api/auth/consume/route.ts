@@ -1,11 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { config } from "@/config";
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const token = url.searchParams.get("token");
   if (!token) {
-    return NextResponse.json({ ok: false, error: "missing_token" }, { status: 400 });
+    return NextResponse.json(
+      { ok: false, error: "missing_token" },
+      { status: 400 },
+    );
   }
 
   const res = await fetch(`${config.apiUrl}/api/auth/login/email/consume`, {

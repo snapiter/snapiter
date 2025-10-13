@@ -1,13 +1,16 @@
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper/modules';
-import type { Swiper as SwiperType } from 'swiper';
-
-import { Marker, lightboxIndexAtom, highlightedMarkerAtom } from '@/store/atoms';
-import { getMarkerUrlThumbnail } from '@/services/thumbnail';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { bottomPanelExpandedAtom } from '@/store/atoms';
-import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
-import { SafeImage } from '@/components/SafeImage';
+import { useAtomValue, useSetAtom } from "jotai";
+import type { Swiper as SwiperType } from "swiper";
+import { Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { SafeImage } from "@/components/SafeImage";
+import { useSelectedTrip } from "@/hooks/trips/useSelectedTrip";
+import { getMarkerUrlThumbnail } from "@/services/thumbnail";
+import {
+  bottomPanelExpandedAtom,
+  highlightedMarkerAtom,
+  lightboxIndexAtom,
+  type Marker,
+} from "@/store/atoms";
 
 export interface Photo {
   id: string;
@@ -23,8 +26,6 @@ export default function PhotoCarousel() {
   const isExpanded = useAtomValue(bottomPanelExpandedAtom);
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
   const setHighlightedMarker = useSetAtom(highlightedMarkerAtom);
-
-
 
   if (!selectedTrip || selectedTrip.markers.length === 0) {
     return <></>;
@@ -70,7 +71,7 @@ export default function PhotoCarousel() {
               >
                 <SafeImage
                   src={getMarkerUrlThumbnail(marker, "500x500")}
-                  alt={marker.title || 'Marker photo'}
+                  alt={marker.title || "Marker photo"}
                   fill
                   className="object-cover rounded-lg"
                   sizes="(max-width: 640px) 100vw, 500px"

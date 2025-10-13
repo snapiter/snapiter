@@ -1,5 +1,5 @@
 import { unstable_noStore as noStore } from "next/cache";
-import { DEFAULT_ENV, ENV_PREFIX, EnvConfig } from "./envprefix";
+import { DEFAULT_ENV, ENV_PREFIX, type EnvConfig } from "./envprefix";
 
 export default function getEnv(): EnvConfig {
   noStore();
@@ -9,13 +9,13 @@ export default function getEnv(): EnvConfig {
       if (key.startsWith(ENV_PREFIX)) acc[key] = value;
       return acc;
     },
-    {}
+    {},
   );
 
   return {
     ...DEFAULT_ENV,
     ...raw,
     SNAPITER_SHOW_BASE_LINE_UNDER_ANIMATION:
-      raw.SNAPITER_SHOW_BASE_LINE_UNDER_ANIMATION === "true"
+      raw.SNAPITER_SHOW_BASE_LINE_UNDER_ANIMATION === "true",
   };
 }

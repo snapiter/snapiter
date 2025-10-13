@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Marker } from "@/store/atoms";
+import { useEffect, useState } from "react";
+import type { Marker } from "@/store/atoms";
 import Card from "../Card";
 import MarkerCard from "./MarkerCard";
 
@@ -25,7 +25,11 @@ export default function MarkersCard({ markers }: MarkersCardProps) {
     <Card title="Markers">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {localMarkers.map((marker) => (
-          <MarkerCard key={marker.markerId} marker={marker} onDelete={handleDelete} />
+          <MarkerCard
+            key={marker.markerId}
+            marker={marker}
+            onDelete={handleDelete}
+          />
         ))}
       </div>
     </Card>

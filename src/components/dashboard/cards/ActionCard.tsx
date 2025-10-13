@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 interface ActionCardProps {
   onClick?: () => void;
@@ -7,7 +7,12 @@ interface ActionCardProps {
   description: string;
 }
 
-export default function ActionCard({ onClick, icon, title, description }: ActionCardProps) {
+export default function ActionCard({
+  onClick,
+  icon,
+  title,
+  description,
+}: ActionCardProps) {
   return (
     <button
       onClick={onClick}

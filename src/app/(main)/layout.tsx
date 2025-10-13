@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { Provider } from "jotai";
-import QueryProvider from "@/components/QueryProvider";
-import GlobalLightbox from "@/components/GlobalLightbox";
-import getEnv from "@/utils/env/getEnv";
-import { ENV_PREFIX } from "@/utils/env/envprefix";
 import Script from "next/script";
+import GlobalLightbox from "@/components/GlobalLightbox";
+import QueryProvider from "@/components/QueryProvider";
 import EnvProvider from "@/utils/env/EnvProvider";
+import { ENV_PREFIX } from "@/utils/env/envprefix";
+import getEnv from "@/utils/env/getEnv";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,17 +29,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   const env = getEnv();
 
   return (
     <html lang="en">
       <head>
-      <Script
+        <Script
           id="runtimeEnv"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
-            __html: `window.${ENV_PREFIX}=${JSON.stringify(env)};`
+            __html: `window.${ENV_PREFIX}=${JSON.stringify(env)};`,
           }}
         />
       </head>
@@ -57,5 +56,5 @@ export default function RootLayout({
         </QueryProvider>
       </body>
     </html>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { atom } from 'jotai';
+import { atom } from "jotai";
 
 export const dashboardLoading = atom<boolean>(false);
 export const mobileMenuOpen = atom<boolean>(false);
@@ -6,16 +6,16 @@ export const mobileMenuOpen = atom<boolean>(false);
 export type ErrorMessage = {
   message: string;
   status: number;
-}
+};
 export const errorMessage = atom<ErrorMessage | null>(null);
 
 export enum PageType {
-  TRIPS = 'TRIPS',
-  POSITIONS = 'POSITIONS',
+  TRIPS = "TRIPS",
+  POSITIONS = "POSITIONS",
 }
 export enum MapStyle {
-  LANDSCAPE = 'landscape',
-  STREETS_V2 = 'streets-v2',
+  LANDSCAPE = "landscape",
+  STREETS_V2 = "streets-v2",
 }
 
 export type Trackable = {
@@ -32,7 +32,6 @@ export type Device = {
   createdAt: Date;
   lastReportedAt: Date;
 };
-
 
 export interface Trip {
   trackableId: string;
@@ -56,8 +55,7 @@ export interface TripWithMarkers extends Trip {
   markers: Marker[];
 }
 
-export interface TripDetailed extends TripWithPositions, TripWithMarkers {
-}
+export interface TripDetailed extends TripWithPositions, TripWithMarkers {}
 
 export interface Position {
   trackableId: string;
@@ -86,12 +84,10 @@ export interface Photo {
   caption?: string;
 }
 
-
-
 export interface QuickCreateRes {
   deviceToken: string;
   qrDataUrl?: string;
-};
+}
 
 export const selectedTripAtom = atom<string | null>(null);
 

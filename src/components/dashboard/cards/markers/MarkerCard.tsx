@@ -1,12 +1,18 @@
-import { Marker } from "@/store/atoms";
-import { useState } from "react";
-import { FaPen, FaArrowLeft, FaTrash, FaFloppyDisk, FaMapPin } from "react-icons/fa6";
-import TextInput from "../../input/TextInput";
-import TextArea from "../../input/TextArea";
-import MarkerImage from "./MarkerImage";
-import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
-import ConfirmDialog from "../../layout/ConfirmDialog";
 import { PrimaryButton, SecondaryButton } from "@snapiter/designsystem";
+import { useState } from "react";
+import {
+  FaArrowLeft,
+  FaFloppyDisk,
+  FaMapPin,
+  FaPen,
+  FaTrash,
+} from "react-icons/fa6";
+import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
+import type { Marker } from "@/store/atoms";
+import TextArea from "../../input/TextArea";
+import TextInput from "../../input/TextInput";
+import ConfirmDialog from "../../layout/ConfirmDialog";
+import MarkerImage from "./MarkerImage";
 
 interface MarkerCardProps {
   marker: Marker;
@@ -21,7 +27,9 @@ export default function MarkerCard({ marker, onDelete }: MarkerCardProps) {
 
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -33,7 +41,7 @@ export default function MarkerCard({ marker, onDelete }: MarkerCardProps) {
         {
           title: formData.title ?? "",
           description: formData.description ?? "",
-        }
+        },
       );
       setIsEditing(false);
     } catch (err) {
@@ -41,11 +49,10 @@ export default function MarkerCard({ marker, onDelete }: MarkerCardProps) {
     }
   };
 
-
   const handleDelete = async () => {
     try {
       await apiClient.delete(
-        `/api/trackables/${marker.trackableId}/markers/${marker.markerId}`
+        `/api/trackables/${marker.trackableId}/markers/${marker.markerId}`,
       );
       setIsEditing(false);
       onDelete(marker.markerId);
@@ -58,7 +65,7 @@ export default function MarkerCard({ marker, onDelete }: MarkerCardProps) {
 
   return (
     <div className="">
-        {showConfirm && (
+      {showConfirm && (
         <ConfirmDialog
           message="This will permanently delete the marker. Do you want to continue?"
           confirmText="Yes, delete"
@@ -72,7 +79,10 @@ export default function MarkerCard({ marker, onDelete }: MarkerCardProps) {
         <div className="space-y-3">
           {/* Top bar with back + delete */}
           <div className="flex items-center justify-between">
-            <SecondaryButton icon={<FaArrowLeft />} onClick={() => setIsEditing(false)} />
+            <SecondaryButton
+              icon={<FaArrowLeft />}
+              onClick={() => setIsEditing(false)}
+            />
             <SecondaryButton icon={<FaTrash />} onClick={handleDelete} />
           </div>
 
@@ -92,7 +102,11 @@ export default function MarkerCard({ marker, onDelete }: MarkerCardProps) {
             placeholder="Description (optional)"
           />
 
-          <PrimaryButton text="Save" icon={<FaFloppyDisk />} onClick={handleSave} />
+          <PrimaryButton
+            text="Save"
+            icon={<FaFloppyDisk />}
+            onClick={handleSave}
+          />
         </div>
       ) : (
         <div className="space-y-2">
@@ -112,16 +126,15 @@ export default function MarkerCard({ marker, onDelete }: MarkerCardProps) {
             </div>
           </div>
 
-          {marker.title && (
-            <h3>{marker.title}</h3>
-          )}
+          {marker.title && <h3>{marker.title}</h3>}
 
           {marker.description && (
             <p className="text-sm text-muted">{marker.description}</p>
           )}
 
           <p className="text-xs text-muted flex gap-1">
-            <FaMapPin className="text-primary" /> {marker.latitude}, {marker.longitude}
+            <FaMapPin className="text-primary" /> {marker.latitude},{" "}
+            {marker.longitude}
           </p>
         </div>
       )}

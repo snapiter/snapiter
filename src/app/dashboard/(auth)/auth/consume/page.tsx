@@ -1,12 +1,12 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { use, useEffect, useState } from "react";
 
 export default function ConsumePage({
   searchParams,
 }: {
-  searchParams: Promise<{ token?: string }>
+  searchParams: Promise<{ token?: string }>;
 }) {
   const router = useRouter();
   const params = use(searchParams);
@@ -23,11 +23,14 @@ export default function ConsumePage({
         return;
       }
       try {
-        const res = await fetch(`/dashboard/api/auth/consume?token=${encodeURIComponent(token)}`, {
-          method: "GET",
-          credentials: "include",
-          cache: "no-store",
-        });
+        const res = await fetch(
+          `/dashboard/api/auth/consume?token=${encodeURIComponent(token)}`,
+          {
+            method: "GET",
+            credentials: "include",
+            cache: "no-store",
+          },
+        );
 
         if (res.ok) {
           setState("ok");
@@ -45,26 +48,32 @@ export default function ConsumePage({
     }
     run();
   }, [router, token]);
-    useEffect(() => {
+  useEffect(() => {
     if (state === "error") {
       const timer = setTimeout(() => {
         router.replace("/dashboard/auth");
       }, 5000);
       return () => clearTimeout(timer);
     }
-    }, [state, router]);
+  }, [state, router]);
   return (
     <main className="flex justify-center bg-surface min-h-screen">
       <div className="px-4 pt-16 pb-12">
         <div className="w-full max-w-sm bg-background rounded-lg p-6">
-          <h1 className="text-2xl font-bold text-foreground mb-2 text-center">Signing you in…</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-2 text-center">
+            Signing you in…
+          </h1>
 
           {state === "loading" && (
-            <p className="text-sm text-muted text-center">Verifying your link…</p>
+            <p className="text-sm text-muted text-center">
+              Verifying your link…
+            </p>
           )}
 
           {state === "ok" && (
-            <p className="text-sm text-success text-center">Success! Redirecting…</p>
+            <p className="text-sm text-success text-center">
+              Success! Redirecting…
+            </p>
           )}
 
           {state === "error" && (

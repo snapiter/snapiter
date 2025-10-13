@@ -2,21 +2,25 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
-import { slugify } from "@/utils/slugify";
 import { queryKeys } from "@/utils/queryKeys";
+import { slugify } from "@/utils/slugify";
 
 export interface CreateTripInput {
-    trackableId: string;
-    title: string;
-    description: string;
-  }
-  
+  trackableId: string;
+  title: string;
+  description: string;
+}
+
 export function useCreateTrip() {
   const apiClient = useDashboardApiClient();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ trackableId, title, description }: CreateTripInput) => {
+    mutationFn: async ({
+      trackableId,
+      title,
+      description,
+    }: CreateTripInput) => {
       const payload = {
         title,
         description,
@@ -27,7 +31,10 @@ export function useCreateTrip() {
         positionType: "ALL",
       };
 
-      await apiClient.post<void>(`/api/trackables/${trackableId}/trips`, payload);
+      await apiClient.post<void>(
+        `/api/trackables/${trackableId}/trips`,
+        payload,
+      );
 
       return payload; // return what was created (useful for redirecting)
     },

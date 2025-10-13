@@ -1,7 +1,6 @@
 @reference "../globals.css";
 @reference "tailwindcss";
 
-
 .loading-bar {
   width: 50%;
   /* chunk size */
@@ -18,9 +17,7 @@
   }
 }
 
-
 @keyframes border-pulse {
-
   0%,
   100% {
     border-color: var(--primary);
@@ -35,7 +32,6 @@
   animation: border-pulse 2s ease-in-out infinite;
 }
 
-
 .text-input-wrapper {
   @apply w-full;
 }
@@ -48,7 +44,6 @@
   @apply w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-[var(--foreground)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition;
 }
 
-
 .text-input.required {
   @apply border-red-500;
 }
@@ -56,9 +51,6 @@
 .text-input:disabled {
   @apply bg-[var(--surface)] opacity-70 cursor-not-allowed;
 }
-
-
-
 
 .text-area-wrapper {
   @apply w-full max-w-sm;
@@ -79,9 +71,6 @@
 .text-area:disabled {
   @apply bg-[var(--surface)] opacity-70 cursor-not-allowed;
 }
-
-
-
 
 h3 {
   @apply text-lg font-semibold;

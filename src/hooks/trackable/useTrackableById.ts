@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import type { Trackable } from "@/store/atoms";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
+import type { Trackable } from "@/store/atoms";
 import { queryKeys } from "@/utils/queryKeys";
 
 export function useTrackableById(trackableId: string | null) {
   const apiClient = useDashboardApiClient();
 
   return useQuery({
-    queryKey: queryKeys.trackable(trackableId ?? ''),
+    queryKey: queryKeys.trackable(trackableId ?? ""),
     queryFn: async () => {
       if (!trackableId) throw new Error("Trackable ID is required");
       return apiClient.get<Trackable>(`/api/trackables/${trackableId}`);

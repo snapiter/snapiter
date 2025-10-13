@@ -1,6 +1,6 @@
-import type maplibregl from 'maplibre-gl';
-import type { Position, TripDetailed } from '@/store/atoms';
-import { getVisibleMarkers, updateMarkersOnMap } from './mapMarkers';
+import type maplibregl from "maplibre-gl";
+import type { Position, TripDetailed } from "@/store/atoms";
+import { getVisibleMarkers, updateMarkersOnMap } from "./mapMarkers";
 
 export function startAnimation(
   mapRef: React.RefObject<any>,
@@ -53,21 +53,30 @@ export function startAnimation(
   const animateMap = () => {
     const { progress, currentIndex } = getProgressData();
 
-    const source = map.getSource(`route-${selectedTrip.slug}-animation`) as maplibregl.GeoJSONSource | undefined;
+    const source = map.getSource(`route-${selectedTrip.slug}-animation`) as
+      | maplibregl.GeoJSONSource
+      | undefined;
     if (source) {
-      const coords = activePositions.slice(0, currentIndex + 1).map(p => [p.longitude, p.latitude]);
+      const coords = activePositions
+        .slice(0, currentIndex + 1)
+        .map((p) => [p.longitude, p.latitude]);
       source.setData({
-        type: 'FeatureCollection',
-        features: [{
-          type: 'Feature',
-          properties: {},
-          geometry: { type: 'LineString', coordinates: coords },
-        }],
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: {},
+            geometry: { type: "LineString", coordinates: coords },
+          },
+        ],
       });
     }
 
     const currentPosition = activePositions[currentIndex];
-    const visibleMarkers = getVisibleMarkers(selectedTrip.markers, currentPosition);
+    const visibleMarkers = getVisibleMarkers(
+      selectedTrip.markers,
+      currentPosition,
+    );
     updateMarkersOnMap(visibleMarkers, visibleMarkersRef, map);
 
     if (progress < 1) {
@@ -84,7 +93,7 @@ export function startAnimation(
 /** Stop animation cleanly */
 export function stopAnimation(
   animationRef: React.RefObject<number | null>,
-  timeoutRef: React.RefObject<number | null>
+  timeoutRef: React.RefObject<number | null>,
 ) {
   if (animationRef.current) {
     cancelAnimationFrame(animationRef.current);

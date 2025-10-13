@@ -1,9 +1,9 @@
 "use client";
 
-import { ReactNode, useState } from "react";
-import { FaCheck, FaChevronDown } from "react-icons/fa6";
-import Link from "next/link";
 import { useSetAtom } from "jotai";
+import Link from "next/link";
+import { type ReactNode, useState } from "react";
+import { FaCheck, FaChevronDown } from "react-icons/fa6";
 import { mobileMenuOpen } from "@/store/atoms";
 
 export interface SubItem {
@@ -22,7 +22,13 @@ export interface MenuItemProps {
   className?: string;
 }
 
-export default function MenuItem({ icon, label, href, submenu, className }: MenuItemProps) {
+export default function MenuItem({
+  icon,
+  label,
+  href,
+  submenu,
+  className,
+}: MenuItemProps) {
   const setMobileMenuOpen = useSetAtom(mobileMenuOpen);
 
   const [open, setOpen] = useState(true);
@@ -61,15 +67,23 @@ export default function MenuItem({ icon, label, href, submenu, className }: Menu
       {hasSubmenu && open && (
         <ul className="">
           {submenu!.map((item) => (
-            <li key={item.href} className="flex items-center gap-3" onClick={() => setMobileMenuOpen(false)}>
+            <li
+              key={item.href}
+              className="flex items-center gap-3"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               <Link
                 href={item.href}
                 className={`flex items-center gap-3 w-full px-4 py-3 rounded-md hover:bg-surface ${item.className}`}
               >
                 <span className="text-xl pl-10">{item.icon}</span>
-                <span className="flex font-medium">{item.label}
+                <span className="flex font-medium">
+                  {item.label}
                   {item.active && (
-                    <span className="px-2 text-sm flex items-center gap-1 text-muted"><FaCheck size={10} className="text-primary-light" />active</span>
+                    <span className="px-2 text-sm flex items-center gap-1 text-muted">
+                      <FaCheck size={10} className="text-primary-light" />
+                      active
+                    </span>
                   )}
                 </span>
               </Link>

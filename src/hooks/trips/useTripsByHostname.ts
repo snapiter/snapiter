@@ -1,18 +1,20 @@
-import { useQuery } from '@tanstack/react-query';
-import type { Trip } from '@/store/atoms';
-import { useApiClient } from '../useApiClient';
-import { useTrackableByHostname } from '../trackable/useTrackableByHostname';
-import { queryKeys } from '@/utils/queryKeys';
+import { useQuery } from "@tanstack/react-query";
+import type { Trip } from "@/store/atoms";
+import { queryKeys } from "@/utils/queryKeys";
+import { useTrackableByHostname } from "../trackable/useTrackableByHostname";
+import { useApiClient } from "../useApiClient";
 
 export function useTripsByHostname() {
   const { data: trackable } = useTrackableByHostname();
   const api = useApiClient();
 
   const query = useQuery({
-    queryKey: queryKeys.trips(trackable?.trackableId ?? ''),
+    queryKey: queryKeys.trips(trackable?.trackableId ?? ""),
     queryFn: async (): Promise<Trip[]> => {
       if (!trackable?.trackableId) return [];
-      return await api.get<Trip[]>(`/api/trackables/${trackable.trackableId}/trips`);
+      return await api.get<Trip[]>(
+        `/api/trackables/${trackable.trackableId}/trips`,
+      );
     },
     enabled: !!trackable?.trackableId,
     staleTime: 2 * 24 * 60 * 60 * 1000,
@@ -20,7 +22,7 @@ export function useTripsByHostname() {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retry: (failureCount, error) => {
-      if (error instanceof Error && error.message.includes('404')) {
+      if (error instanceof Error && error.message.includes("404")) {
         return false;
       }
       return failureCount < 2;
@@ -34,4 +36,3 @@ export function useTripsByHostname() {
     trips: query.data ?? [],
   };
 }
-

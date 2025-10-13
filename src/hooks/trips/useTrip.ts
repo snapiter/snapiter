@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
-import type { Trip } from '@/store/atoms';
-import { useApiClient } from '../useApiClient';
-import { queryKeys } from '@/utils/queryKeys';
+import { useQuery } from "@tanstack/react-query";
+import type { Trip } from "@/store/atoms";
+import { queryKeys } from "@/utils/queryKeys";
+import { useApiClient } from "../useApiClient";
 
 export function useTrip(trackableId: string, slug: string) {
   const api = useApiClient();
@@ -9,8 +9,11 @@ export function useTrip(trackableId: string, slug: string) {
   return useQuery<Trip>({
     queryKey: [...queryKeys.trips(trackableId), slug] as const,
     queryFn: async () => {
-      if (!trackableId || !slug) throw new Error('Trackable ID and slug are required');
-      return await api.get<Trip>(`/api/trackables/${trackableId}/trips/${slug}`);
+      if (!trackableId || !slug)
+        throw new Error("Trackable ID and slug are required");
+      return await api.get<Trip>(
+        `/api/trackables/${trackableId}/trips/${slug}`,
+      );
     },
     enabled: !!trackableId && !!slug,
     staleTime: 10 * 60 * 1000,

@@ -5,11 +5,11 @@ import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
 import { queryKeys } from "@/utils/queryKeys";
 
 export interface CreateTrackableInput {
-    title: string;
-    name: string;
-    hostName: string;
-  }
-  
+  title: string;
+  name: string;
+  hostName: string;
+}
+
 export function useCreateTrackable() {
   const apiClient = useDashboardApiClient();
   const queryClient = useQueryClient();

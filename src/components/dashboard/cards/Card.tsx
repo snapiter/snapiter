@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 interface CardProps {
   title?: string;
@@ -8,23 +8,23 @@ interface CardProps {
   children?: ReactNode;
 }
 
-export default function Card({ title, description, icon, className, children }: CardProps) {
+export default function Card({
+  title,
+  description,
+  icon,
+  className,
+  children,
+}: CardProps) {
   return (
-    <div className={`bg-surface rounded md:rounded-lg p-2 md:p-6 border border-border ${className}`}>
+    <div
+      className={`bg-surface rounded md:rounded-lg p-2 md:p-6 border border-border ${className}`}
+    >
       {(title || description) && (
         <div className="flex items-start gap-3">
-          {icon && (
-            <div className="text-foreground mt-1">{icon}</div>
-          )}
+          {icon && <div className="text-foreground mt-1">{icon}</div>}
           <div>
-            {title && (
-              <h3 className="pb-2">
-                {title}
-              </h3>
-            )}
-            {description && (
-              <p className="text-muted mb-4">{description}</p>
-            )}
+            {title && <h3 className="pb-2">{title}</h3>}
+            {description && <p className="text-muted mb-4">{description}</p>}
           </div>
         </div>
       )}

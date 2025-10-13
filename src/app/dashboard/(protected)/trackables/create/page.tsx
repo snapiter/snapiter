@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { PrimaryButton } from "@snapiter/designsystem";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FaFloppyDisk } from "react-icons/fa6";
-import TextInput from "@/components/dashboard/input/TextInput";
 import Card from "@/components/dashboard/cards/Card";
+import TextInput from "@/components/dashboard/input/TextInput";
 import StackCard from "@/components/dashboard/layout/StackCard";
 import { useCreateTrackable } from "@/hooks/dashboard/trackables/useCreateTrackable";
-import { useRouter } from "next/navigation";
 
 type TrackableRequest = {
   name: string;
@@ -24,27 +24,28 @@ export default function CreateTrackablePage() {
     hostName: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
-
 
   return (
     <div className="items-center flex flex-col">
       <StackCard columns={1}>
         <Card title="Create Trackable">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (e.currentTarget.checkValidity()) {
-              createTrackable.mutate(form, {
-                onSuccess: () => router.push("/dashboard"),
-              });
-            }
-          }}
-          className="space-y-3"
-        >
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (e.currentTarget.checkValidity()) {
+                createTrackable.mutate(form, {
+                  onSuccess: () => router.push("/dashboard"),
+                });
+              }
+            }}
+            className="space-y-3"
+          >
             <TextInput
               required
               id="name"
@@ -70,7 +71,11 @@ export default function CreateTrackablePage() {
               placeholder="snapiter.com"
             />
 
-            <PrimaryButton text="Create" icon={<FaFloppyDisk />} type="submit" />
+            <PrimaryButton
+              text="Create"
+              icon={<FaFloppyDisk />}
+              type="submit"
+            />
           </form>
         </Card>
       </StackCard>

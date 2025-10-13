@@ -1,9 +1,9 @@
 "use client";
 
-import StackCard from "@/components/dashboard/layout/StackCard";
-import DeviceCard from "@/components/dashboard/cards/devices/DeviceCard";
 import AddPhoneCard from "@/components/dashboard/cards/AddPhoneCard";
 import AddTokenCard from "@/components/dashboard/cards/AddTokenCard";
+import DeviceCard from "@/components/dashboard/cards/devices/DeviceCard";
+import StackCard from "@/components/dashboard/layout/StackCard";
 import { useDevices } from "@/hooks/dashboard/useDevices";
 
 export default function DevicesStackCard({
@@ -11,7 +11,6 @@ export default function DevicesStackCard({
 }: {
   trackableId: string;
 }) {
-
   const { data: devices } = useDevices(trackableId);
 
   return (

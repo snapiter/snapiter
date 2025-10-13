@@ -1,27 +1,27 @@
-'use client';
+"use client";
 
-import { useAtomValue, useSetAtom } from 'jotai';
-import Lightbox from 'yet-another-react-lightbox';
-import { lightboxIndexAtom } from '@/store/atoms';
-import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
-import 'yet-another-react-lightbox/styles.css';
-import { getMarkerImage } from '@/services/thumbnail';
+import { useAtomValue, useSetAtom } from "jotai";
+import Lightbox from "yet-another-react-lightbox";
+import { useSelectedTrip } from "@/hooks/trips/useSelectedTrip";
+import { lightboxIndexAtom } from "@/store/atoms";
+import "yet-another-react-lightbox/styles.css";
+import { getMarkerImage } from "@/services/thumbnail";
 
 export default function GlobalLightbox() {
   const lightboxIndex = useAtomValue(lightboxIndexAtom);
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
   const { trip } = useSelectedTrip();
 
-  if(trip === null) {
+  if (trip === null) {
     return <></>;
   }
 
   // Derive photos from selectedTrip markers
-  const photos = trip?.markers
-      .map(marker => ({
+  const photos =
+    trip?.markers.map((marker) => ({
       src: getMarkerImage(marker),
-      alt: marker.title || 'Marker photo',
-      title: marker.description
+      alt: marker.title || "Marker photo",
+      title: marker.description,
     })) || [];
 
   const isOpen = lightboxIndex >= 0;

@@ -1,5 +1,5 @@
-import { Trackable } from '@/store/atoms';
-import Logo from '@snapiter/designsystem/dist/layout/logo/Logo';
+import Logo from "@snapiter/designsystem/dist/layout/logo/Logo";
+import type { Trackable } from "@/store/atoms";
 
 interface SnapIterLoaderProps {
   trackable: Trackable | null;
@@ -24,8 +24,8 @@ export default function SnapIterLoader({ trackable }: SnapIterLoaderProps) {
         <div className="relative h-12 w-full  px-4 overflow-hidden">
           <div
             className={`w-full bg-background rounded-full h-2 overflow-hidden mt-4
-              ${trackable?.title ? 'opacity-0' : 'opacity-100'}`}
-            >
+              ${trackable?.title ? "opacity-0" : "opacity-100"}`}
+          >
             <div className="h-2 bg-primary rounded-full animate-loading" />
           </div>
 
@@ -33,15 +33,12 @@ export default function SnapIterLoader({ trackable }: SnapIterLoaderProps) {
             className={`
       absolute inset-0 flex items-center justify-center
       transition-all duration-700 ease-out text-2xl font-bold text-foreground whitespace-nowrap
-      ${trackable?.title ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}
+      ${trackable?.title ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}
     `}
           >
-            {trackable?.title ?? ''}
+            {trackable?.title ?? ""}
           </h1>
         </div>
-
-
-
       </div>
     </div>
   );

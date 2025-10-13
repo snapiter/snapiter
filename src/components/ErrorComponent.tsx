@@ -11,7 +11,8 @@ export default function ErrorComponent({ message }: { message?: string }) {
           Oops… we couldn’t load your trips
         </h2>
         <p className="text-muted mb-6">
-          {message || "Looks like this journey took a little detour. Please try again in a moment."}
+          {message ||
+            "Looks like this journey took a little detour. Please try again in a moment."}
         </p>
         <button
           onClick={() => window.location.reload()}

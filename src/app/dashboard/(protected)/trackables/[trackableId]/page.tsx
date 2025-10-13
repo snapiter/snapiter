@@ -1,12 +1,12 @@
 "use client";
 
-import StackCard from "@/components/dashboard/layout/StackCard";
-import { useTrips } from "@/hooks/dashboard/trips/useTrips";
-import ActiveTripCard from "@/components/dashboard/cards/trips/ActiveTripCard";
-import StartTripCard from "@/components/dashboard/cards/trips/StartTripCard";
-import TrackableCard from "@/components/dashboard/cards/TrackableCard";
 import { use } from "react";
 import DevicesStackCard from "@/components/dashboard/cards/devices/DevicesStackCard";
+import TrackableCard from "@/components/dashboard/cards/TrackableCard";
+import ActiveTripCard from "@/components/dashboard/cards/trips/ActiveTripCard";
+import StartTripCard from "@/components/dashboard/cards/trips/StartTripCard";
+import StackCard from "@/components/dashboard/layout/StackCard";
+import { useTrips } from "@/hooks/dashboard/trips/useTrips";
 
 export default function TrackablePage({
   params,
@@ -29,7 +29,7 @@ export default function TrackablePage({
         )}
       </StackCard>
       <StackCard columns={1}>
-        <TrackableCard trackableId={trackableId } />
+        <TrackableCard trackableId={trackableId} />
       </StackCard>
       <DevicesStackCard trackableId={trackableId} />
     </>

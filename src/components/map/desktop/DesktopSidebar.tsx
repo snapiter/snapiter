@@ -1,10 +1,10 @@
-import DesktopMarkerMenu from './DesktopMarkerMenu';
-import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
-import DesktopTripMenu from './DesktopTripMenu';
-import { useTripsByHostname } from '@/hooks/trips/useTripsByHostname';
+import { useSelectedTrip } from "@/hooks/trips/useSelectedTrip";
+import { useTripsByHostname } from "@/hooks/trips/useTripsByHostname";
+import DesktopMarkerMenu from "./DesktopMarkerMenu";
+import DesktopTripMenu from "./DesktopTripMenu";
 
 export default function DesktopSidebar() {
-  const { trips: trips } = useTripsByHostname();
+  const { trips } = useTripsByHostname();
   const { trip: selectedTrip } = useSelectedTrip();
 
   if (selectedTrip === undefined) {
@@ -28,6 +28,5 @@ export default function DesktopSidebar() {
         <DesktopMarkerMenu />
       </div>
     </div>
-
   );
 }

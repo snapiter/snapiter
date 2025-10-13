@@ -1,21 +1,21 @@
-import { useQuery } from '@tanstack/react-query';
-import type { Device } from '@/store/atoms';
-import { useDashboardApiClient } from './useDashboardApiClient';
-import { queryKeys } from '@/utils/queryKeys';
+import { useQuery } from "@tanstack/react-query";
+import type { Device } from "@/store/atoms";
+import { queryKeys } from "@/utils/queryKeys";
+import { useDashboardApiClient } from "./useDashboardApiClient";
 
 export function useDevices(trackableId: string) {
-  const api = useDashboardApiClient()
+  const api = useDashboardApiClient();
 
   const query = useQuery({
     queryKey: queryKeys.devices(trackableId),
     queryFn: async () => {
-      if (!trackableId) throw new Error('Trackable ID is required');
-      return api.get<Device[]>(`/api/trackables/${trackableId}/devices`)
+      if (!trackableId) throw new Error("Trackable ID is required");
+      return api.get<Device[]>(`/api/trackables/${trackableId}/devices`);
     },
     enabled: !!trackableId,
-    staleTime: 10 * 60 * 1000, 
+    staleTime: 10 * 60 * 1000,
     retry: (failureCount, error) => {
-      if (error instanceof Error && error.message.includes('404')) {
+      if (error instanceof Error && error.message.includes("404")) {
         return false;
       }
       return failureCount < 2;

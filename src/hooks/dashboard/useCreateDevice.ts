@@ -2,23 +2,23 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
-import { QuickCreateRes } from "@/store/atoms";
+import type { QuickCreateRes } from "@/store/atoms";
 
 export interface CreateDeviceInput {
-    trackableId: string;
+  trackableId: string;
 }
 
 export function useCreateDevice() {
-    const apiClient = useDashboardApiClient();
+  const apiClient = useDashboardApiClient();
 
-    return useMutation({
-        mutationFn: async ({ trackableId }: CreateDeviceInput) => {
-            const payload = await apiClient.post<QuickCreateRes>(
-                `/api/trackables/${trackableId}/devices/token`,
-                {}
-            );
+  return useMutation({
+    mutationFn: async ({ trackableId }: CreateDeviceInput) => {
+      const payload = await apiClient.post<QuickCreateRes>(
+        `/api/trackables/${trackableId}/devices/token`,
+        {},
+      );
 
-            return payload;
-        }
-    });
+      return payload;
+    },
+  });
 }

@@ -1,17 +1,17 @@
 "use client";
 
+import { Logo } from "@snapiter/designsystem";
+import { useAtomValue } from "jotai";
 import { type ReactNode, use } from "react";
-import Menu from "@/components/dashboard/layout/Menu";
-import Main from "@/components/dashboard/layout/Main";
-import { MenuItemProps } from "@/components/dashboard/layout/MenuItem";
 import { FaRoute, FaVanShuttle } from "react-icons/fa6";
+import Main from "@/components/dashboard/layout/Main";
+import Menu from "@/components/dashboard/layout/Menu";
+import type { MenuItemProps } from "@/components/dashboard/layout/MenuItem";
+import { useTrackables } from "@/hooks/dashboard/trackables/useTrackables";
+import { useTrips } from "@/hooks/dashboard/trips/useTrips";
 import { useTrackableById } from "@/hooks/trackable/useTrackableById";
 import { dashboardLoading } from "@/store/atoms";
-import { useAtomValue } from "jotai";
-import { useTrips } from "@/hooks/dashboard/trips/useTrips";
 import { createTrackableMenuItem, dashboardMenuItem } from "../../menu";
-import { Logo } from "@snapiter/designsystem";
-import { useTrackables } from "@/hooks/dashboard/trackables/useTrackables";
 
 export default function TrackableLayout({
   children,
@@ -28,28 +28,27 @@ export default function TrackableLayout({
   const { data: trips, isLoading: isTripsLoading } = useTrips(trackableId);
 
   const menuItems: MenuItemProps[] = trackable
-  ? [
-      trackables?.length > 1 ? dashboardMenuItem : createTrackableMenuItem,
-      {
-        icon: <Logo />,
-        label: trackable.hostName,
-        href: `/dashboard/trackables/${trackable.trackableId}`,
-      },
-      trips && trips.length > 0
-        ? {
-            icon: <FaRoute className="text-primary" />,
-            label: "Trips",
-            submenu: trips.map((trip) => ({
-              icon: <FaVanShuttle className="text-primary" />,
-              label: trip.title,
-              href: `/dashboard/trackables/${trackable.trackableId}/trips/${trip.slug}`,
-              active: trip.endDate == null,
-            })),
-          }
-        : undefined,
-    ].filter(Boolean) as MenuItemProps[] 
-  : [];
-
+    ? ([
+        trackables?.length > 1 ? dashboardMenuItem : createTrackableMenuItem,
+        {
+          icon: <Logo />,
+          label: trackable.hostName,
+          href: `/dashboard/trackables/${trackable.trackableId}`,
+        },
+        trips && trips.length > 0
+          ? {
+              icon: <FaRoute className="text-primary" />,
+              label: "Trips",
+              submenu: trips.map((trip) => ({
+                icon: <FaVanShuttle className="text-primary" />,
+                label: trip.title,
+                href: `/dashboard/trackables/${trackable.trackableId}/trips/${trip.slug}`,
+                active: trip.endDate == null,
+              })),
+            }
+          : undefined,
+      ].filter(Boolean) as MenuItemProps[])
+    : [];
 
   const showOverlay = loading || isLoading || isTripsLoading;
 
@@ -59,10 +58,8 @@ export default function TrackableLayout({
       <Main>{children}</Main>
 
       {showOverlay && (
-        <div className="absolute inset-0 flex items-center justify-center bg-background/50 z-40">
-        </div>
+        <div className="absolute inset-0 flex items-center justify-center bg-background/50 z-40"></div>
       )}
-
     </div>
   );
 }

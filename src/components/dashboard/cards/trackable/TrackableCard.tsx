@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Trackable } from "@/store/atoms";
 import { FaArrowRight } from "react-icons/fa6";
+import type { Trackable } from "@/store/atoms";
 
 export default function TrackableCard({ t }: { t: Trackable }) {
   return (

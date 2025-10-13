@@ -2,25 +2,27 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDashboardApiClient } from "@/hooks/dashboard/useDashboardApiClient";
-import { Device } from "@/store/atoms";
+import type { Device } from "@/store/atoms";
 import { queryKeys } from "@/utils/queryKeys";
 
 export interface DeleteDeviceInput {
-    trackableId: string;
-    device: Device;
-  }
-  
+  trackableId: string;
+  device: Device;
+}
+
 export function useDeleteDevice() {
   const apiClient = useDashboardApiClient();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ trackableId, device}: DeleteDeviceInput) => {
+    mutationFn: async ({ trackableId, device }: DeleteDeviceInput) => {
       const payload = {
         device,
       };
 
-      await apiClient.delete<void>(`/api/trackables/${trackableId}/devices/${device.deviceId}`);
+      await apiClient.delete<void>(
+        `/api/trackables/${trackableId}/devices/${device.deviceId}`,
+      );
 
       return payload; // return what was created (useful for redirecting)
     },

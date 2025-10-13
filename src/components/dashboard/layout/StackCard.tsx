@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 type StackCardProps = {
   children: ReactNode;
@@ -6,13 +6,17 @@ type StackCardProps = {
   className?: string;
 };
 
-export default function StackCard({ children, columns = 2, className = "" }: StackCardProps) {
+export default function StackCard({
+  children,
+  columns = 2,
+  className = "",
+}: StackCardProps) {
   const gridCols =
     columns === 1
       ? "md:grid-cols-1"
       : columns === 2
-      ? "md:grid-cols-2"
-      : "md:grid-cols-3";
+        ? "md:grid-cols-2"
+        : "md:grid-cols-3";
 
   return (
     <div
