@@ -1,7 +1,7 @@
 "use client";
 
 import { type RefObject, use, useEffect, useRef, useState } from "react";
-import { Layer, type MapRef, Marker, Source } from "react-map-gl/maplibre";
+import { Layer, type MapRef, Source } from "react-map-gl/maplibre";
 import Card from "@/components/dashboard/cards/Card";
 import MarkersCard from "@/components/dashboard/cards/markers/MarkersCard";
 import ActiveTripCard from "@/components/dashboard/cards/trips/ActiveTripCard";
@@ -30,7 +30,7 @@ export default function TripsPage({
     if (mapReady && mapRef.current && positions.length > 1) {
       fitMapBounds(mapRef, positions);
     }
-  }, [positions, mapRef.current, mapReady]);
+  }, [positions, mapReady, mapRef.current]);
 
   if (isLoading || isError || !trip) return <></>;
 

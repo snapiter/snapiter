@@ -26,7 +26,7 @@ export function useCreateTrackable() {
 
       return payload;
     },
-    onSuccess: (_data, variables) => {
+    onSuccess: (_data, _variables) => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.trackables(),
       });

@@ -66,7 +66,7 @@ export default function MenuItem({
       {/* Submenu */}
       {hasSubmenu && open && (
         <ul className="">
-          {submenu!.map((item) => (
+          {submenu?.map((item) => (
             <li
               key={item.href}
               className="flex items-center gap-3"

@@ -24,7 +24,7 @@ export default function Dashboard() {
         }
 
         if (trackables.length === 1) {
-          router.replace("/dashboard/trackables/" + trackables[0].trackableId);
+          router.replace(`/dashboard/trackables/${trackables[0].trackableId}`);
           return;
         }
       } catch (err) {
@@ -32,7 +32,7 @@ export default function Dashboard() {
       }
     }
     load();
-  }, [trackables, isFetched]);
+  }, [trackables, isFetched, router.replace]);
 
   return (
     <div className="flex flex-1 relative">

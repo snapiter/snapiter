@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 export default function ErrorComponent({ message }: { message?: string }) {
   return (
     <div className="flex items-center justify-center h-screen">

@@ -1,7 +1,6 @@
 "use client";
 
 import { useSetAtom } from "jotai";
-import Image from "next/image";
 import { useRef, useState } from "react";
 import { getMarkerUrlThumbnail } from "@/services/thumbnail";
 import {

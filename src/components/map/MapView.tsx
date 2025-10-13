@@ -1,4 +1,4 @@
-import { atom, useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { Fragment, type RefObject, useMemo, useRef } from "react";
 import type { MapRef } from "react-map-gl/maplibre";
 import { useAutoFlyToMarker } from "@/hooks/map/useAutoFlyToMarker";

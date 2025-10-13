@@ -26,7 +26,7 @@ export default function AddTokenCard({ trackableId }: AddTokenCardProps) {
   return (
     <>
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-        {modalContent && modalContent.deviceToken && (
+        {modalContent?.deviceToken && (
           <div className="flex flex-col items-center gap-4 p-6">
             <h2 className="text-lg font-semibold">Your Device Token</h2>
             <p className="text-sm text-muted">

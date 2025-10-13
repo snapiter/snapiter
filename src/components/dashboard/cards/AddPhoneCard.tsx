@@ -34,7 +34,7 @@ export default function AddPhoneCard({ trackableId }: AddPhoneCardProps) {
   return (
     <>
       <Modal open={modalOpen} onClose={handleClose}>
-        {modalContent && modalContent.qrDataUrl && (
+        {modalContent?.qrDataUrl && (
           <div className="flex flex-col items-center gap-4 p-6">
             <h2 className="text-lg font-semibold">
               Scan this QR with your phone

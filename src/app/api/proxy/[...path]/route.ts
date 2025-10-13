@@ -122,7 +122,7 @@ function buildNextResponse(response: Response) {
 }
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> },
 ) {
   const { path: pathArray } = await params;
@@ -151,7 +151,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> },
 ) {
   const { path: pathArray } = await params;

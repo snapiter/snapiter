@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useEffect } from "react";
 import type { MapRef } from "react-map-gl/maplibre";
 import { flyToAtom, highlightedMarkerAtom } from "@/store/atoms";

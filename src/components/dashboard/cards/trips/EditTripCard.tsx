@@ -2,7 +2,7 @@
 
 import { PrimaryButton } from "@snapiter/designsystem";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaRegFloppyDisk } from "react-icons/fa6";
 import { useUpdateTrip } from "@/hooks/dashboard/trips/useUpdateTrip";
 import type { Trip } from "@/store/atoms";

@@ -1,5 +1,5 @@
 import { useAtomValue, useSetAtom } from "jotai";
-import { useCallback, useContext, useEffect, useMemo, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import { Layer, Source, useMap } from "react-map-gl/maplibre";
 import { useTripPositions } from "@/hooks/trips/useTripPositions";
 import { selectedTripAtom, type Trip } from "@/store/atoms";

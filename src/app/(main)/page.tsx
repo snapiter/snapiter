@@ -1,7 +1,7 @@
 "use client";
 
 import { useAtomValue, useSetAtom } from "jotai";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Brand from "@/components/Brand";
 import DynamicTitle from "@/components/DynamicTitle";
 import ErrorComponent from "@/components/ErrorComponent";

@@ -1,7 +1,7 @@
 export const formatTripDate = (dateStart: string, dateEnd?: string): string => {
   const start = new Date(dateStart);
 
-  if (isNaN(start.getTime())) {
+  if (Number.isNaN(start.getTime())) {
     return "Invalid date";
   }
 
@@ -17,7 +17,7 @@ export const formatTripDate = (dateStart: string, dateEnd?: string): string => {
 
   const end = new Date(dateEnd);
 
-  if (isNaN(end.getTime())) {
+  if (Number.isNaN(end.getTime())) {
     return "Invalid date";
   }
 
@@ -28,7 +28,7 @@ export const formatTripDate = (dateStart: string, dateEnd?: string): string => {
 };
 
 export const formatDate = (date: Date): string => {
-  if (isNaN(date.getTime())) {
+  if (Number.isNaN(date.getTime())) {
     return "Invalid date";
   }
   const locale = navigator.language || "en-US";
