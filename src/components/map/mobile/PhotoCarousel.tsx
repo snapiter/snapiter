@@ -28,7 +28,7 @@ export default function PhotoCarousel() {
   const setHighlightedMarker = useSetAtom(highlightedMarkerAtom);
 
   if (!selectedTrip || selectedTrip.markers.length === 0) {
-    return <></>;
+    return null;
   }
 
   if (!isExpanded) {

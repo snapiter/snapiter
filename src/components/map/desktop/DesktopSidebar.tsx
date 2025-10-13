@@ -8,7 +8,7 @@ export default function DesktopSidebar() {
   const { trip: selectedTrip } = useSelectedTrip();
 
   if (selectedTrip === undefined) {
-    return <></>;
+    return null;
   }
 
   if (trips.length === 0) {

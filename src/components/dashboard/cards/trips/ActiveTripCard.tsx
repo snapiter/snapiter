@@ -41,7 +41,7 @@ export default function ActiveTripCard({ trip }: ActiveTripCardProps) {
     );
   };
 
-  if (!isActive) return <></>;
+  if (!isActive) return null;
 
   return (
     <>

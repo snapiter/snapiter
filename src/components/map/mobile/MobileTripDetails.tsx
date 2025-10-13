@@ -14,7 +14,7 @@ export default function MobileTripDetails({ trip }: TripDetailsProps) {
     trip?.slug ?? "",
   );
   if (trip === undefined || trip === null) {
-    return <></>;
+    return null;
   }
 
   return (

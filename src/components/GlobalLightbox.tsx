@@ -13,7 +13,7 @@ export default function GlobalLightbox() {
   const { trip } = useSelectedTrip();
 
   if (trip === null) {
-    return <></>;
+    return null;
   }
 
   // Derive photos from selectedTrip markers

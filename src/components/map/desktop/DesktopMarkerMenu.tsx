@@ -7,11 +7,11 @@ export default function DesktopMarkerMenu() {
   const { trip } = useSelectedTrip();
 
   if (trip === undefined || trip === null) {
-    return <></>;
+    return null;
   }
 
   if (trip.markers.length === 0) {
-    return <></>;
+    return null;
   }
 
   return (

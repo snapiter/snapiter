@@ -24,7 +24,7 @@ export default function DesktopTripMenu() {
   };
 
   if (trips.length === 0) {
-    return <></>;
+    return null;
   }
 
   return (

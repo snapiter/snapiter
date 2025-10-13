@@ -66,7 +66,7 @@ export default function EditTripCard({ trackableId, trip }: EditTripCardProps) {
     );
   };
 
-  if (!form) return <></>;
+  if (!form) return null;
 
   return (
     <Card title="Edit Trip">

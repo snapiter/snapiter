@@ -32,7 +32,7 @@ export default function TripsPage({
     }
   }, [positions, mapReady, mapRef.current]);
 
-  if (isLoading || isError || !trip) return <></>;
+  if (isLoading || isError || !trip) return null;
 
   return (
     <>
