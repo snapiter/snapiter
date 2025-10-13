@@ -1,15 +1,12 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
-import Image from 'next/image';
 
 import { Marker, lightboxIndexAtom, highlightedMarkerAtom } from '@/store/atoms';
 import { getMarkerUrlThumbnail } from '@/services/thumbnail';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { bottomPanelExpandedAtom } from '@/store/atoms';
 import { useSelectedTrip } from '@/hooks/trips/useSelectedTrip';
-import { useState } from 'react';
-import { FaEyeSlash } from 'react-icons/fa6';
 import { SafeImage } from '@/components/SafeImage';
 
 export interface Photo {
