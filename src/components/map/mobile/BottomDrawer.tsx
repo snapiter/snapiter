@@ -11,9 +11,7 @@ export default function BottomDrawer({
 }) {
   const isExpanded = useAtomValue(bottomPanelExpandedAtom);
   const setBottomPanelExpanded = useSetAtom(bottomPanelExpandedAtom);
-  const [mounted, setMounted] = React.useState(false);
-  const ref = React.useRef<SheetRef>(null);
-
+  const sheetRef = React.useRef<SheetRef>(null);
   const snapIndices = [0, config.collapsedHeight, config.expandedHeight, 1];
 
   const expandedSnapIndex = 2;
@@ -21,21 +19,22 @@ export default function BottomDrawer({
   const fullScreenSnapIndex = 3;
 
   React.useEffect(() => {
-    setMounted(true);
-    if (!ref.current) return;
-    if (isExpanded) {
-      ref.current.snapTo(expandedSnapIndex);
-    } else {
-      ref.current.snapTo(collapsedSnapIndex);
-    }
-  }, [ref.current, isExpanded]);
+    if (!sheetRef.current) return;
 
-  if (!mounted) return null; // 🚀 prevent SSR mismatch
+    if (isExpanded) {
+      sheetRef.current.snapTo(expandedSnapIndex);
+    } else {
+      sheetRef.current.snapTo(collapsedSnapIndex);
+    }
+  }, [isExpanded]);
+
   return (
     <Sheet
-      ref={ref}
+      ref={sheetRef}
       isOpen={true}
-      onClose={() => setBottomPanelExpanded(false)}
+      onClose={() => {
+        setBottomPanelExpanded(false);
+      }}
       onSnap={(index) => {
         if (index === expandedSnapIndex && !isExpanded) {
           setBottomPanelExpanded(true);
@@ -49,7 +48,7 @@ export default function BottomDrawer({
       }}
       className="md:hidden"
       snapPoints={snapIndices}
-      initialSnap={0}
+      initialSnap={collapsedSnapIndex}
     >
       <Sheet.Container
         style={{
