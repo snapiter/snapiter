@@ -15,6 +15,7 @@ export default function ActionCard({
 }: ActionCardProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className="flex flex-col items-center justify-center gap-3 p-6 rounded-lg border border-border bg-surface 
                  cursor-pointer transition-colors duration-200 hover:border-primary hover:bg-surface/50"

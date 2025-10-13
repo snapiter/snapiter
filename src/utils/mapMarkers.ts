@@ -89,7 +89,10 @@ export function cleanupMarkers(
   visibleMarkersRef: { current: Record<string, maplibregl.Marker> },
   vehicleMarkerRef: { current: maplibregl.Marker | null },
 ) {
-  Object.values(visibleMarkersRef.current).forEach((m) => m.remove());
+  Object.values(visibleMarkersRef.current).forEach((m) => {
+    m.remove();
+  });
+
   visibleMarkersRef.current = {};
   if (vehicleMarkerRef.current) {
     vehicleMarkerRef.current.remove();

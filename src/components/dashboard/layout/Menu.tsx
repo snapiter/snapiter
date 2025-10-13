@@ -19,7 +19,7 @@ export default function Menu({ items }: { items: MenuItemProps[] }) {
       <div className="md:hidden">
         <div className="flex items-center justify-between mb-6">
           <Logo size="sm" showTitle={true} />
-          <button onClick={() => setIsOpen(false)}>
+          <button type="button" onClick={() => setIsOpen(false)}>
             <FaX />
           </button>
         </div>

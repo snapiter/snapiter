@@ -13,6 +13,7 @@ export default function ErrorComponent({ message }: { message?: string }) {
             "Looks like this journey took a little detour. Please try again in a moment."}
         </p>
         <button
+          type="button"
           onClick={() => window.location.reload()}
           className="px-4 py-2 rounded-md bg-primary text-white hover:bg-primary-hover transition"
         >

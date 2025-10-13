@@ -67,6 +67,10 @@ export default function PhotoCarousel() {
             <SwiperSlide key={marker.markerId} className="relative">
               <div
                 className="relative w-full h-64 cursor-pointer hover:opacity-90 transition-opacity"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ")
+                    handlePhotoClick(index);
+                }}
                 onClick={() => handlePhotoClick(index)}
               >
                 <SafeImage

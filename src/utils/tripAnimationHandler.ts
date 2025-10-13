@@ -1,4 +1,5 @@
 import type maplibregl from "maplibre-gl";
+import type { GeoJSONSource } from "maplibre-gl";
 import type { MapRef } from "react-map-gl/maplibre";
 import type { TripDetailed } from "@/store/atoms";
 import { startAnimation, stopAnimation } from "@/utils/mapAnimation";
@@ -39,7 +40,7 @@ export function animateTrip(
   // Reset the animation route line to empty
   const animationRouteSource = map.getSource(
     `route-${tripDetailed.slug}-animation`,
-  ) as any;
+  ) as GeoJSONSource;
   if (animationRouteSource) {
     animationRouteSource.setData({
       type: "FeatureCollection",

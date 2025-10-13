@@ -39,6 +39,7 @@ export default function MenuItem({
       {/* Main Item */}
       {hasSubmenu ? (
         <button
+          type="button"
           onClick={() => setOpen(!open)}
           className={`flex items-center cursor-pointer justify-between w-full px-4 py-3 rounded-md text-left
                      hover:bg-surface transition-colors ${className}`}

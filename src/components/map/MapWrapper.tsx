@@ -1,4 +1,4 @@
-import Map from "react-map-gl/maplibre";
+import MapLibre from "react-map-gl/maplibre";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 
@@ -36,7 +36,7 @@ export default function MapWrapper({
   const tileUrl = `https://api.maptiler.com/maps/landscape/{z}/{x}/{y}${isRetina ? "@2x" : ""}.png?key=${env.SNAPITER_MAPTILER_KEY}`;
 
   return (
-    <Map
+    <MapLibre
       ref={mapRef}
       initialViewState={{
         longitude: 5.1214201,
@@ -78,6 +78,6 @@ export default function MapWrapper({
       style={mapStyle}
     >
       {children}
-    </Map>
+    </MapLibre>
   );
 }

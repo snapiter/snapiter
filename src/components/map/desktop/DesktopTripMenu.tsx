@@ -40,6 +40,7 @@ export default function DesktopTripMenu() {
       <div className="p-2">
         {trips.map((trip, index) => (
           <button
+            type="button"
             key={`button-${trip.slug}`}
             onClick={() => handleTripSelect(index)}
             style={

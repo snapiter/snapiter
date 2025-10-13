@@ -93,7 +93,7 @@ export default function RequestMagicLinkPage() {
               </form>
 
               {message && status === "error" && (
-                <p role="status" className="mt-4 text-sm text-error">
+                <p role="alert" className="mt-4 text-sm text-error">
                   {message}
                 </p>
               )}

@@ -12,7 +12,13 @@ export default function Modal({ open, onClose, children }: ModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/70" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-black/70"
+        onClick={onClose}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") onClose();
+        }}
+      />
 
       <div className="relative z-10 w-full max-w-md rounded-lg bg-surface p-6">
         {children}
