@@ -37,10 +37,10 @@ export default function BottomDrawer({
         setBottomPanelExpanded(BottomPanelState.Closed);
       }}
       onSnap={(index) => {
-        if (index === expandedSnapIndex && !bottomPanelExpanded) {
+        if (index === expandedSnapIndex && bottomPanelExpanded === BottomPanelState.Closed) {
           setBottomPanelExpanded(BottomPanelState.Open);
         }
-        if (index === collapsedSnapIndex && bottomPanelExpanded) {
+        if (index === collapsedSnapIndex && bottomPanelExpanded !== BottomPanelState.Closed) {
           setBottomPanelExpanded(BottomPanelState.Closed);
         }
         if (index === fullScreenSnapIndex) {

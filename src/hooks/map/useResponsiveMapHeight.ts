@@ -1,13 +1,14 @@
 import { useAtomValue } from "jotai";
 import { useCallback, useEffect } from "react";
 import { config } from "@/config";
-import { bottomPanelExpandedAtom } from "@/store/atoms";
+import { bottomPanelExpandedAtom, BottomPanelState } from "@/store/atoms";
 
 export function useResponsiveMapHeight(mapRef: React.RefObject<any>) {
-  const isPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
+  const bottomPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
 
   const updateMapHeight = useCallback(() => {
-    if (isPanelExpanded !== null && mapRef.current) {
+    console.log("updateMapHeight", bottomPanelExpanded);
+    if (bottomPanelExpanded !== null && mapRef.current) {
       const map = mapRef.current.getMap?.();
       if (!map) return;
 
@@ -15,6 +16,8 @@ export function useResponsiveMapHeight(mapRef: React.RefObject<any>) {
 
       const container = map.getContainer();
       if (!container) return;
+
+      const isPanelExpanded = bottomPanelExpanded === BottomPanelState.Open || bottomPanelExpanded === BottomPanelState.Fullscreen;
 
       if (isMobile) {
         container.style.height = isPanelExpanded
@@ -25,7 +28,7 @@ export function useResponsiveMapHeight(mapRef: React.RefObject<any>) {
       }
       map.resize();
     }
-  }, [isPanelExpanded, mapRef]);
+  }, [bottomPanelExpanded, mapRef]);
 
   useEffect(() => {
     updateMapHeight();

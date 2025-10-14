@@ -8,7 +8,7 @@ import ErrorComponent from "@/components/ErrorComponent";
 import DesktopSidebar from "@/components/map/desktop/DesktopSidebar";
 import MapView from "@/components/map/MapView";
 import BottomDrawer from "@/components/map/mobile/BottomDrawer";
-import PhotoCarousel from "@/components/map/mobile/PhotoCarousel";
+import PhotoCarousel from "@/components/map/mobile/drawer/PhotoCarousel";
 import TripSwiper from "@/components/map/mobile/TripSwiper";
 import SnapIterLoader from "@/components/SnapIterLoader";
 import { useTripsByHostname } from "@/hooks/trips/useTripsByHostname";
