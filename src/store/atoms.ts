@@ -91,7 +91,13 @@ export interface QuickCreateRes {
 
 export const selectedTripAtom = atom<string | null>(null);
 
-export const bottomPanelExpandedAtom = atom<boolean>(false);
+export enum BottomPanelState {
+  Closed = 'closed',
+  Open = 'open',
+  Fullscreen = 'fullscreen',
+}
+export const bottomPanelExpandedAtom = atom<BottomPanelState>(BottomPanelState.Closed);
+
 
 export const lightboxIndexAtom = atom<number>(-1);
 

@@ -7,6 +7,7 @@ import { useSelectedTrip } from "@/hooks/trips/useSelectedTrip";
 import { getMarkerUrlThumbnail } from "@/services/thumbnail";
 import {
   bottomPanelExpandedAtom,
+  BottomPanelState,
   highlightedMarkerAtom,
   lightboxIndexAtom,
   type Marker,
@@ -31,7 +32,7 @@ export default function PhotoCarousel() {
     return null;
   }
 
-  if (!isExpanded) {
+  if (isExpanded === BottomPanelState.Closed) {
     return (
       <div className="relative w-full pt-4">
         <div className="bg-background border border-muted rounded-lg animate-pulse flex items-center justify-center h-64">

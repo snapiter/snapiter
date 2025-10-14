@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import React from "react";
 import { Sheet, type SheetRef } from "react-modal-sheet";
 import { config } from "@/config";
-import { bottomPanelExpandedAtom } from "@/store/atoms";
+import { bottomPanelExpandedAtom, BottomPanelState } from "@/store/atoms";
 
 export default function BottomDrawer({
   children,
@@ -21,7 +21,7 @@ export default function BottomDrawer({
   React.useEffect(() => {
     if (!sheetRef.current) return;
 
-    if (bottomPanelExpanded) {
+    if (bottomPanelExpanded === BottomPanelState.Open || bottomPanelExpanded === BottomPanelState.Fullscreen) {
       sheetRef.current.snapTo(expandedSnapIndex);
     } else {
       sheetRef.current.snapTo(collapsedSnapIndex);
@@ -34,17 +34,17 @@ export default function BottomDrawer({
       isOpen={true}
       onClose={() => {
         sheetRef.current?.snapTo(collapsedSnapIndex); // Force to stay on collapsed snap
-        setBottomPanelExpanded(false);
+        setBottomPanelExpanded(BottomPanelState.Closed);
       }}
       onSnap={(index) => {
         if (index === expandedSnapIndex && !bottomPanelExpanded) {
-          setBottomPanelExpanded(true);
+          setBottomPanelExpanded(BottomPanelState.Open);
         }
         if (index === collapsedSnapIndex && bottomPanelExpanded) {
-          setBottomPanelExpanded(false);
+          setBottomPanelExpanded(BottomPanelState.Closed);
         }
         if (index === fullScreenSnapIndex) {
-          setBottomPanelExpanded(true);
+          setBottomPanelExpanded(BottomPanelState.Open);
         }
       }}
       className="md:hidden"
