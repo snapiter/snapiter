@@ -7,7 +7,6 @@ export function useResponsiveMapHeight(mapRef: React.RefObject<any>) {
   const bottomPanelExpanded = useAtomValue(bottomPanelExpandedAtom);
 
   const updateMapHeight = useCallback(() => {
-    console.log("updateMapHeight", bottomPanelExpanded);
     if (bottomPanelExpanded !== null && mapRef.current) {
       const map = mapRef.current.getMap?.();
       if (!map) return;

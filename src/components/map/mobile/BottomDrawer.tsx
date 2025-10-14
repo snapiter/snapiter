@@ -21,8 +21,10 @@ export default function BottomDrawer({
   React.useEffect(() => {
     if (!sheetRef.current) return;
 
-    if (bottomPanelExpanded === BottomPanelState.Open || bottomPanelExpanded === BottomPanelState.Fullscreen) {
+    if (bottomPanelExpanded === BottomPanelState.Open) {
       sheetRef.current.snapTo(expandedSnapIndex);
+    } else if (bottomPanelExpanded === BottomPanelState.Fullscreen) {
+      sheetRef.current.snapTo(fullScreenSnapIndex);
     } else {
       sheetRef.current.snapTo(collapsedSnapIndex);
     }
@@ -37,14 +39,14 @@ export default function BottomDrawer({
         setBottomPanelExpanded(BottomPanelState.Closed);
       }}
       onSnap={(index) => {
-        if (index === expandedSnapIndex && bottomPanelExpanded === BottomPanelState.Closed) {
+        if (index === expandedSnapIndex) {
           setBottomPanelExpanded(BottomPanelState.Open);
         }
-        if (index === collapsedSnapIndex && bottomPanelExpanded !== BottomPanelState.Closed) {
+        if (index === collapsedSnapIndex) {
           setBottomPanelExpanded(BottomPanelState.Closed);
         }
         if (index === fullScreenSnapIndex) {
-          setBottomPanelExpanded(BottomPanelState.Open);
+          setBottomPanelExpanded(BottomPanelState.Fullscreen);
         }
       }}
       className="md:hidden"

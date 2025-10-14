@@ -5,6 +5,7 @@ import {
   BottomPanelState,
 } from "@/store/atoms";
 import { PhotoSwiper } from "./PhotoSwiper";
+import PhotoGrid2 from "./PhotoGrid";
 
 export interface Photo {
   id: string;
@@ -33,11 +34,16 @@ export default function PhotoCarousel() {
     );
   }
 
+
   return (
     <div className="pt-4">
       <div className="w-full">
-        <PhotoSwiper selectedTrip={selectedTrip} />
+        {isExpanded === BottomPanelState.Fullscreen ? (
+          <PhotoGrid2 markers={selectedTrip.markers} />
+        ) : (
+          <PhotoSwiper selectedTrip={selectedTrip} />
+        )}
       </div>
     </div>
   );
-}
+}  

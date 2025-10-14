@@ -89,7 +89,6 @@ export default function TripLayer({ trip }: TripLayerProps) {
     opacity = 0;
   }
 
-  console.log("routeData", positions.length + "-" + routeData.features[0].geometry.coordinates.length);
   return (
     <Source id={`route-${trip.slug}`} type="geojson" data={routeData}>
       <Layer
