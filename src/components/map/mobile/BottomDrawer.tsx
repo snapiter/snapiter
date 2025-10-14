@@ -1,4 +1,4 @@
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import React from "react";
 import { Sheet, type SheetRef } from "react-modal-sheet";
 import { config } from "@/config";
@@ -9,8 +9,8 @@ export default function BottomDrawer({
 }: {
   children: React.ReactNode;
 }) {
-  const isExpanded = useAtomValue(bottomPanelExpandedAtom);
-  const setBottomPanelExpanded = useSetAtom(bottomPanelExpandedAtom);
+  const [bottomPanelExpanded, setBottomPanelExpanded] = useAtom(bottomPanelExpandedAtom);
+
   const sheetRef = React.useRef<SheetRef>(null);
   const snapIndices = [0, config.collapsedHeight, config.expandedHeight, 1];
 
@@ -21,12 +21,12 @@ export default function BottomDrawer({
   React.useEffect(() => {
     if (!sheetRef.current) return;
 
-    if (isExpanded) {
+    if (bottomPanelExpanded) {
       sheetRef.current.snapTo(expandedSnapIndex);
     } else {
       sheetRef.current.snapTo(collapsedSnapIndex);
     }
-  }, [isExpanded]);
+  }, [bottomPanelExpanded]);
 
   return (
     <Sheet
@@ -36,10 +36,10 @@ export default function BottomDrawer({
         setBottomPanelExpanded(false);
       }}
       onSnap={(index) => {
-        if (index === expandedSnapIndex && !isExpanded) {
+        if (index === expandedSnapIndex && !bottomPanelExpanded) {
           setBottomPanelExpanded(true);
         }
-        if (index === collapsedSnapIndex && isExpanded) {
+        if (index === collapsedSnapIndex && bottomPanelExpanded) {
           setBottomPanelExpanded(false);
         }
         if (index === fullScreenSnapIndex) {
