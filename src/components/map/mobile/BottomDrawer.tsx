@@ -33,6 +33,7 @@ export default function BottomDrawer({
       ref={sheetRef}
       isOpen={true}
       onClose={() => {
+        sheetRef.current?.snapTo(collapsedSnapIndex); // Force to stay on collapsed snap
         setBottomPanelExpanded(false);
       }}
       onSnap={(index) => {
