@@ -107,3 +107,11 @@ export type FlyToCommand = {
 export const flyToAtom = atom<FlyToCommand | null>(null);
 
 export const highlightedMarkerAtom = atom<string | null>(null);
+
+export type AnimationLineData = {
+  slug: string;
+  coordinates: [number, number][];
+  color: string;
+};
+
+export const animationLineAtom = atom<AnimationLineData | null>(null);

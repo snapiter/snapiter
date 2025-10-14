@@ -33,11 +33,9 @@ function MobileMapView({
   return (
     <>
       {visibleTrips.map((trip) => (
-        <Fragment key={trip.slug}>
-          <TripLayer trip={trip} />
-          <AnimatedTripLayer trip={trip} />
-        </Fragment>
+        <TripLayer key={trip.slug} trip={trip} />
       ))}
+      <AnimatedTripLayer />
     </>
   );
 }
@@ -55,11 +53,9 @@ function DesktopMapView({
   return (
     <>
       {trips.map((trip) => (
-        <Fragment key={trip.slug}>
-          <TripLayer trip={trip} />
-          <AnimatedTripLayer trip={trip} />
-        </Fragment>
+        <TripLayer key={trip.slug} trip={trip} />
       ))}
+      <AnimatedTripLayer />
     </>
   );
 }

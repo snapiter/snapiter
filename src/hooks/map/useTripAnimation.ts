@@ -1,19 +1,22 @@
 import { useSetAtom } from "jotai";
 import { useEffect, useRef } from "react";
 import type { MapRef } from "react-map-gl/maplibre";
-import { lightboxIndexAtom } from "@/store/atoms";
+import { animationLineAtom, lightboxIndexAtom } from "@/store/atoms";
 import { TripAnimator } from "@/utils/TripAnimator";
 import { useSelectedTrip } from "../trips/useSelectedTrip";
 
 export function useTripAnimation(mapRef: React.RefObject<MapRef | null>) {
   const { trip: selectedTrip } = useSelectedTrip();
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
+  const setAnimationLine = useSetAtom(animationLineAtom);
 
   const animatorRef = useRef<TripAnimator | null>(null);
 
   if (!animatorRef.current) {
-    animatorRef.current = new TripAnimator(mapRef, (photoIndex) =>
-      setLightboxIndex(photoIndex),
+    animatorRef.current = new TripAnimator(
+      mapRef,
+      setAnimationLine,
+      (photoIndex) => setLightboxIndex(photoIndex),
     );
   }
 

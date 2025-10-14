@@ -1,6 +1,6 @@
 import type maplibregl from "maplibre-gl";
 import type { MapRef } from "react-map-gl/maplibre";
-import type { Position, TripDetailed } from "@/store/atoms";
+import type { AnimationLineData, Position, TripDetailed } from "@/store/atoms";
 import { fitMapBounds } from "./mapBounds";
 import {
   createTripMarkers,
@@ -20,6 +20,7 @@ export class TripAnimator {
 
   constructor(
     private mapRef: React.RefObject<MapRef | null>,
+    private setAnimationLine: (data: AnimationLineData | null) => void,
     private onPhotoClick?: (photoIndex: number) => void,
   ) {}
 
@@ -82,6 +83,9 @@ export class TripAnimator {
         this.resetAnimationSource(map, this.currentSlug);
       }
     }
+
+    // Clear the animation line atom
+    this.setAnimationLine(null);
 
     this.currentSlug = null;
     this.startTime = null;
@@ -161,11 +165,18 @@ export class TripAnimator {
         | maplibregl.GeoJSONSource
         | undefined;
 
-      if (source) {
-        const coords = activePositions
-          .slice(0, currentIndex + 1)
-          .map((p) => [p.longitude, p.latitude]);
+      const coords = activePositions
+        .slice(0, currentIndex + 1)
+        .map((p) => [p.longitude, p.latitude]) as [number, number][];
 
+      // Update atom with current animation progress
+      this.setAnimationLine({
+        slug: trip.slug,
+        coordinates: coords,
+        color: trip.color || "#3b82f6",
+      });
+
+      if (source) {
         source.setData({
           type: "FeatureCollection",
           features: [
