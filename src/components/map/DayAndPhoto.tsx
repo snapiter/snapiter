@@ -13,7 +13,7 @@ export default function ({
   return (
     <p className="mt-2 text-foreground flex items-center space-x-4 text-sm">
       {/* Duration */}
-      <span className="flex items-center space-x-1 text-muted">
+      <span className="flex items-center space-x-1 text-muted whitespace-nowrap">
         <FaRegCalendar className="w-4 h-4" />
         <span>{formatTripDate(startDate, endDate)}</span>
       </span>

@@ -36,14 +36,12 @@ export default function PhotoCarousel() {
 
 
   return (
-    <div className="pt-4">
       <div className="w-full">
         {isExpanded === BottomPanelState.Fullscreen ? (
           <MarkerGrid markers={selectedTrip.markers} />
         ) : (
           <PhotoSwiper selectedTrip={selectedTrip} />
         )}
-      </div>
     </div>
   );
 }  

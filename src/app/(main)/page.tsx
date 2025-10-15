@@ -47,10 +47,15 @@ export default function Home() {
 
         {isMobile && (
           <BottomDrawer>
-            <div className="w-full h-full">
-              <TripSwiper />
+            <div className="w-full flex flex-col">
+              <div className="sticky top-0 z-10 bg-background p-2">
+                <TripSwiper />
+              </div>
+              <div className="p-2 pt-0">
               <PhotoCarousel />
+              </div>
             </div>
+
           </BottomDrawer>
         )}
         {!isMobile && <DesktopSidebar />}

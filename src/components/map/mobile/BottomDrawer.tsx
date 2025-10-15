@@ -66,7 +66,7 @@ export default function BottomDrawer({
           </div>
         </Sheet.Header>
         <Sheet.Content className="bg-background" disableDrag={true}>
-          <div className="p-2">{children}</div>
+          <div className="min-h-full">{children}</div>
         </Sheet.Content>
       </Sheet.Container>
     </Sheet>
