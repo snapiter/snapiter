@@ -1,6 +1,6 @@
 import { FaRoute } from "react-icons/fa6";
 import { useSelectedTrip } from "@/hooks/trips/useSelectedTrip";
-import PhotoGrid from "../../PhotoGrid";
+import PhotoGrid from "./PhotoGrid";
 import DayAndPhoto from "../DayAndPhoto";
 
 export default function DesktopMarkerMenu() {
@@ -33,7 +33,7 @@ export default function DesktopMarkerMenu() {
         </div>
 
         <div className="flex-1  overflow-y-auto">
-          <PhotoGrid markers={trip.markers} />
+          <PhotoGrid markers={trip.markers} className="px-4" />
         </div>
       </div>
     </div>

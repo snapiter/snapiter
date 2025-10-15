@@ -5,7 +5,7 @@ import { config } from "@/config";
 import { bottomPanelExpandedAtom, BottomPanelState } from "@/store/atoms";
 
 export default function BottomDrawer({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) {
@@ -35,8 +35,6 @@ export default function BottomDrawer({
       ref={sheetRef}
       isOpen={true}
       onClose={() => {
-        sheetRef.current?.snapTo(collapsedSnapIndex); // Force to stay on collapsed snap
-        setBottomPanelExpanded(BottomPanelState.Closed);
       }}
       onSnap={(index) => {
         if (index === expandedSnapIndex) {
@@ -52,6 +50,7 @@ export default function BottomDrawer({
       className="md:hidden"
       snapPoints={snapIndices}
       initialSnap={collapsedSnapIndex}
+      disableDismiss={true}
     >
       <Sheet.Container
         style={{

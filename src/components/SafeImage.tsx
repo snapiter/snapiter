@@ -15,6 +15,7 @@ export function SafeImage({
   ...props
 }: SafeImageProps) {
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const sizeClass =
     size === "small" ? "text-2xl" : size === "large" ? "text-6xl" : "text-4xl"; // default medium
@@ -27,13 +28,24 @@ export function SafeImage({
     );
   }
 
+
   return (
-    <Image
-      {...props}
-      loading="lazy"
-      src={src}
-      alt={alt}
-      onError={() => setError(true)}
-    />
+    <>
+      {loading && (
+        <div className="absolute inset-0 bg-muted rounded-lg animate-pulse flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-border border-t-primary rounded-full animate-spin"></div>
+        </div>
+      )}
+      <Image
+        {...props}
+        loading="lazy"
+        src={src}
+        alt={alt}
+        className={`${props.className} ${loading ? "opacity-0" : "opacity-100"}`}
+        onError={() => setError(true)}
+        onLoad={() => setLoading(false)}
+      />
+    </>
+
   );
 }
