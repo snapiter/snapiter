@@ -44,10 +44,10 @@ export default function MarkerGrid({ markers, handleMarkerHover, handleGridMouse
             size="small"
           />
 
-          {marker.description && (
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-opacity rounded-lg flex items-end p-2">
-              <p className="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity line-clamp-2">
-                {marker.description}
+          {marker.title && (
+            <div className="absolute inset-0 transition-opacity rounded-lg flex items-end justify-center p-2">
+              <p className="text-foreground text-xs bg-background/50 rounded-sm transition-opacity line-clamp-2 p-1">
+                {marker.title}
               </p>
             </div>
           )}
