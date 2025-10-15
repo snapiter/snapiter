@@ -23,6 +23,11 @@ export default function BottomDrawer({
   React.useEffect(() => {
     if (!sheetRef.current) return;
 
+    if(!dragEnabled) {
+      sheetRef.current.snapTo(collapsedSnapIndex);
+      return;
+    }
+
     if (bottomPanelExpanded === BottomPanelState.Open) {
       sheetRef.current.snapTo(expandedSnapIndex);
     } else if (bottomPanelExpanded === BottomPanelState.Fullscreen) {
@@ -30,7 +35,7 @@ export default function BottomDrawer({
     } else {
       sheetRef.current.snapTo(collapsedSnapIndex);
     }
-  }, [bottomPanelExpanded]);
+  }, [dragEnabled, bottomPanelExpanded]);
 
   return (
     <Sheet
