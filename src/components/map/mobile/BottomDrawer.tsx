@@ -1,15 +1,17 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import React from "react";
 import { Sheet, type SheetRef } from "react-modal-sheet";
 import { config } from "@/config";
-import { bottomPanelExpandedAtom, BottomPanelState } from "@/store/atoms";
+import { bottomPanelExpandedAtom, BottomPanelState, dragEnabledAtom } from "@/store/atoms";
 
 export default function BottomDrawer({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {
   const [bottomPanelExpanded, setBottomPanelExpanded] = useAtom(bottomPanelExpandedAtom);
+
+  const dragEnabled = useAtomValue(dragEnabledAtom);
 
   const sheetRef = React.useRef<SheetRef>(null);
   const snapIndices = [0, config.collapsedHeight, config.expandedHeight, 1];
@@ -34,6 +36,7 @@ export default function BottomDrawer({
     <Sheet
       ref={sheetRef}
       isOpen={true}
+      disableDrag={!dragEnabled}
       onClose={() => {
       }}
       onSnap={(index) => {
@@ -60,9 +63,9 @@ export default function BottomDrawer({
         }}
         className="bg-background rounded-t-3xl"
       >
-        <Sheet.Header className="bg-background rounded-t-3xl py-2 cursor-grab border-b border-border">
+        <Sheet.Header className={`bg-background rounded-t-3xl py-2  border-b border-border ${dragEnabled ? "cursor-grab" : ""}`}>
           <div className="flex justify-center py-2">
-            <div className="w-10 h-1 rounded-full bg-foreground" />
+            <div className={`w-10 h-1 rounded-full bg-foreground ${!dragEnabled ? "opacity-0" : ""}`} />
           </div>
         </Sheet.Header>
         <Sheet.Content className="bg-background" disableDrag={true}>

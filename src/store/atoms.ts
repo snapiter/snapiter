@@ -98,6 +98,7 @@ export enum BottomPanelState {
 }
 export const bottomPanelExpandedAtom = atom<BottomPanelState>(BottomPanelState.Closed);
 
+export const dragEnabledAtom = atom<boolean>(true);
 
 export const lightboxIndexAtom = atom<number>(-1);
 

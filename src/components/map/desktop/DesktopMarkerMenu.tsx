@@ -15,7 +15,7 @@ export default function DesktopMarkerMenu() {
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col w-1/2">
       <div className="hidden md:flex flex-col flex-1 min-h-0">
         {/* Sticky header */}
         <div className="p-0 md:p-4 sticky top-0 z-[101] bg-background">

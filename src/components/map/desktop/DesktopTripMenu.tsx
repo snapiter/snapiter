@@ -28,7 +28,7 @@ export default function DesktopTripMenu() {
   }
 
   return (
-    <div className="bg-surface border-r border-border h-full overflow-y-auto flex-1">
+    <div className="bg-surface w-1/2 border-r border-border h-full overflow-y-auto flex-1">
       <div className="p-4">
         <div className="flex items-center gap-3 mb-2">
           <Logo size="md" showTitle={true} title={trackable?.title} />

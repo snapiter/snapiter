@@ -1,11 +1,14 @@
-import { useAtomValue } from "jotai";
+"use client";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useSelectedTrip } from "@/hooks/trips/useSelectedTrip";
 import {
   bottomPanelExpandedAtom,
   BottomPanelState,
+  dragEnabledAtom,
 } from "@/store/atoms";
 import { PhotoSwiper } from "./PhotoSwiper";
 import MarkerGrid from "../../../MarkerGrid";
+import { useEffect } from "react";
 
 export interface Photo {
   id: string;
@@ -19,6 +22,14 @@ export default function PhotoCarousel() {
   const { trip: selectedTrip } = useSelectedTrip();
 
   const isExpanded = useAtomValue(bottomPanelExpandedAtom);
+
+  const setDragEnabled = useSetAtom(dragEnabledAtom);
+
+  useEffect(() => {
+    // On mobile enable or disable dragging of the bottom drawer
+    setDragEnabled(!(!selectedTrip || selectedTrip.markers.length === 0));
+  }, [selectedTrip]);
+
 
   if (!selectedTrip || selectedTrip.markers.length === 0) {
     return null;
