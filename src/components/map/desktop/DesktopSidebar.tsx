@@ -22,10 +22,14 @@ export default function DesktopSidebar() {
   }
 
   return (
-    <div className="h-full hidden md:block md:w-1/2 lg:w-1/3">
+    <div className="h-full hidden md:block md:w-1/2 lg:w-2/5">
       <div className="flex h-full">
+        <div className="w-1/2">
         <DesktopTripMenu />
+        </div>
+        <div className="w-1/2">
         <DesktopMarkerMenu />
+        </div>
       </div>
     </div>
   );

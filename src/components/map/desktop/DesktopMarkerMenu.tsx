@@ -32,7 +32,7 @@ export default function DesktopMarkerMenu() {
           />
         </div>
 
-        <div className="flex-1  overflow-y-auto">
+        <div className="flex-1 overflow-y-auto">
           <PhotoGrid markers={trip.markers} className="px-4" />
         </div>
       </div>

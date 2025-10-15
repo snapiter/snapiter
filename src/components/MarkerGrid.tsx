@@ -18,9 +18,13 @@ interface PhotoGridProps {
 
 export default function MarkerGrid({ markers, handleMarkerHover, handleGridMouseEnter, handleGridMouseLeave }: PhotoGridProps) {
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
+
+  // The grid seems weird, on mobile view fullscreen bottomdrawer it needs to be 2 columns.
+  // Desktop small view needs to be 1 column.
+  // Desktop Large view needs to be 2 columns.
   return (
     <div
-      className="grid grid-cols-2 lg:grid-cols-2 gap-3"
+      className="grid grid-cols-2  md:grid-cols-1 lg:grid-cols-2 gap-3"
       onMouseEnter={handleGridMouseEnter}
       onMouseLeave={handleGridMouseLeave}
     >
