@@ -6,9 +6,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "api.snapiter.com",
-        port: "",
-        pathname: "/**",
+        hostname: "**",
       },
     ],
   },
