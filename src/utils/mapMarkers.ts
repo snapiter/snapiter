@@ -1,11 +1,11 @@
 import maplibregl from "maplibre-gl";
-import { getMarkerUrlThumbnail, getTrackableIcon } from "@/services/thumbnail";
 import type { Position, Marker as TripMarker } from "@/store/atoms";
 
 export function createTripMarkers(
   markers: TripMarker[],
   visibleMarkersRef: { current: Record<string, maplibregl.Marker> },
   onMarkerClick: (photoIndex: number) => void,
+  markerUrl: string,
 ) {
   markers.forEach((marker) => {
     if (!visibleMarkersRef.current[marker.markerId]) {
@@ -13,8 +13,8 @@ export function createTripMarkers(
       el.className = "";
 
       el.innerHTML = `
-        <img 
-          src="${getMarkerUrlThumbnail(marker, "100x100")}" 
+        <img
+          src="${markerUrl}/api/trackables/${marker.trackableId}/markers/${marker.markerId}/thumbnail/100x100"
           class="map-marker"
           alt="marker"
           data-marker-id="${marker.markerId}"
@@ -42,6 +42,7 @@ export function createVehicleMarker(
   vehicleMarkerRef: { current: maplibregl.Marker | null },
   map: maplibregl.Map,
   trackableId: string,
+  markerUrl: string,
 ) {
   if (!vehicleMarkerRef.current) {
     const el = document.createElement("div");
@@ -49,7 +50,7 @@ export function createVehicleMarker(
     el.style.height = "32px";
     el.style.zIndex = "100"; // Ensure vehicle marker is always on top
 
-    el.innerHTML = `<img src="${getTrackableIcon(trackableId)}" style="width: 100%; height: 100%;" />`;
+    el.innerHTML = `<img src="${markerUrl}/api/trackables/${trackableId}/icon" style="width: 100%; height: 100%;" />`;
 
     vehicleMarkerRef.current = new maplibregl.Marker({
       element: el,

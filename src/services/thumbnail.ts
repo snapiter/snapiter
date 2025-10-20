@@ -1,21 +1,34 @@
-import { config } from "@/config";
+"use client"
+
+import { useContext } from "react";
+import { EnvContext } from "@/utils/env/EnvProvider";
 import type { Marker } from "@/store/atoms";
 
-export function getMarkerUrlThumbnail(
+function getMarkerUrlThumbnailInternal(
+  markerUrl: string,
   marker: Marker,
   size: string = "200x200",
 ): string {
   if (!marker.hasThumbnail) {
-    return getMarkerImage(marker);
+    return getMarkerImageInternal(markerUrl, marker);
   }
-  return `${config.markerUrl}/api/trackables/${marker.trackableId}/markers/${marker.markerId}/thumbnail/${size}`;
+  return `${markerUrl}/api/trackables/${marker.trackableId}/markers/${marker.markerId}/thumbnail/${size}`;
 }
 
-export function getMarkerImage(marker: Marker): string {
-  // return `${config.markerUrl}/api/trackables/${marker.trackableId}/markers/${marker.markerId}/image`;
-  return getMarkerUrlThumbnail(marker, "2000x2000");
+function getMarkerImageInternal(markerUrl: string, marker: Marker): string {
+  // return `${markerUrl}/api/trackables/${marker.trackableId}/markers/${marker.markerId}/image`;
+  return getMarkerUrlThumbnailInternal(markerUrl, marker, "2000x2000");
 }
 
-export function getTrackableIcon(trackableId: string): string {
-  return `${config.markerUrl}/api/trackables/${trackableId}/icon`;
+function getTrackableIconInternal(markerUrl: string, trackableId: string): string {
+  return `${markerUrl}/api/trackables/${trackableId}/icon`;
+}
+
+export function useMarkerUrls() {
+  const env = useContext(EnvContext);
+  return {
+    getMarkerUrlThumbnail: (marker: Marker, size?: string) => getMarkerUrlThumbnailInternal(env.SNAPITER_MARKER_URL, marker, size),
+    getMarkerImage: (marker: Marker) => getMarkerImageInternal(env.SNAPITER_MARKER_URL, marker),
+    getTrackableIcon: (trackableId: string) => getTrackableIconInternal(env.SNAPITER_MARKER_URL, trackableId),
+  };
 }

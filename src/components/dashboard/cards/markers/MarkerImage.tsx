@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { getMarkerUrlThumbnail } from "@/services/thumbnail";
+import { useMarkerUrls } from "@/services/thumbnail";
 import type { Marker } from "@/store/atoms";
 
 interface MarkerImageProps {
@@ -15,6 +15,7 @@ export default function MarkerImage({
   size = "500x500",
   className = "object-cover rounded",
 }: MarkerImageProps) {
+  const { getMarkerUrlThumbnail } = useMarkerUrls();
   const src = getMarkerUrlThumbnail(marker, size);
 
   return (

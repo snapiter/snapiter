@@ -8,13 +8,14 @@ import { useSelectedTrip } from "@/hooks/trips/useSelectedTrip";
 import { lightboxIndexAtom } from "@/store/atoms";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/captions.css";
-import { getMarkerImage } from "@/services/thumbnail";
+import { useMarkerUrls } from "@/services/thumbnail";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 
 export default function GlobalLightbox() {
   const lightboxIndex = useAtomValue(lightboxIndexAtom);
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
   const { trip } = useSelectedTrip();
+  const { getMarkerImage } = useMarkerUrls();
 
   if (trip === null) {
     return null;

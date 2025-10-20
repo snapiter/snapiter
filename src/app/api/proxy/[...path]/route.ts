@@ -1,11 +1,13 @@
 import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
+import getEnv from "@/utils/env/getEnv";
 
-const API_BASE_URL = "https://api.snapiter.com";
-
-async function refreshTokens(cookieStore: Awaited<ReturnType<typeof cookies>>) {
+async function refreshTokens(
+  cookieStore: Awaited<ReturnType<typeof cookies>>,
+  apiBaseUrl: string,
+) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
+    const response = await fetch(`${apiBaseUrl}/api/auth/refresh`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -36,11 +38,12 @@ async function refreshTokens(cookieStore: Awaited<ReturnType<typeof cookies>>) {
 async function makeProxyRequest(
   path: string,
   method: string,
+  apiBaseUrl: string,
   body?: string,
   accessToken?: string,
   additionalHeaders?: Record<string, string>,
 ) {
-  const url = `${API_BASE_URL}/${path}`;
+  const url = `${apiBaseUrl}/${path}`;
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -59,20 +62,32 @@ async function makeProxyRequest(
 
   return response;
 }
-async function proxyWithRefresh(path: string, method: string, body?: string) {
+async function proxyWithRefresh(
+  path: string,
+  method: string,
+  apiBaseUrl: string,
+  body?: string,
+) {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("access_token")?.value;
 
-  let response = await makeProxyRequest(path, method, body, accessToken);
+  let response = await makeProxyRequest(
+    path,
+    method,
+    apiBaseUrl,
+    body,
+    accessToken,
+  );
 
   // If unauthorized → try refresh
   if (response.status === 401 || response.status === 403) {
-    const refreshResult = await refreshTokens(cookieStore);
+    const refreshResult = await refreshTokens(cookieStore, apiBaseUrl);
 
     if (refreshResult.success && refreshResult.newAccessToken) {
       response = await makeProxyRequest(
         path,
         method,
+        apiBaseUrl,
         body,
         refreshResult.newAccessToken,
       );
@@ -125,36 +140,40 @@ export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> },
 ) {
+  const env = getEnv();
   const { path: pathArray } = await params;
   const path = pathArray.join("/");
-  return proxyWithRefresh(path, "GET");
+  return proxyWithRefresh(path, "GET", env.SNAPITER_API_URL);
 }
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> },
 ) {
+  const env = getEnv();
   const { path: pathArray } = await params;
   const path = pathArray.join("/");
   const body = await request.text();
-  return proxyWithRefresh(path, "POST", body);
+  return proxyWithRefresh(path, "POST", env.SNAPITER_API_URL, body);
 }
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> },
 ) {
+  const env = getEnv();
   const { path: pathArray } = await params;
   const path = pathArray.join("/");
   const body = await request.text();
-  return proxyWithRefresh(path, "PUT", body);
+  return proxyWithRefresh(path, "PUT", env.SNAPITER_API_URL, body);
 }
 
 export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> },
 ) {
+  const env = getEnv();
   const { path: pathArray } = await params;
   const path = pathArray.join("/");
-  return proxyWithRefresh(path, "DELETE");
+  return proxyWithRefresh(path, "DELETE", env.SNAPITER_API_URL);
 }

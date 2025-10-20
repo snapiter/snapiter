@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useTripMarkers } from "@/hooks/trips/useTripMarkers";
-import { getMarkerUrlThumbnail } from "@/services/thumbnail";
+import { useMarkerUrls } from "@/services/thumbnail";
 import type { Trip } from "@/store/atoms";
 import DayAndPhoto from "../DayAndPhoto";
 
@@ -13,6 +13,7 @@ export default function MobileTripDetails({ trip }: TripDetailsProps) {
     trip?.trackableId ?? "",
     trip?.slug ?? "",
   );
+  const { getMarkerUrlThumbnail } = useMarkerUrls();
   if (trip === undefined || trip === null) {
     return null;
   }

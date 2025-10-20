@@ -4,12 +4,13 @@ import { SafeImage } from "@/components/SafeImage";
 import { useSetAtom } from "jotai";
 import { lightboxIndexAtom } from "@/store/atoms";
 import { Pagination } from "swiper/modules";
-import { getMarkerUrlThumbnail } from "@/services/thumbnail";
+import { useMarkerUrls } from "@/services/thumbnail";
 import type { Swiper as SwiperType } from "swiper";
 
 export function PhotoSwiper({ selectedTrip }: { selectedTrip: TripDetailed }) {
     const setLightboxIndex = useSetAtom(lightboxIndexAtom);
     const setHighlightedMarker = useSetAtom(highlightedMarkerAtom);
+    const { getMarkerUrlThumbnail } = useMarkerUrls();
 
 
     const handlePhotoClick = (index: number) => {

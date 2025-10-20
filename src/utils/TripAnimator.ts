@@ -21,6 +21,7 @@ export class TripAnimator {
   constructor(
     private mapRef: React.RefObject<MapRef | null>,
     private setAnimationLine: (data: AnimationLineData | null) => void,
+    private markerUrl: string,
     private onPhotoClick?: (photoIndex: number) => void,
   ) {}
 
@@ -41,7 +42,7 @@ export class TripAnimator {
 
     createTripMarkers(trip.markers, { current: this.visibleMarkers }, (photoIndex) => {
       this.onPhotoClick?.(photoIndex);
-    });
+    }, this.markerUrl);
 
     const vehicleMarkerRef = { current: this.vehicleMarker };
     createVehicleMarker(
@@ -49,6 +50,7 @@ export class TripAnimator {
       vehicleMarkerRef,
       map,
       trackableId,
+      this.markerUrl,
     );
     this.vehicleMarker = vehicleMarkerRef.current;
 

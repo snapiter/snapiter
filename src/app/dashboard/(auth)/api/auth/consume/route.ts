@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { config } from "@/config";
+import getEnv from "@/utils/env/getEnv";
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
@@ -11,7 +11,8 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const res = await fetch(`${config.apiUrl}/api/auth/login/email/consume`, {
+  const env = getEnv();
+  const res = await fetch(`${env.SNAPITER_API_URL}/api/auth/login/email/consume`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ token }),

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { getTrackableIcon } from "@/services/thumbnail";
+import { useMarkerUrls } from "@/services/thumbnail";
 import type { Trackable } from "@/store/atoms";
 import { queryKeys } from "@/utils/queryKeys";
 import { useApiClient } from "../useApiClient";
@@ -9,6 +9,7 @@ import { useHostname } from "./useHostname";
 export function useTrackableByHostname() {
   const api = useApiClient();
   const hostname = useHostname();
+  const { getTrackableIcon } = useMarkerUrls();
 
   const query = useQuery({
     queryKey: queryKeys.trackable(hostname ?? ""),
@@ -36,7 +37,7 @@ export function useTrackableByHostname() {
       const img = new Image();
       img.src = url; // triggers preload into browser cache
     }
-  }, [query.data?.trackableId]);
+  }, [query.data?.trackableId, getTrackableIcon]);
 
   return query;
 }

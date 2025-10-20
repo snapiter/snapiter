@@ -1,7 +1,7 @@
 "use client";
 
 import { useSetAtom } from "jotai";
-import { getMarkerUrlThumbnail } from "@/services/thumbnail";
+import { useMarkerUrls } from "@/services/thumbnail";
 import {
   lightboxIndexAtom,
   type Marker,
@@ -18,6 +18,7 @@ interface PhotoGridProps {
 
 export default function MarkerGrid({ markers, handleMarkerHover, handleGridMouseEnter, handleGridMouseLeave }: PhotoGridProps) {
   const setLightboxIndex = useSetAtom(lightboxIndexAtom);
+  const { getMarkerUrlThumbnail } = useMarkerUrls();
 
   // The grid seems weird, on mobile view fullscreen bottomdrawer it needs to be 2 columns.
   // Desktop small view needs to be 1 column.

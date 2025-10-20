@@ -1,12 +1,14 @@
 "use client";
 
+import { useContext } from "react";
 import { useSetAtom } from "jotai";
-import { config } from "@/config";
+import { EnvContext } from "@/utils/env/EnvProvider";
 import { dashboardLoading, errorMessage } from "@/store/atoms";
 
 export function useApiClient() {
   const setLoading = useSetAtom(dashboardLoading);
   const setErrorMessage = useSetAtom(errorMessage);
+  const env = useContext(EnvContext);
 
   async function request<T>(
     endpoint: string,
@@ -14,7 +16,7 @@ export function useApiClient() {
   ): Promise<T> {
     setLoading(true);
     try {
-      const res = await fetch(`${config.apiUrl}${endpoint}`, {
+      const res = await fetch(`${env.SNAPITER_API_URL}${endpoint}`, {
         ...options,
         credentials: "include",
         headers: {

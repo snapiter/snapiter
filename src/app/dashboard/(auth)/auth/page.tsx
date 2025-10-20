@@ -1,8 +1,8 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
-import { config } from "@/config";
+import { useContext, useState } from "react";
+import { EnvContext } from "@/utils/env/EnvProvider";
 
 export default function RequestMagicLinkPage() {
   const [email, setEmail] = useState("");
@@ -10,6 +10,7 @@ export default function RequestMagicLinkPage() {
     "idle" | "loading" | "success" | "error"
   >("idle");
   const [message, setMessage] = useState("");
+  const env = useContext(EnvContext);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -17,7 +18,7 @@ export default function RequestMagicLinkPage() {
     setMessage("");
 
     try {
-      const res = await fetch(`${config.apiUrl}/api/auth/login/email/request`, {
+      const res = await fetch(`${env.SNAPITER_API_URL}/api/auth/login/email/request`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
