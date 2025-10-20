@@ -21,15 +21,6 @@ export function useHostname() {
       finalHostname = window.location.hostname;
     }
 
-    if (
-      finalHostname === "localhost" ||
-      finalHostname === "127.0.0.1" ||
-      finalHostname === "snapiter.com"
-    ) {
-      finalHostname = "partypieps.nl";
-      // finalHostname = 'maps.lunaverde.nl';
-    }
-
     setHostname(finalHostname);
   }, []);
 
