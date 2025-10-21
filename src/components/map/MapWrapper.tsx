@@ -9,7 +9,7 @@ import {
   type RefObject,
   useContext,
 } from "react";
-import type { MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
+import type { MapLayerMouseEvent, MapRef, StyleSpecification } from "react-map-gl/maplibre";
 import { EnvContext } from "@/utils/env/EnvProvider";
 
 export type MapViewProps = {
@@ -32,8 +32,40 @@ export default function MapWrapper({
   mapStyle,
 }: MapViewProps) {
   const env = useContext(EnvContext);
-  const isRetina = typeof window !== "undefined" && window.devicePixelRatio > 1;
-  const tileUrl = `https://api.maptiler.com/maps/landscape/{z}/{x}/{y}${isRetina ? "@2x" : ""}.png?key=${env.SNAPITER_MAPTILER_KEY}`;
+
+  const isBrowser = typeof window !== "undefined";
+  const isRetina = isBrowser && window.devicePixelRatio > 1;
+  
+  const useMapTiler = !!env.SNAPITER_MAPTILER_KEY;
+  
+  const sourceId = useMapTiler ? "maptiler" : "osm";
+  const tileUrl = useMapTiler
+    ? `https://api.maptiler.com/maps/landscape/{z}/{x}/{y}${isRetina ? "@2x" : ""}.png?key=${env.SNAPITER_MAPTILER_KEY}`
+    : "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png";
+  
+  const attribution = useMapTiler
+    ? '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+    : "&copy; OpenStreetMap Contributors";
+  
+  const style: StyleSpecification = {
+    version: 8,
+    sources: {
+      [sourceId]: {
+        type: "raster",
+        tiles: [tileUrl],
+        tileSize: 256,
+        attribution,
+        maxzoom: 19,
+      },
+    },
+    layers: [
+      {
+        id: sourceId,
+        type: "raster",
+        source: sourceId,
+      },
+    ],
+  };
 
   return (
     <MapLibre
@@ -43,25 +75,7 @@ export default function MapWrapper({
         latitude: 52.0907374,
         zoom: 12,
       }}
-      mapStyle={{
-        version: 8,
-        sources: {
-          "maptiler-raster": {
-            type: "raster",
-            tiles: [tileUrl],
-            tileSize: 256, // or 256, depending on style
-            attribution:
-              '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
-          },
-        },
-        layers: [
-          {
-            id: "maptiler-raster",
-            type: "raster",
-            source: "maptiler-raster",
-          },
-        ],
-      }}
+      mapStyle={style}
       attributionControl={false}
       onLoad={(e) => {
         onMapReady?.();
