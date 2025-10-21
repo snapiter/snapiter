@@ -36,6 +36,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
+
   // Add hostname to response headers so it can be accessed in components/API routes
   const response = NextResponse.next();
   response.headers.set("x-hostname", cleanHostname);

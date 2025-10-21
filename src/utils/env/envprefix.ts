@@ -5,6 +5,7 @@ export type EnvConfig = {
   SNAPITER_SHOW_BASE_LINE_UNDER_ANIMATION: boolean;
   SNAPITER_API_URL: string;
   SNAPITER_MARKER_URL: string;
+  SNAPITER_OVERWRITE_HOSTNAME: string;
 };
 
 export const DEFAULT_ENV: EnvConfig = {
@@ -12,4 +13,5 @@ export const DEFAULT_ENV: EnvConfig = {
   SNAPITER_SHOW_BASE_LINE_UNDER_ANIMATION: false,
   SNAPITER_API_URL: "https://api.snapiter.com",
   SNAPITER_MARKER_URL: "https://api.snapiter.com",
+  SNAPITER_OVERWRITE_HOSTNAME: "",
 };

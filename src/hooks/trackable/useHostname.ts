@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { EnvContext } from "@/utils/env/EnvProvider";
+import { useContext, useEffect, useState } from "react";
 
 export function useHostname() {
   const [hostname, setHostname] = useState<string>("");
+  const env = useContext(EnvContext);
 
   useEffect(() => {
     // Try to get hostname from cookie first (set by middleware)
@@ -20,6 +22,15 @@ export function useHostname() {
       // Fallback to window.location.hostname
       finalHostname = window.location.hostname;
     }
+
+    if(
+      process.env.NODE_ENV !== "production" && 
+      finalHostname === "localhost" &&
+      env.SNAPITER_OVERWRITE_HOSTNAME !== ""
+    ) {
+      finalHostname = env.SNAPITER_OVERWRITE_HOSTNAME;
+    }
+
 
     setHostname(finalHostname);
   }, []);
