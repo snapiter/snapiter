@@ -1,8 +1,20 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useContext } from "react";
+import { EnvContext } from "@/utils/env/EnvProvider";
 
 export default function Brand() {
+  const env = useContext(EnvContext);
+
+  if (!env.SNAPITER_SHOW_BRAND) {
+    return null;
+  }
+  
   return (
+    <div className="hidden md:block absolute bottom-4 left-4 z-10">
+
     <Link
       href="https://snapiter.com"
       target="_blank"
@@ -18,5 +30,6 @@ export default function Brand() {
       />
       <span className="text-xs font-semibold text-primary">SnapIter</span>
     </Link>
+    </div>
   );
 }

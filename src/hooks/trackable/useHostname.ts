@@ -1,3 +1,5 @@
+"use client";
+
 import { EnvContext } from "@/utils/env/EnvProvider";
 import { useContext, useEffect, useState } from "react";
 

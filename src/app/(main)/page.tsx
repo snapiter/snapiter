@@ -61,10 +61,7 @@ export default function Home() {
         {!isMobile && <DesktopSidebar />}
 
         {!isLoaded && <SnapIterLoader trackable={trackable ?? null} />}
-
-        <div className="hidden md:block absolute bottom-4 left-4 z-10">
           <Brand />
-        </div>
       </div>
     </>
   );
